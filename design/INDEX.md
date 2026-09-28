@@ -2,9 +2,9 @@
 
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
-- Top-level frames: 222
-- Reusable components: 85 (2475 references, nested ones included)
-- Reference screens and boards: 34
+- Top-level frames: 223
+- Reusable components: 87 (2517 references, nested ones included)
+- Reference screens and boards: 33
 - Flow screens: 74
 
 Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID>"`).
@@ -20,7 +20,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | `border` | color | `#E3DFD6` |
 | `text-primary` | color | `#1B1A17` |
 | `text-secondary` | color | `#5E5A52` |
-| `text-tertiary` | color | `#8E897E` |
+| `text-tertiary` | color | `#6F6A62` |
 | `accent` | color | `#1F5C4A` |
 | `accent-soft` | color | `#E2EEE8` |
 | `on-accent` | color | `#FFFFFF` |
@@ -42,10 +42,10 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Button / Primary | `H0OSN` | auto×auto |  | 36 |
 | Button / Secondary | `XBZK2` | auto×auto |  | 72 |
 | Button / Danger | `HsXdL` | auto×auto |  | 5 |
-| Icon Button | `btfe4` | 32×32 |  | 91 |
+| Icon Button | `btfe4` | 32×32 |  | 93 |
 | Kbd | `rjWo1` | auto×20 |  | 124 |
 | Tooltip | `fkIAs` | auto×auto |  | 3 |
-| Checkbox | `llhcq` | 16×16 |  | 21 |
+| Checkbox | `llhcq` | 16×16 |  | 18 |
 | Status Badge | `JQ0rx` | auto×auto |  | 17 |
 | Agent Avatar | `vCJQN` | 26×26 |  | 60 |
 | Inline Code | `Uzd9M` | auto×auto |  | 2 |
@@ -71,14 +71,14 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Menu Item | `koWWb` | 180×auto |  | 67 |
-| Menu Panel | `QRlRa` | 220×auto | `Items` (p97XhG): Menu Item | 17 |
+| Menu Item | `koWWb` | 180×auto |  | 73 |
+| Menu Panel | `QRlRa` | 220×auto | `Items` (p97XhG): Menu Item | 18 |
 | Agent Menu Item | `UauTJ` | 288×auto |  | 12 |
 | Palette Row | `QrHIB` | 600×auto |  | 33 |
 | Command Palette | `ZHC9i` | 640×auto | `Results` (NF5Vl): Palette Row | 5 |
 | Dialog | `dQMxZ` | 480×auto | `Body` (sYTH9) | 21 |
-| Confirm Dialog | `i3B1e` | 400×auto |  | 3 |
-| Toast | `IjtkQ` | 380×auto |  | 12 |
+| Confirm Dialog (Delete all only) | `i3B1e` | 400×auto |  | 0 |
+| Toast | `IjtkQ` | 380×auto |  | 13 |
 | Feedback Popover | `meKbs` | 380×auto |  | 1 |
 | Source Preview | `Ypu1g` | 340×auto |  | 1 |
 
@@ -87,14 +87,14 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
 | App Header | `fqLch` | 1440×64 |  | 17 |
-| Chat Header | `H0YWK` | 1156×60 |  | 62 |
-| Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 61 |
+| Chat Header | `H0YWK` | 1156×60 |  | 61 |
+| Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 60 |
 | Sidebar Brand | `T8TdZq` | 256×auto |  | 1 |
 | Agent Switcher | `RZF5q` | 256×auto |  | 1 |
 | Sidebar Nav Item | `MoK3u` | 256×auto |  | 29 |
 | Sidebar Footer | `CpCSr` | 284×auto |  | 1 |
 | Session Item | `SEJaD` | 248×auto |  | 311 |
-| Session Group Label | `rQVuA` | auto×auto |  | 153 |
+| Session Group Label | `rQVuA` | auto×auto |  | 149 |
 | Mobile Status Bar | `CLJUJ` | 390×44 |  | 9 |
 | Home Indicator | `mSdhx` | 390×28 |  | 6 |
 | Section Heading | `o1lqG` | auto×auto |  | 31 |
@@ -104,13 +104,13 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Composer | `K6k66O` | 760×auto | `Attachments` (I5xpa): Attachment Chip / Image Attachment | 76 |
-| User Message | `EfHME` | 760×auto |  | 98 |
-| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 121 |
+| Composer | `K6k66O` | 760×auto | `Attachments` (I5xpa): Attachment Chip / Image Attachment | 75 |
+| User Message | `EfHME` | 760×auto |  | 96 |
+| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 119 |
 | Message Actions | `SnIqS` | auto×auto |  | 8 |
 | Message Editor | `x0laEo` | 520×auto |  | 1 |
 | Version Pager | `FVkS9` | auto×auto |  | 2 |
-| Attachment Chip | `xdoWs` | auto×auto |  | 10 |
+| Attachment Chip | `xdoWs` | auto×auto |  | 11 |
 | Image Attachment | `z1ehKR` | 54×54 |  | 4 |
 | File Card | `Mr5AY` | 260×auto |  | 10 |
 | Jump to Latest | `R2yN9` | auto×auto |  | 2 |
@@ -122,8 +122,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Tool Call Chip | `Hbhy0` | auto×auto |  | 93 |
-| Tool Call Detail | `pkhri` | 640×auto |  | 15 |
+| Tool Call Chip | `Hbhy0` | auto×auto |  | 89 |
+| Tool Call Detail | `pkhri` | 640×auto |  | 14 |
 | Timeline Step | `JGoho` | 640×auto |  | 15 |
 | Plan Step | `aKwZB` | 480×auto |  | 38 |
 | Plan Card | `I05g84` | 520×auto | `Steps` (LlLdq): Plan Step | 5 |
@@ -137,7 +137,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Code Block | `wW1XY` | 640×auto |  | 19 |
+| Code Block | `wW1XY` | 640×auto |  | 18 |
 | Content Card | `l5WJH` | 640×auto | `Actions` (LibZM): Button / Secondary / Icon Button, `Body` (ZnzO6) | 5 |
 | Source Row | `q7ISXo` | 320×auto |  | 4 |
 | Download File | `s5qDxc` | 420×auto |  | 7 |
@@ -159,6 +159,11 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Recent Session Row | `V8961f` | 800×auto |  | 30 |
 | Info Row | `NEFiE` | 320×auto |  | 12 |
 | Tip Card | `HFzDp` | 300×auto | `Extra` (IepYs): Kbd | 6 |
+
+### Not on a library panel
+
+- Composer Disclaimer (`QTWM6`)
+- Composer / Mobile (`OUcXN`)
 
 ## Reference screens and boards
 
@@ -184,7 +189,6 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Rich Reply Content | `IVLvU` | 2280×auto |
 | Agent-Initiated Interactions | `Lwlwe` | 2280×auto |
 | Sessions — Row menu + Pinned | `sV0Oz` | 1440×1024 |
-| Sessions — Delete confirmation | `Hkcgi` | 1440×1024 |
 | Sessions — Deleted, undo toast | `ABwYF` | 1440×1024 |
 | Search — Command palette (⌘K) | `B5LZKO` | 1440×1024 |
 | Archived sessions | `HbIFz` | 1440×1024 |
@@ -266,13 +270,13 @@ The user shares a photo and a lab report with Health Assistant, gets an answer a
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
-| F5.1 Add attachments | `dHNiV` | 1440×1024 | Clicks “Add photos”, picks files |
-| F5.2 Uploading | `q83nhv` | 1440×1024 | Uploads finish; types a question |
-| F5.3 Ready to send | `Y5upBH` | 1440×1024 | Presses Enter |
-| F5.4 Agent reads the files | `N3iNA` | 1440×1024 | Answer arrives |
-| F5.5 Answer with care note | `NxvnJ` | 1440×1024 | Taps the mic to follow up |
-| F5.6 Dictating | `RL8tk` | 1440×1024 | Taps ✓ to finish |
-| F5.7 Transcribed, ready to send | `TNRet` | 1440×1024 | Presses Enter |
+| F5.1 Add attachments | `Nuk64` | 1440×1024 | Clicks “Add photos”, picks files |
+| F5.2 Uploading | `k7zUs` | 1440×1024 | Uploads finish; types a question |
+| F5.3 Ready to send | `U1xhD` | 1440×1024 | Presses Enter |
+| F5.4 Agent reads the files | `LJlPN` | 1440×1024 | Answer arrives |
+| F5.5 Answer with care note | `xwgQu` | 1440×1024 | Taps the mic to follow up |
+| F5.6 Dictating | `rzkSq` | 1440×1024 | Taps ✓ to finish |
+| F5.7 Transcribed, ready to send | `sGUaU` | 1440×1024 | Presses Enter |
 
 ### Flow 6 — Recovering from problems
 
@@ -286,7 +290,7 @@ What the user sees when things go wrong: a failed reply, a dropped connection, r
 | F6.4 Back online | `PsIbC` | 1440×1024 | Sends several requests quickly |
 | F6.5 Rate limited | `HmCpV` | 1440×1024 | Later: session grows very long |
 | F6.6 Session too long | `M7v0g` | 1440×1024 | Clicks “Start new session” |
-| F6.7 Fresh session with summary | `qdFc2` | 1440×1024 | Switches to Home Ops |
+| F6.7 Fresh session with summary | `uZP3Q` | 1440×1024 | Switches to Home Ops |
 | F6.8 Agent offline while typing | `j5dD9g` | 1440×1024 | Draft kept; waits or switches |
 
 ### Flow 7 — Finding & organising
@@ -299,8 +303,8 @@ Search everything with ⌘K, look up session details, share and export a session
 | F7.2 Session info | `xCNWU` | 1440×1024 | Opens the row menu in the sidebar |
 | F7.3 Session row menu | `QVH2g` | 1440×1024 | Chooses “Share…” |
 | F7.4 Share session | `JFeoX` | 1440×1024 | Copies the link; then Export… |
-| F7.5 Export session | `n8oFZ` | 1440×1024 | Exports; then Delete… |
-| F7.6 Confirm delete | `Ba2LD` | 1440×1024 | Clicks “Delete session” |
+| F7.5 Export session | `n8oFZ` | 1440×1024 | Exports; then opens the row menu again |
+| F7.6 Delete from row menu | `Ba2LD` | 1440×1024 | Clicks “Delete”: gone at once, no dialog |
 | F7.7 Deleted with undo | `ZX9nG` | 1440×1024 | Opens Archived |
 | F7.8 Archived sessions | `b0VrqQ` | 1440×1024 | Opens Artifacts |
 | F7.9 Artifacts library | `JROuy` | 1440×1024 | Opens an artifact → Flow 3 |
@@ -313,7 +317,7 @@ Move between agents from anywhere. Switching always opens a fresh session; past 
 |---|---|---|---|
 | F8.1 Mid-conversation | `oI49h` | 1440×1024 | Clicks the agent switcher |
 | F8.2 Agent switcher | `ga0YM` | 1440×1024 | Picks Health Assistant |
-| F8.3 Fresh session | `I09y2` | 1440×1024 | Opens a past session from the sidebar |
+| F8.3 Fresh session | `p8e9kq` | 1440×1024 | Opens a past session from the sidebar |
 | F8.4 Past session reopened | `jrgPt` | 1440×1024 | Presses ⌘J to switch quickly |
 | F8.5 Quick switch (⌘J) | `gihjG` | 1440×1024 | Picks Coding Agent → Flow 2 |
 
