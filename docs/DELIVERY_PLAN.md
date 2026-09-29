@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved 2026-09-29** (§7). Tracked in GitHub: milestones M1–M4, issues #2–#10 for M1, pinned #11 Weekly status |
+| Status | **Approved 2026-09-29** (§7). Tracked in GitHub: milestones M1–M4, issues #2–#10 for M1, pinned #11 Weekly status, [board](https://github.com/users/IsraelBO17/projects/3) |
 | Date | 2026-09-29 |
 | Target | **v1 on Fri 18 Dec 2026** (PRODUCT_PLAN A3), about 20 focused hours a week |
 | Replaces | The roadmap in `PRODUCT_PLAN.md` §8 (written before the stack decisions). `BUILD_PLAN.md` steps 8 and 9 are milestones M1–M4 here. |
@@ -117,7 +117,7 @@ The schedule has no slack (≈ 230 h in ≈ 11.5 weeks). If a milestone slips by
 - **Milestones** M1–M4 with their due dates. The milestone page shows the burn-up for free.
 - **One issue per slice**, written as: what the user can do; the acceptance criteria it closes (PRODUCT_PLAN F-numbers); the Definition of Done checklist below.
 - **Labels:** `area:api`, `area:web`, `area:infra`, `area:agent`; `P0` / `P1`; `risk` for spikes; `agent-onboarding` for PRs that only add an agent (they must not touch `web/` or `api/`, PRODUCT_PLAN §6).
-- **A Project board** ("Agent Hub v1") with Todo / In Progress / Done. At most 2 items in progress. It needs the `project` scope on the GitHub CLI token (`gh auth refresh -s project`).
+- **A Project board**, [Agent Hub v1](https://github.com/users/IsraelBO17/projects/3), linked to the repo, with Todo / In Progress / Done. At most 2 items in progress. New issues are added to it when they are written.
 - **Issue template** `.github/ISSUE_TEMPLATE/slice.md` for new slices. M2–M4 issues are written at the start of each milestone, so the board holds only work that is next.
 - **Branches and PRs** per slice, merged to `main` when the Definition of Done holds.
 
