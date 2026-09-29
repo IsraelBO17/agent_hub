@@ -1,6 +1,11 @@
 # VPC with public subnets only: no NAT gateway (ARCHITECTURE §2). Tasks get public IPs; security groups do the fencing.
 
-variable "name" {
+variable "prefix" {
+  description = "<project>-<environment>, e.g. fleet-dev (D26)."
+  type        = string
+}
+
+variable "region" {
   type = string
 }
 
@@ -22,12 +27,12 @@ resource "aws_vpc" "this" {
   cidr_block           = var.cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags                 = { Name = var.name }
+  tags                 = { Name = "${var.prefix}-main-vpc-${var.region}" }
 }
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
-  tags   = { Name = var.name }
+  tags   = { Name = "${var.prefix}-main-igw-${var.region}" }
 }
 
 resource "aws_subnet" "public" {
@@ -36,7 +41,7 @@ resource "aws_subnet" "public" {
   cidr_block              = cidrsubnet(var.cidr, 8, count.index)
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = false # ECS assigns public IPs per task; nothing else lives here
-  tags                    = { Name = "${var.name}-public-${count.index}" }
+  tags                    = { Name = "${var.prefix}-public-${substr(data.aws_availability_zones.available.names[count.index], -1, 1)}-subnet-${var.region}" }
 }
 
 resource "aws_route_table" "public" {
@@ -45,7 +50,7 @@ resource "aws_route_table" "public" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.this.id
   }
-  tags = { Name = "${var.name}-public" }
+  tags = { Name = "${var.prefix}-public-rt-${var.region}" }
 }
 
 resource "aws_route_table_association" "public" {

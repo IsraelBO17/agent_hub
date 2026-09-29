@@ -1,7 +1,9 @@
 # Created once, by hand, before anything else (D14, D25):
-# - the S3 bucket that holds every environment's Terraform state (native S3 locking, no DynamoDB table);
-# - the Route 53 zone for fleet.programmeos.com, whose name servers the owner adds as NS records in GoDaddy.
+# - the S3 bucket that holds the dev environment's Terraform state (native S3 locking, no DynamoDB table);
+# - the Route 53 zone for fleet.qucoon.com. Its four name servers are added as NS records named `fleet` in the
+#   qucoon.com zone, which lives in a different AWS account.
 # State for this folder stays local (gitignored). If it is lost, import the two resources.
+# Names: <project>-<environment>-<component>-<type>-<region> (D26).
 
 terraform {
   required_version = ">= 1.10"
@@ -13,21 +15,25 @@ terraform {
   }
 }
 
+locals {
+  prefix = "${var.project}-${var.environment}"
+}
+
 provider "aws" {
   region = var.region
   default_tags {
     tags = {
-      Project   = "agent-hub"
-      Stack     = "bootstrap"
-      ManagedBy = "terraform"
+      Owner        = var.owner
+      Project      = var.project
+      Environment  = var.environment
+      "aws-apn-id" = var.aws_apn_id
+      ManagedBy    = "terraform"
     }
   }
 }
 
-data "aws_caller_identity" "current" {}
-
 resource "aws_s3_bucket" "state" {
-  bucket = "agent-hub-tfstate-${data.aws_caller_identity.current.account_id}"
+  bucket = "${local.prefix}-tfstate-s3-${var.region}"
 
   lifecycle {
     prevent_destroy = true
@@ -88,7 +94,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "state" {
 
 resource "aws_route53_zone" "fleet" {
   name    = var.zone_name
-  comment = "Agent Hub. Delegated from GoDaddy DNS for programmeos.com (D25)."
+  comment = "Agent Hub. Delegated from the qucoon.com zone in another account (D25)."
+  tags    = { Name = "${local.prefix}-dns-zone-${var.region}" }
 
   lifecycle {
     prevent_destroy = true

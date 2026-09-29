@@ -1,8 +1,9 @@
 # The API on ECS Fargate: cluster, task definition, service, logs, IAM and the task security group (D2, P2, P7).
 # One task, no autoscaling in v1 (P7). desired_count stays 0 until step 8 pushes the first image.
 
-variable "name" {
-  type = string
+variable "prefix" {
+  description = "<project>-<environment>-<component>, e.g. fleet-dev-api. Names end with -<type>-<region> (D26)."
+  type        = string
 }
 
 variable "region" {
@@ -80,7 +81,7 @@ locals {
 
 # ---- Logs
 resource "aws_cloudwatch_log_group" "api" {
-  name              = "/ecs/${var.name}"
+  name              = "${var.prefix}-logs-${var.region}"
   retention_in_days = var.log_retention_days
 }
 
@@ -96,7 +97,7 @@ data "aws_iam_policy_document" "ecs_tasks_assume" {
 }
 
 resource "aws_iam_role" "execution" {
-  name               = "${var.name}-execution"
+  name               = "${var.prefix}-exec-role-${var.region}"
   assume_role_policy = data.aws_iam_policy_document.ecs_tasks_assume.json
 }
 
@@ -122,7 +123,7 @@ resource "aws_iam_role_policy" "execution_secrets" {
 
 # ---- IAM: task role (what the API itself may do)
 resource "aws_iam_role" "task" {
-  name               = "${var.name}-task"
+  name               = "${var.prefix}-task-role-${var.region}"
   assume_role_policy = data.aws_iam_policy_document.ecs_tasks_assume.json
 }
 
@@ -147,10 +148,10 @@ resource "aws_iam_role_policy" "task" {
 
 # ---- Network
 resource "aws_security_group" "task" {
-  name        = "${var.name}-task"
+  name        = "${var.prefix}-task-sg-${var.region}"
   description = "API tasks: inbound only from the ALB"
   vpc_id      = var.vpc_id
-  tags        = { Name = "${var.name}-task" }
+  tags        = { Name = "${var.prefix}-task-sg-${var.region}" }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "from_alb" {
@@ -170,7 +171,7 @@ resource "aws_vpc_security_group_egress_rule" "all" {
 
 # ---- ECS
 resource "aws_ecs_cluster" "this" {
-  name = var.name
+  name = "${var.prefix}-ecs-${var.region}"
   setting {
     name  = "containerInsights"
     value = "disabled" # cost; revisit with monitoring in step 9
@@ -178,7 +179,7 @@ resource "aws_ecs_cluster" "this" {
 }
 
 resource "aws_ecs_task_definition" "api" {
-  family                   = var.name
+  family                   = "${var.prefix}-task-${var.region}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = var.cpu
@@ -211,12 +212,14 @@ resource "aws_ecs_task_definition" "api" {
 }
 
 resource "aws_ecs_service" "api" {
-  name                              = "api"
+  name                              = "${var.prefix}-svc-${var.region}"
   cluster                           = aws_ecs_cluster.this.id
   task_definition                   = aws_ecs_task_definition.api.arn
   desired_count                     = var.desired_count
   launch_type                       = "FARGATE"
   health_check_grace_period_seconds = 30
+  enable_ecs_managed_tags           = true
+  propagate_tags                    = "SERVICE" # tasks carry the required tags too (D26)
 
   # Rolling deploy: the new task starts before the old one drains (P2, B3).
   deployment_minimum_healthy_percent = 100

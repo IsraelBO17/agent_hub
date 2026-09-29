@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.4, D1–D25 and P1–P8 locked; §4 questions still open |
+| Status | v0.4, D1–D26 and P1–P8 locked; §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -69,7 +69,7 @@ Each entry: the decision, why, and what would make us revisit it.
 ### D8. Auth: Google sign-in, then the API's own session
 **Decision.** The browser gets a Google ID token (Google Identity Services) and posts it once to `POST /v1/auth/google`. The API verifies signature (Google JWKS), `aud` (our client ID), `iss`, `exp` and `email_verified`, looks the user up by Google `sub`, and rejects unknown or inactive users. It then issues:
 - a short-lived **access token** (JWT, ~15 min, signed with the session key from Secrets Manager), held in memory by the client and sent as `Authorization: Bearer`;
-- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, host-only (no `Domain` attribute), so it goes only to `api.fleet.programmeos.com` (D25) (all routes live under `/v1`, D23).
+- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, host-only (no `Domain` attribute), so it goes only to `api.fleet.qucoon.com` (D25) (all routes live under `/v1`, D23).
 Refresh rotates the token and detects reuse (reuse of an old token revokes the whole family). App (`app.`) and API (`api.`) share a parent domain, so the cookie is same-site; CORS allows only the app origin with credentials, and `/v1/auth/*` also checks `Origin`.
 **Why.** No Cognito to operate; Google does the hard part; our own session gives revocation and short token lifetime.
 **Revisit if.** We need non-Google sign-in, SSO, or passkey step-up (P2).
@@ -99,7 +99,7 @@ Refresh rotates the token and detects reuse (reuse of an old token revokes the w
 Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Revisit if** a model or AgentCore feature we need isn't there.
 
 ### D13. Front-end hosting: AWS Amplify Hosting
-**Decision.** Amplify Hosting serves the web app on `fleet.programmeos.com`, same parent domain as the API (D25).
+**Decision.** Amplify Hosting serves the web app on `fleet.qucoon.com`, same parent domain as the API (D25).
 **Why.** Managed builds, previews per branch, TLS, custom domain.
 **Revisit if.** We choose a server-rendered framework Amplify handles poorly (not expected: the front end is a static SPA, D16), or cost/control push us to S3 + CloudFront.
 
@@ -158,15 +158,24 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Why.** The simplest layout that keeps "adding an agent touches only `agents/`" checkable in a pull request, and keeps each part deployable on its own.
 **Revisit if.** A second TypeScript package appears (then npm workspaces), or the contract gains another consumer (then move it to a top-level `contract/`).
 
-### D25. Domain: `fleet.programmeos.com`, delegated to Route 53
-**Decision (owner, 2026-09-29, Q2).** The owner's domain `programmeos.com` stays registered and hosted at GoDaddy. Only the subdomain `fleet.programmeos.com` is delegated to a Route 53 hosted zone (Terraform), by four `NS` records named `fleet` that the owner adds in GoDaddy DNS.
-- Web app (Amplify): `https://fleet.programmeos.com`; share links `https://fleet.programmeos.com/s/<slug>`.
-- API (ALB): `https://api.fleet.programmeos.com`.
+### D25. Domain: `fleet.qucoon.com`, delegated to its own Route 53 zone
+**Decision (owner, 2026-09-29, Q2; changed the same day from `fleet.qucoon.com`).** `qucoon.com` is hosted in Route 53 in **another AWS account**. Only `fleet.qucoon.com` is delegated to a Route 53 zone in the Agent Hub account (created by `infra/bootstrap`): whoever manages `qucoon.com` adds four `NS` records named `fleet` with the values Terraform prints.
+- Web app (Amplify): `https://fleet.qucoon.com`; share links `https://fleet.qucoon.com/s/<slug>`.
+- API (ALB): `https://api.fleet.qucoon.com`.
 - Certificates: ACM in us-east-1, validated through DNS records in the delegated zone. Amplify manages its own certificate for the app.
-- Google OAuth authorised JavaScript origin: `https://fleet.programmeos.com`; CORS allows only that origin.
-- Checked 2026-09-29: DNS is at GoDaddy (`ns61/62.domaincontrol.com`), no CAA records (nothing blocks Amazon certificates), and `fleet` isn't in use.
-**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). Delegating one subdomain leaves the rest of the domain untouched and costs only the hosted zone ($0.50/month).
-**Revisit if.** The app moves to its own domain: change one Terraform variable, the Google OAuth origin and the CORS origin.
+- Google OAuth authorised JavaScript origin: `https://fleet.qucoon.com`; CORS allows only that origin.
+- Checked 2026-09-29: `qucoon.com` is on Route 53 (`awsdns` name servers), has no CAA records (nothing blocks Amazon certificates), and `fleet` isn't in use.
+**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). A delegated zone keeps Agent Hub's records in its own account and leaves the rest of `qucoon.com` untouched; $0.50/month.
+**Revisit if.** The app moves to another domain: change one Terraform variable, the Google OAuth origin and the CORS origin.
+
+### D26. Resource names and required tags
+**Decision (owner, 2026-09-29, internal convention).**
+- **Names:** `<project>-<environment>-<component>-<type>-<region>`, with project `fleet` and environment `dev`, e.g. `fleet-dev-main-vpc-us-east-1`, `fleet-dev-api-alb-us-east-1`, `fleet-dev-files-s3-us-east-1`. Built in one place per module from `project`, `environment` and `region`. All names fit AWS limits (ALB and target group ≤ 32 characters).
+- **Tags on every resource** (provider `default_tags`, plus `propagate_tags` so ECS tasks carry them): `Owner`, `Project` (`fleet`), `Environment` (`dev`), `aws-apn-id`, and `ManagedBy = terraform`.
+- **`Owner` and `aws-apn-id` values stay out of git** (the repository is public): they are required Terraform variables with no default, set in the gitignored `terraform.tfvars` of each root. Terraform refuses to plan without them.
+- The Terraform state bucket is per environment (`fleet-dev-tfstate-s3-us-east-1`), which follows the convention; D14's "one state per environment" is unchanged.
+**Why.** Company convention for cost reporting, ownership and partner attribution. The product is still called Agent Hub; `fleet` is the project name in AWS.
+**Revisit if.** The convention changes: names and tags are defined once in each root.
 
 ---
 
@@ -198,7 +207,7 @@ These refine D1–D15 and are binding for the steps that follow.
 
 ## 4. Open questions (answers pending)
 
-Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 → D25 (`fleet.programmeos.com`), Q3 → §2 (public subnets, no NAT), Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (let the agent finish), Q6 → D18 (API sends history; AgentCore Memory later), Q7 → §3 (P1–P8 accepted). Still open:
+Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 → D25 (`fleet.qucoon.com`), Q3 → §2 (public subnets, no NAT), Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (let the agent finish), Q6 → D18 (API sends history; AgentCore Memory later), Q7 → §3 (P1–P8 accepted). Still open:
 
 | # | Question | Blocks | My default |
 |---|---|---|---|
@@ -208,7 +217,7 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 
 ## 5. Open items (known, not yet decided)
 
-- The four `NS` records for `fleet` in GoDaddy DNS, added by the owner once Terraform creates the hosted zone (D25).
+- The four `NS` records for `fleet` in the `qucoon.com` zone (another AWS account), added by whoever manages it once Terraform creates the delegated zone (D25).
 - Google OAuth client: created by hand in Google Cloud console. Needs the app origin as an authorised JavaScript origin.
 - Terraform state bucket: bootstrapped first, by a separate minimal config.
 - Neon: created by hand; its pooled and direct connection strings go into Secrets Manager.
@@ -245,3 +254,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-09-29 | Q2 answered: D25, `fleet.programmeos.com` (app) and `api.fleet.programmeos.com` (API), subdomain delegated from GoDaddy to Route 53; refresh cookie made host-only. |
 | 2026-09-29 | Step 7: Terraform written (`infra/`); D2 Express Mode re-check recorded. Budget alarm at $50 (Q8 default) when an alert email is set. |
 | 2026-09-29 | D2: cheaper alternatives to the ALB weighed; ALB kept behind `enable_api` (off until step 8). |
+| 2026-09-29 | Domain changed to `fleet.qucoon.com` (D25; `qucoon.com` is on Route 53 in another account). D26: naming convention and required tags; `Owner` and `aws-apn-id` values kept out of git. |

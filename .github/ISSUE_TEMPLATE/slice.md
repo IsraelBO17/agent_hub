@@ -12,7 +12,7 @@ labels: P0
 ### Definition of Done
 - [ ] Contract first: `api/openapi.yaml` updated and linted, if the API changes
 - [ ] API and UI built, with tests
-- [ ] Works on `fleet.programmeos.com`, not only locally
+- [ ] Works on `fleet.qucoon.com`, not only locally
 - [ ] Docs changed where a decision or flow changed
 - [ ] Acceptance criteria above checked off
 

@@ -1,7 +1,8 @@
 # Image repository for the API (D2).
 
 variable "name" {
-  type = string
+  description = "Full repository name (D26), e.g. fleet-dev-api-ecr-us-east-1."
+  type        = string
 }
 
 variable "keep_images" {

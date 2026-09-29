@@ -1,7 +1,12 @@
 # Public ALB for the API with its certificate and DNS name (D2, D5, P2, D25).
 # Idle timeout and deregistration delay are explicit because SSE and deploy draining depend on them.
 
-variable "name" {
+variable "prefix" {
+  description = "<project>-<environment>-<component>, e.g. fleet-dev-api. Names end with -<type>-<region> (D26)."
+  type        = string
+}
+
+variable "region" {
   type = string
 }
 
@@ -22,7 +27,7 @@ variable "zone_id" {
 }
 
 variable "domain" {
-  description = "API host name, e.g. api.fleet.programmeos.com."
+  description = "API host name, e.g. api.fleet.qucoon.com."
   type        = string
 }
 
@@ -47,10 +52,10 @@ variable "deregistration_delay_seconds" {
 }
 
 resource "aws_security_group" "alb" {
-  name        = "${var.name}-alb"
+  name        = "${var.prefix}-alb-sg-${var.region}"
   description = "Public HTTPS to the API load balancer"
   vpc_id      = var.vpc_id
-  tags        = { Name = "${var.name}-alb" }
+  tags        = { Name = "${var.prefix}-alb-sg-${var.region}" }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "https" {
@@ -79,7 +84,7 @@ resource "aws_vpc_security_group_egress_rule" "to_tasks" {
 }
 
 resource "aws_lb" "this" {
-  name                       = var.name
+  name                       = "${var.prefix}-alb-${var.region}" # 32-character limit
   load_balancer_type         = "application"
   internal                   = false
   security_groups            = [aws_security_group.alb.id]
@@ -89,7 +94,7 @@ resource "aws_lb" "this" {
 }
 
 resource "aws_lb_target_group" "api" {
-  name                 = "${var.name}-api"
+  name                 = "${var.prefix}-tg-${var.region}" # 32-character limit
   vpc_id               = var.vpc_id
   target_type          = "ip"
   protocol             = "HTTP"
@@ -109,6 +114,7 @@ resource "aws_lb_target_group" "api" {
 resource "aws_acm_certificate" "api" {
   domain_name       = var.domain
   validation_method = "DNS"
+  tags              = { Name = "${var.prefix}-cert-${var.region}" }
 
   lifecycle {
     create_before_destroy = true

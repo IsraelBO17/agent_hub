@@ -1,16 +1,18 @@
 # Infrastructure (Terraform)
 
-AWS us-east-1, one environment (`dev`) until v1 (D17). Decisions: `docs/ARCHITECTURE.md` D2, D3, D5, D7, D13–D15, D25, §2 and P2.
+AWS us-east-1, one environment (`dev`) until v1 (D17). Decisions: `docs/ARCHITECTURE.md` D2, D3, D5, D7, D13–D15, D25, D26, §2 and P2.
+
+Names follow `fleet-<environment>-<component>-<type>-<region>` (e.g. `fleet-dev-api-alb-us-east-1`); every resource carries the tags `Owner`, `Project`, `Environment`, `aws-apn-id` and `ManagedBy` (D26).
 
 ```
-bootstrap/        Created once: Terraform state bucket + Route 53 zone for fleet.programmeos.com. Local state.
+bootstrap/        Created once: Terraform state bucket + Route 53 zone for fleet.qucoon.com. Local state.
 envs/dev/         The dev environment. State in the bootstrap bucket (native S3 locking).
 modules/
   network/        VPC, 2 public subnets, internet gateway. No NAT gateway.
   ecr/            API image repository (immutable tags, scan on push, keep 15).
   storage/        Private files bucket (uploads, artifacts, exports), CORS for the app origin.
   secrets/        Secrets Manager containers; values are set by hand, never through Terraform.
-  alb/            Public ALB: HTTPS (ACM), HTTP→HTTPS, idle timeout 300 s, drain 300 s, api.fleet.programmeos.com.
+  alb/            Public ALB: HTTPS (ACM), HTTP→HTTPS, idle timeout 300 s, drain 300 s, api.fleet.qucoon.com.
   service/        ECS cluster, task definition (ARM64, stopTimeout 120 s), service, logs, IAM, task security group.
   amplify/        Amplify app for web/ (branch, GitHub and custom domain come in step 8).
 ```
@@ -20,6 +22,7 @@ modules/
 Nothing here is applied without the owner's go-ahead on the plan output.
 
 1. **Pick the AWS profile** for every command below: `export AWS_PROFILE=<profile>` and check it with `aws sts get-caller-identity`.
+   Then copy `bootstrap/terraform.tfvars.example` and `envs/dev/terraform.tfvars.example` to `terraform.tfvars` in the same folders and fill in the required tags (`owner`, `aws_apn_id`; D26). Those files are gitignored: the repo is public.
 2. **Bootstrap:**
    ```bash
    make infra-plan-bootstrap
@@ -28,7 +31,7 @@ Nothing here is applied without the owner's go-ahead on the plan output.
    terraform -chdir=infra/bootstrap apply
    ```
    It prints `name_servers`.
-3. **Delegate `fleet` (owner, in GoDaddy):** DNS for `programmeos.com` → add four records of type `NS`, name `fleet`, one per name server, TTL 1 hour. Check with `dig +short NS fleet.programmeos.com` (a few minutes to an hour). Needed before `enable_api = true` (the API certificate is validated through this zone); it can be done any time before step 8.
+3. **Delegate `fleet` (whoever manages `qucoon.com`, in its Route 53 zone in the other AWS account):** add one record of type `NS`, name `fleet`, with the four `name_servers` values, TTL 3600. Check with `dig +short NS fleet.qucoon.com`. Needed before `enable_api = true` (the API certificate is validated through this zone); it can be done any time before step 8.
 4. **Dev environment:** copy `envs/dev/terraform.tfvars.example` to `envs/dev/terraform.tfvars` and fill it in, then:
    ```bash
    make infra-init
@@ -42,7 +45,7 @@ Nothing here is applied without the owner's go-ahead on the plan output.
    With `enable_api = false` (the default) this creates the network, ECR, the files bucket, the secrets and the Amplify app; no load balancer and no ECS service.
 5. **Secret values** (by hand, never in Terraform or git): for each name in the `secret_names` output,
    ```bash
-   aws secretsmanager put-secret-value --secret-id agent-hub/dev/session-signing-key --secret-string "$(openssl rand -base64 48)"
+   aws secretsmanager put-secret-value --secret-id fleet-dev-session-key-secret-us-east-1 --secret-string "$(openssl rand -base64 48)"
    ```
    The two Neon connection strings are set once the Neon project exists (step 8).
 
@@ -52,7 +55,7 @@ Two switches, so nothing is billed before it's needed:
 
 | Variable | Default | Effect |
 |---|---|---|
-| `enable_api` | `false` | Creates the ALB, its certificate and `api.fleet.programmeos.com`, the ECS cluster, task definition, service and their IAM roles. Needs step 3 done (the certificate validates through the delegated zone). |
+| `enable_api` | `false` | Creates the ALB, its certificate and `api.fleet.qucoon.com`, the ECS cluster, task definition, service and their IAM roles. Needs step 3 done (the certificate validates through the delegated zone). |
 | `api_desired_count` | `0` | Number of API tasks. Set to `1` once an image is in ECR (P7: one task, no autoscaling). |
 
 ## Monthly cost, dev (us-east-1, 730 h, checked 2026-09-29)

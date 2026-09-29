@@ -13,7 +13,7 @@ This is the product manager's plan: what gets built in which order, how we know 
 
 ## 1. Backend or frontend first? Neither: a thin slice through both
 
-**Recommendation:** build one **walking skeleton** first: the thinnest path from the browser, through the API and AgentCore, back to the browser, deployed on `fleet.programmeos.com`. After that, build every feature as a **vertical slice**: contract change, API, UI and test together, shipped in one pull request.
+**Recommendation:** build one **walking skeleton** first: the thinnest path from the browser, through the API and AgentCore, back to the browser, deployed on `fleet.qucoon.com`. After that, build every feature as a **vertical slice**: contract change, API, UI and test together, shipped in one pull request.
 
 **Why not backend first?** The API would be built blind to how the UI uses it, and nothing is demoable for weeks.
 
@@ -54,7 +54,7 @@ Health Assistant, Coding Agent and Travel Planner (LangGraph) stay after v1 (PRO
 
 ## 3. Milestones
 
-Each milestone ends with something you use on `fleet.programmeos.com`, and passes only if every exit criterion passes.
+Each milestone ends with something you use on `fleet.qucoon.com`, and passes only if every exit criterion passes.
 
 ### M0: Decide and design (done 29 Sep)
 Build steps 1–7 (Terraform written, not applied): decisions, diagrams, schema, contract, repo layout.
@@ -63,13 +63,13 @@ Build steps 1–7 (Terraform written, not applied): decisions, diagrams, schema,
 
 | Slice | Contents |
 |---|---|
-| Infra up | Profile chosen; bootstrap applied; `fleet` NS records in GoDaddy; dev applied with `enable_api = true`; Neon project; Google OAuth client; secrets set |
+| Infra up | Profile chosen; bootstrap applied; `fleet` NS records added in the qucoon.com zone (other account); dev applied with `enable_api = true`; Neon project; Google OAuth client; secrets set |
 | Agent | Research Analyst v0 deployed on AgentCore; **its raw stream recorded and committed** |
 | API | FastAPI app with `/v1/health`, Google sign-in/refresh/logout/`me`, `GET /agents`, create session + send + stream (text, thinking, tool), list messages, stop; heartbeat and cancel flag; the registry CLI and `agents/research-analyst.yaml` |
 | Web | Vite app with the design tokens; the typed client from `openapi.yaml`; sign-in, catalog, new session, streaming chat with thinking and tool chips, Stop |
 | Delivery | API image to ECR, service at 1 task, Amplify branch and custom domain; a manual deploy script is fine |
 
-**Exit:** you sign in and chat with Research Analyst on `fleet.programmeos.com` from laptop and phone; a 3-minute reply streams through the ALB without dropping; reload shows the full history; Stop works; `/v1/health` is green behind the ALB.
+**Exit:** you sign in and chat with Research Analyst on `fleet.qucoon.com` from laptop and phone; a 3-minute reply streams through the ALB without dropping; reload shows the full history; Stop works; `/v1/health` is green behind the ALB.
 
 ### M2: Chat core, Mon 19 Oct – Fri 6 Nov (≈ 60 h)
 
@@ -124,7 +124,7 @@ The schedule has no slack (≈ 230 h in ≈ 11.5 weeks). If a milestone slips by
 **Definition of Done (every slice):**
 - [ ] Contract changes first: `openapi.yaml` updated and linted, if the slice changes the API
 - [ ] API and UI built, with tests (API unit/integration; web component or Playwright where it renders a flow)
-- [ ] Works on `fleet.programmeos.com`, not only locally
+- [ ] Works on `fleet.qucoon.com`, not only locally
 - [ ] Docs changed where a decision or flow changed (ARCHITECTURE change log)
 - [ ] The issue's acceptance criteria checked off
 

@@ -20,9 +20,11 @@ provider "aws" {
   region = var.region
   default_tags {
     tags = {
-      Project     = "agent-hub"
-      Environment = "dev"
-      ManagedBy   = "terraform"
+      Owner        = var.owner
+      Project      = var.project
+      Environment  = var.environment
+      "aws-apn-id" = var.aws_apn_id
+      ManagedBy    = "terraform"
     }
   }
 }

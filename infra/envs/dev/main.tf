@@ -7,9 +7,9 @@ data "aws_route53_zone" "fleet" {
 }
 
 locals {
-  name       = "agent-hub-dev"
-  app_domain = var.zone_name          # https://fleet.programmeos.com (Amplify, step 8)
-  api_domain = "api.${var.zone_name}" # https://api.fleet.programmeos.com (ALB)
+  prefix     = "${var.project}-${var.environment}" # names: <prefix>-<component>-<type>-<region> (D26)
+  app_domain = var.zone_name                       # https://fleet.qucoon.com (Amplify, step 8)
+  api_domain = "api.${var.zone_name}"              # https://api.fleet.qucoon.com (ALB)
   app_origin = "https://${local.app_domain}"
   api_port   = 8000
   account_id = data.aws_caller_identity.current.account_id
@@ -20,35 +20,38 @@ locals {
 
 module "network" {
   source = "../../modules/network"
-  name   = local.name
+  prefix = local.prefix
+  region = var.region
   cidr   = "10.20.0.0/16"
 }
 
 module "ecr" {
   source = "../../modules/ecr"
-  name   = "agent-hub-api"
+  name   = "${local.prefix}-api-ecr-${var.region}"
 }
 
 module "storage" {
   source       = "../../modules/storage"
-  bucket_name  = "agent-hub-files-dev-${local.account_id}"
+  bucket_name  = "${local.prefix}-files-s3-${var.region}"
   cors_origins = [local.app_origin, "http://localhost:5173"] # 5173: Vite dev server
 }
 
 module "secrets" {
   source = "../../modules/secrets"
-  prefix = "agent-hub/dev"
+  prefix = local.prefix
+  region = var.region
   secrets = {
     "database-url"        = "Neon pooled connection string, used by the API (D3)"
     "database-url-direct" = "Neon direct connection string, used by migrations (D3)"
-    "session-signing-key" = "Signs the API's access tokens (D8). Random, at least 32 bytes."
+    "session-key"         = "Signs the API's access tokens (D8). Random, at least 32 bytes."
   }
 }
 
 module "alb" {
   count             = var.enable_api ? 1 : 0
   source            = "../../modules/alb"
-  name              = local.name
+  prefix            = "${local.prefix}-api"
+  region            = var.region
   vpc_id            = module.network.vpc_id
   vpc_cidr          = module.network.vpc_cidr
   subnet_ids        = module.network.public_subnet_ids
@@ -61,7 +64,7 @@ module "alb" {
 module "api" {
   count                 = var.enable_api ? 1 : 0
   source                = "../../modules/service"
-  name                  = local.name
+  prefix                = "${local.prefix}-api"
   region                = var.region
   vpc_id                = module.network.vpc_id
   subnet_ids            = module.network.public_subnet_ids
@@ -85,13 +88,13 @@ module "api" {
   secrets = {
     DATABASE_URL        = module.secrets.arns["database-url"]
     DATABASE_URL_DIRECT = module.secrets.arns["database-url-direct"]
-    SESSION_SIGNING_KEY = module.secrets.arns["session-signing-key"]
+    SESSION_SIGNING_KEY = module.secrets.arns["session-key"]
   }
 }
 
 module "web" {
   source = "../../modules/amplify"
-  name   = local.name
+  name   = "${local.prefix}-web-amplify-${var.region}"
   environment_variables = {
     VITE_API_URL          = "https://${local.api_domain}"
     VITE_GOOGLE_CLIENT_ID = var.google_client_id
@@ -100,7 +103,7 @@ module "web" {
 
 resource "aws_budgets_budget" "monthly" {
   count        = var.budget_alert_email == "" ? 0 : 1
-  name         = "agent-hub-monthly"
+  name         = "${local.prefix}-monthly-budget-${var.region}"
   budget_type  = "COST"
   limit_amount = tostring(var.monthly_budget_usd)
   limit_unit   = "USD"

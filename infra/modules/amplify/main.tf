@@ -1,8 +1,9 @@
 # Amplify Hosting app for the SPA in web/ (D13, D24). The branch, the GitHub connection and the custom domain
-# (fleet.programmeos.com) are added in step 8, when web/ exists.
+# (fleet.qucoon.com) are added in step 8, when web/ exists.
 
 variable "name" {
-  type = string
+  description = "Full app name (D26), e.g. fleet-dev-web-amplify-us-east-1."
+  type        = string
 }
 
 variable "environment_variables" {

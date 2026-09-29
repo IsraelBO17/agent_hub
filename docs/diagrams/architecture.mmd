@@ -14,8 +14,8 @@ flowchart LR
   end
 
   subgraph AWS["AWS us-east-1, managed with Terraform (dev only until v1)"]
-    AMPLIFY["AWS Amplify Hosting<br/>fleet.programmeos.com"]
-    ALB["Application Load Balancer<br/>api.fleet.programmeos.com, HTTPS<br/>idle timeout 300 s, drain 300 s"]
+    AMPLIFY["AWS Amplify Hosting<br/>fleet.qucoon.com"]
+    ALB["Application Load Balancer<br/>api.fleet.qucoon.com, HTTPS<br/>idle timeout 300 s, drain 300 s"]
     API["FastAPI container<br/>ECS Fargate, 1 task<br/>verifies Google token (JWKS),<br/>own session, history, stream translator"]
     ECR[("ECR<br/>API image")]
     S3[("S3<br/>artifacts and uploads")]

@@ -8,6 +8,6 @@ output "zone_id" {
 }
 
 output "name_servers" {
-  description = "Add one NS record named `fleet` per value in GoDaddy DNS for programmeos.com."
+  description = "Add one NS record named `fleet` per value in the qucoon.com zone (other account)."
   value       = aws_route53_zone.fleet.name_servers
 }

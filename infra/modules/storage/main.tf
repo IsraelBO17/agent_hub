@@ -2,7 +2,8 @@
 # Keys start with u/{userId}/ (D7).
 
 variable "bucket_name" {
-  type = string
+  description = "Full bucket name (D26), e.g. fleet-dev-files-s3-us-east-1."
+  type        = string
 }
 
 variable "cors_origins" {

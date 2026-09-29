@@ -1,4 +1,9 @@
 # Copy to terraform.tfvars (gitignored) and fill in.
+
+# Required tags (D26). Values stay out of git.
+owner      = "name@example.com"
+aws_apn_id = ""
+
 budget_alert_email = "you@example.com"
 google_client_id   = ""
 

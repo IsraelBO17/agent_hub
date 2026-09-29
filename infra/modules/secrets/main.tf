@@ -2,8 +2,12 @@
 # through Terraform, so they never land in state.
 
 variable "prefix" {
-  description = "e.g. agent-hub/dev"
+  description = "<project>-<environment>, e.g. fleet-dev. Names: <prefix>-<name>-secret-<region> (D26)."
   type        = string
+}
+
+variable "region" {
+  type = string
 }
 
 variable "secrets" {
@@ -13,7 +17,7 @@ variable "secrets" {
 
 resource "aws_secretsmanager_secret" "this" {
   for_each                = var.secrets
-  name                    = "${var.prefix}/${each.key}"
+  name                    = "${var.prefix}-${each.key}-secret-${var.region}"
   description             = each.value
   recovery_window_in_days = 7
 }
