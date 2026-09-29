@@ -7,6 +7,8 @@
 | Owner | Israel B. (product, engineering, approver) |
 | Inputs | `design/fleet_dev.pen` as pushed to this repo on 2026-09-28 (222 frames, 85 components, 74 flow screens), the project brief |
 
+> **Stack superseded (2026-09-29):** technical decisions now live in [`ARCHITECTURE.md`](ARCHITECTURE.md). Mentions below of DynamoDB, Cognito, Next.js and Lambda Function URLs are out of date; see its table at the top.
+
 This is the plan to build from. It makes decisions; where a decision rests on something I don't know, it is marked **[A#]** (assumption) and collected in §7. Open questions that block the build are ranked at the end (§11).
 
 **Two corrections to the brief before anything else:**
@@ -202,7 +204,9 @@ Status key:
 | New session (starters) | ✅ `uBRCZ` | ✅ F11.2 `HgtnP` | P0 |
 | Chat: streaming, tools, plan, thinking | ✅ `wtDYF`, F2.5–F2.8 | ✅ F11.5 `DNypg`, plan F11.6 `DuSPU` | P0 |
 | Chat: all failure states | ✅ "Agent Working & Failure States" board | ✅ reconnecting F11.8 `e6XAO`, reply failed F11.9 `vBCdH` | P0 |
-| Chat: auth expired, draft kept | ✅ `jlDzd` | ✅ `xBrZk` | P0 |
+| Chat: auth expired, draft kept | ✅ `N8ysh` | ✅ `DxTnt` | P0 |
+| Sign in (Google only; loading, signed out) | ✅ `MMxdZ`, loading `vkBhc`, signed out `DfY8F` | ✅ `U0HaRi` | P0 |
+| Sign in: account not allowed | ✅ `zte2v` | ✅ `dLCVX` | P0 |
 | Composer states (attachments, disabled, drag-drop) | ✅ | ✅ `Composer / Mobile` `OUcXN`; keyboard open F11.3 `w1IZ2`; disabled F11.11 | P0 |
 | Sessions sidebar / drawer | ✅ | ✅ F10.5 `i46aRN` | P0 |
 | Sessions: loading skeleton | ✅ States board | ✅ F11.15 `JgaZ9` | P0 |
@@ -219,14 +223,14 @@ Status key:
 | ⌘K palette | ✅ `B5LZKO` | ✅ search screen `P7n48` | P1 |
 | Share dialog + public shared view | ✅ dialog; public page `q1bvDq` | ✅ public page `W2aSQ` | P1 |
 | Agent detail | ✅ `x05s4W` | ✅ `mN9zj` | P1 |
-| Settings | ✅ `Ue3Jc`: Light only; shortcuts moved to the ⌘/ overlay | ✅ `peFJG` (no shortcuts on mobile) | P1 |
+| Settings | ✅ `RHrDH`: Account (Google, Sign out), Light only, shortcuts in the ⌘/ overlay | ✅ `RT72e` (Account; no shortcuts on mobile) | P1 |
 | Artifacts library / Archived | ✅ | ✅ `GSi1C` / `grrlx` | P1 |
 | Forms | ✅ | ✅ `m4Kt4` | P1 |
 | Add / Edit agent, Face ID, voice, doc edit, compare, onboarding, shortcuts overlay | ✅ (parked) | n/a | P2 |
 
 **Mobile screens for v1: done.** The 13 missing items (new session, streaming with tool chips, plan card, error and reconnect, keyboard-open composer with attachments, agent switcher sheet, approval approved / denied / expired, question card, agent offline, 404, catalog loading, sessions loading, row menu) are designed as Flow 11, 19 screens in all (F11.1–F11.19). Variants got their own step so every screen has a trigger note. Delete on mobile supports both long-press and swipe.
 
-The remaining P0 mobile states (catalog error and empty, auth expired, artifact streaming, approval waiting elsewhere, agent not found) are reference screens named `Mobile — …` at y 39,600. All P0 and P1 rows above are now ✅; P1 mobile screens are also named `Mobile — …`, at y 39,600 from x 3,120.
+The remaining P0 mobile states (catalog error and empty, auth expired, artifact streaming, approval waiting elsewhere, agent not found) are reference screens named `Mobile — …` at y 40,000. All P0 and P1 rows above are now ✅; P1 mobile screens are also named `Mobile — …`, at y 40,000 from x 3,120.
 
 P1 adds the public shared session, search and agent detail.
 

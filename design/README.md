@@ -26,12 +26,12 @@ Find a node by searching for its ID from `INDEX.md`, for example `"id": "PBQLh"`
 | Area | Where (y) |
 |---|---|
 | Component library, 8 labelled groups | −7,240 to −200 |
-| Core screens and interaction boards | 0 to ~5,000 |
-| Artifact screens and boards | 5,200 to ~13,000 |
-| Sessions screens and board | 13,400 |
-| Agent management screens and board | 16,700 |
-| User flows (index at x −1,500) | 21,700 to ~37,850 |
-| P0 and P1 state screens (desktop row, mobile row) and the Edge States board | 38,400 to ~42,300 |
+| Core screens and interaction boards | 0 to ~5,450 |
+| Artifact screens and boards | 5,600 to ~13,400 |
+| Sessions screens and board | 13,800 |
+| Agent management screens and board | 17,100 |
+| User flows (index at x −1,500) | 22,100 to ~38,250 |
+| P0 and P1 state screens, including Sign in (desktop row 38,800, mobile row 40,000), and the Edge States board | 38,800 to ~42,700 |
 
 ## After editing the design
 
