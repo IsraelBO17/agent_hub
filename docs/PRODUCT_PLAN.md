@@ -408,4 +408,4 @@ The design shows Research Analyst as "LangGraph · Lambda". I recommend Strands 
 | 7 | **Data retention:** keep sessions forever? Hard-delete after the undo window, or soft-delete for 30 days? | Data model, delete semantics, export | Hard delete after 10 s undo. Attachments deleted with their session. |
 | 8 | **Visual direction:** keep the warm editorial look, or did "Apple-style" mean a different visual language? | Token cleanup in M0 | Keep the current direction. |
 | 9 | **Is the pen.dev share link newer than the repo copy?** | Critique accuracy, design fix pass | The repo copy is the latest. |
-| 10 | **Name and domain:** is "Agent Hub" final? Custom domain for share links? | Share link URLs (P1), portfolio branding | "Agent Hub" on a subdomain of your portfolio domain. |
+| 10 | **Name and domain:** is "Agent Hub" final? Custom domain for share links? **Domain answered 2026-09-29: `fleet.programmeos.com` (ARCHITECTURE D25).** | Share link URLs (P1), portfolio branding | "Agent Hub" on a subdomain of your portfolio domain. |

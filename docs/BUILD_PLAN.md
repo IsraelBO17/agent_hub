@@ -43,11 +43,9 @@ The ordered steps for building Agent Hub, their status, and how we work. Start a
 
 Kept current in [`ARCHITECTURE.md` §4](ARCHITECTURE.md#4-open-questions-answers-pending). As of 2026-09-29 these are still open:
 
-- **Q2 Domain:** which parent domain; is it in Route 53; certificates from ACM? (Needed by step 7.)
-- **Q3 Networking:** public subnets with public IPs, inbound from the ALB only, no NAT gateway? (Step 7.)
 - **Q8 Budget:** is $50/month AWS (excluding model tokens) still the ceiling?
 - **Q9 First agent:** is there an agent already deployed on AgentCore to use in step 8?
-- **Q10 AWS account:** which account or CLI profile; may read-only commands and `terraform plan` run against it? (Step 7.)
+- **Q10 AWS account:** the account exists; the owner will set up access and say when (step 7).
 
 ## Where things are
 

@@ -75,8 +75,8 @@ info:
   contact:
     name: Israel B.
 servers:
-  - url: https://api.agenthub.dev
-    description: Placeholder until the domain is chosen (ARCHITECTURE Q2).
+  - url: https://api.fleet.programmeos.com
+    description: Dev, the only environment until v1 (ARCHITECTURE D17, D25).
   - url: http://localhost:8000
     description: Local development
 tags:
@@ -171,7 +171,7 @@ paths:
               examples:
                 notInvited:
                   value:
-                    type: https://agenthub.dev/errors/not_invited
+                    type: https://fleet.programmeos.com/errors/not_invited
                     title: This Google account doesn't have access to Agent Hub
                     status: 403
                     code: not_invited
@@ -1299,7 +1299,7 @@ components:
       schema:
         type: string
     SetRefreshCookie:
-      description: '`ah_refresh=<token>; HttpOnly; Secure; SameSite=Strict; Domain=api.<domain>; Path=/v1/auth; Max-Age=2592000`'
+      description: '`ah_refresh=<token>; HttpOnly; Secure; SameSite=Strict; Path=/v1/auth; Max-Age=2592000` (host-only: no `Domain` attribute)'
       schema:
         type: string
     RetryAfter:
@@ -1416,7 +1416,7 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://agenthub.dev/errors/token_expired
+            type: https://fleet.programmeos.com/errors/token_expired
             title: Access token expired
             status: 401
             code: token_expired
@@ -1441,7 +1441,7 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://agenthub.dev/errors/session_not_found
+            type: https://fleet.programmeos.com/errors/session_not_found
             title: Session not found
             status: 404
             code: session_not_found
@@ -1457,7 +1457,7 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://agenthub.dev/errors/run_in_progress
+            type: https://fleet.programmeos.com/errors/run_in_progress
             title: A reply is already running in this session
             status: 409
             code: run_in_progress
@@ -1474,7 +1474,7 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://agenthub.dev/errors/file_too_large
+            type: https://fleet.programmeos.com/errors/file_too_large
             title: File is too large
             status: 422
             detail: ct-scan-full.tiff is 86 MB; the limit is 20 MB.
@@ -1595,7 +1595,7 @@ components:
         type:
           type: string
           format: uri
-          description: '`https://agenthub.dev/errors/<code>`'
+          description: '`https://fleet.programmeos.com/errors/<code>`'
         title:
           type: string
           description: Short, human-readable, safe to show.
@@ -2970,7 +2970,7 @@ components:
         url:
           type: string
           format: uri
-          example: https://app.agenthub.dev/s/Kq2x9TmV4pLr7Wn3Yb8sHd
+          example: https://fleet.programmeos.com/s/Kq2x9TmV4pLr7Wn3Yb8sHd
         slug:
           type: string
           minLength: 22

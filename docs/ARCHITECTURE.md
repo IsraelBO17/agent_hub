@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.4, D1–D24 and P1–P8 locked; §2 default and §4 questions still open |
+| Status | v0.4, D1–D25 and P1–P8 locked; §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -68,7 +68,7 @@ Each entry: the decision, why, and what would make us revisit it.
 ### D8. Auth: Google sign-in, then the API's own session
 **Decision.** The browser gets a Google ID token (Google Identity Services) and posts it once to `POST /v1/auth/google`. The API verifies signature (Google JWKS), `aud` (our client ID), `iss`, `exp` and `email_verified`, looks the user up by Google `sub`, and rejects unknown or inactive users. It then issues:
 - a short-lived **access token** (JWT, ~15 min, signed with the session key from Secrets Manager), held in memory by the client and sent as `Authorization: Bearer`;
-- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Domain=api.<domain>; Path=/v1/auth` (all routes live under `/v1`, D23).
+- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, host-only (no `Domain` attribute), so it goes only to `api.fleet.programmeos.com` (D25) (all routes live under `/v1`, D23).
 Refresh rotates the token and detects reuse (reuse of an old token revokes the whole family). App (`app.`) and API (`api.`) share a parent domain, so the cookie is same-site; CORS allows only the app origin with credentials, and `/v1/auth/*` also checks `Origin`.
 **Why.** No Cognito to operate; Google does the hard part; our own session gives revocation and short token lifetime.
 **Revisit if.** We need non-Google sign-in, SSO, or passkey step-up (P2).
@@ -98,7 +98,7 @@ Refresh rotates the token and detects reuse (reuse of an old token revokes the w
 Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Revisit if** a model or AgentCore feature we need isn't there.
 
 ### D13. Front-end hosting: AWS Amplify Hosting
-**Decision.** Amplify Hosting serves the web app on `app.<domain>`, same parent domain as the API.
+**Decision.** Amplify Hosting serves the web app on `fleet.programmeos.com`, same parent domain as the API (D25).
 **Why.** Managed builds, previews per branch, TLS, custom domain.
 **Revisit if.** We choose a server-rendered framework Amplify handles poorly (not expected: the front end is a static SPA, D16), or cost/control push us to S3 + CloudFront.
 
@@ -157,11 +157,21 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Why.** The simplest layout that keeps "adding an agent touches only `agents/`" checkable in a pull request, and keeps each part deployable on its own.
 **Revisit if.** A second TypeScript package appears (then npm workspaces), or the contract gains another consumer (then move it to a top-level `contract/`).
 
+### D25. Domain: `fleet.programmeos.com`, delegated to Route 53
+**Decision (owner, 2026-09-29, Q2).** The owner's domain `programmeos.com` stays registered and hosted at GoDaddy. Only the subdomain `fleet.programmeos.com` is delegated to a Route 53 hosted zone (Terraform), by four `NS` records named `fleet` that the owner adds in GoDaddy DNS.
+- Web app (Amplify): `https://fleet.programmeos.com`; share links `https://fleet.programmeos.com/s/<slug>`.
+- API (ALB): `https://api.fleet.programmeos.com`.
+- Certificates: ACM in us-east-1, validated through DNS records in the delegated zone. Amplify manages its own certificate for the app.
+- Google OAuth authorised JavaScript origin: `https://fleet.programmeos.com`; CORS allows only that origin.
+- Checked 2026-09-29: DNS is at GoDaddy (`ns61/62.domaincontrol.com`), no CAA records (nothing blocks Amazon certificates), and `fleet` isn't in use.
+**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). Delegating one subdomain leaves the rest of the domain untouched and costs only the hosted zone ($0.50/month).
+**Revisit if.** The app moves to its own domain: change one Terraform variable, the Google OAuth origin and the CORS origin.
+
 ---
 
-## 2. Unconfirmed defaults (do not build on these until confirmed; see Q3)
+## 2. Networking (confirmed by the owner, 2026-09-29, Q3)
 
-| Default | Why it's the default | Cost of the alternative |
+| Decision | Why | Cost of the alternative |
 |---|---|---|
 | Fargate tasks in **public subnets** with public IPs; security group allows inbound only from the ALB; **no NAT gateway** | The task must reach Neon, Google, AgentCore, Secrets Manager and ECR over the internet anyway; a NAT gateway is ~$33/month per AZ before data | Private subnets + NAT or VPC endpoints: more cost, no real gain while Neon is public |
 
@@ -187,19 +197,18 @@ These refine D1–D15 and are binding for the steps that follow.
 
 ## 4. Open questions (answers pending)
 
-Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (let the agent finish), Q6 → D18 (API sends history; AgentCore Memory later), Q7 → §3 (P1–P8 accepted). Still open:
+Answered 2026-09-29: Q2 → D25 (`fleet.programmeos.com`), Q3 → §2 (public subnets, no NAT), Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (let the agent finish), Q6 → D18 (API sends history; AgentCore Memory later), Q7 → §3 (P1–P8 accepted). Still open:
 
 | # | Question | Blocks | My default |
 |---|---|---|---|
-| Q2 | **Domain.** Which parent domain, is it in Route 53, and who issues TLS (ACM in us-east-1)? | ALB listener, Amplify custom domain, cookie domain, Google OAuth origins | Subdomains of your portfolio domain, ACM certificates, Route 53 if already there |
-| Q3 | **Networking.** Accept public subnets, public IP, ALB-only inbound, no NAT? | Step 7 | Yes |
+| ~~Q2~~ | **Answered → D25.** ~~Domain.~~ Which parent domain, is it in Route 53, and who issues TLS (ACM in us-east-1)? | ALB listener, Amplify custom domain, cookie domain, Google OAuth origins | Subdomains of your portfolio domain, ACM certificates, Route 53 if already there |
 | Q8 | **Budget.** Is the $50/month AWS ceiling in the plan still right, excluding model tokens? | Task size, alarms | Yes |
 | Q9 | **First real agent for step 8.** Research Analyst (the plan's pick), or an agent you already have deployed on AgentCore? An existing one is faster. Is there one, and can the API's IAM role invoke it? | Step 8 | An existing deployed agent, if any |
 | Q10 | **AWS account.** Is there a dedicated account (or at least credentials profile) for Agent Hub, and may I run read-only AWS CLI and `terraform plan` against it? | Step 7 | Ask again at step 7 |
 
 ## 5. Open items (known, not yet decided)
 
-- Domain and TLS certificate (Q2).
+- The four `NS` records for `fleet` in GoDaddy DNS, added by the owner once Terraform creates the hosted zone (D25).
 - Google OAuth client: created by hand in Google Cloud console. Needs the app origin as an authorised JavaScript origin.
 - Terraform state bucket: bootstrapped first, by a separate minimal config.
 - Neon: created by hand; its pooled and direct connection strings go into Secrets Manager.
@@ -232,3 +241,5 @@ Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (l
 | 2026-09-29 | v0.4, alignment review (build step 4b): D19 approval pause, D20 attachments to agents, D21 session titles, D22 polling for cross-session activity, D23 API conventions; D7 key prefix; D8 cookie path `/v1/auth`; D11, P1, P3, P4 amended for two tasks during deploys and Retry after Stop; D18 payload gains `attachments`. Migration `0002`. |
 | 2026-09-29 | OpenAPI 3.1 spec (step 5): `api/openapi.yaml`. Stream events fixed as `run.started`, `block.started/delta/updated/completed`, `artifact.delta`, and the terminal `run.completed`, `run.awaiting_approval`, `run.stopped`, `run.failed`. |
 | 2026-09-29 | Repo layout (step 6): D24. Root `README.md` maps the repo; root `Makefile` for common commands. |
+| 2026-09-29 | Q3 answered: public subnets, ALB-only inbound, no NAT gateway (§2 confirmed). Q10: account exists; the owner sets up access at step 7. |
+| 2026-09-29 | Q2 answered: D25, `fleet.programmeos.com` (app) and `api.fleet.programmeos.com` (API), subdomain delegated from GoDaddy to Route 53; refresh cookie made host-only. |
