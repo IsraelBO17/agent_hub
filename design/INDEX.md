@@ -2,9 +2,9 @@
 
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
-- Top-level frames: 267
-- Reusable components: 92 (2800 references, nested ones included)
-- Reference screens and boards: 51
+- Top-level frames: 278
+- Reusable components: 97 (2831 references, nested ones included)
+- Reference screens and boards: 57
 - Flow screens: 93
 
 Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID>"`).
@@ -97,6 +97,13 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | `highlight-soft` | color | `#EFE8F5` |
 | `code-inline-fg` | color | `#A23B3B` |
 | `syntax-light-function` | color | `#2F5597` |
+| `google-blue` | color | `#4285F4` |
+| `google-green` | color | `#34A853` |
+| `google-yellow` | color | `#FBBC05` |
+| `google-red` | color | `#EA4335` |
+| `google-border` | color | `#747775` |
+| `google-text` | color | `#1F1F1F` |
+| `font-google` | string | `Roboto` |
 
 ## Components
 
@@ -104,8 +111,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Button / Primary | `H0OSN` | auto×auto |  | 34 |
-| Button / Secondary | `XBZK2` | auto×auto |  | 90 |
+| Button / Primary | `H0OSN` | auto×auto |  | 33 |
+| Button / Secondary | `XBZK2` | auto×auto |  | 94 |
 | Button / Danger | `HsXdL` | auto×auto |  | 5 |
 | Icon Button | `btfe4` | 32×32 |  | 97 |
 | Kbd | `rjWo1` | auto×20 |  | 124 |
@@ -117,6 +124,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Citation Chip | `q3C9LM` | auto×18 |  | 4 |
 | Resize Handle | `accqR` | 1×400 |  | 9 |
 | Stage Tag | `nC6tf` | auto×auto |  | 4 |
+| Google Button | `hveC0` | auto×40 |  | 5 |
+| Google Button / Loading | `Y8uI7x` | auto×40 |  | 1 |
 
 ### 2 Inputs & Selection
 
@@ -159,12 +168,12 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Agent Switcher | `RZF5q` | 256×auto |  | 1 |
 | Sidebar Nav Item | `MoK3u` | 256×auto |  | 29 |
 | Sidebar Footer | `CpCSr` | 284×auto |  | 1 |
-| Session Item | `SEJaD` | 248×auto |  | 329 |
+| Session Item | `SEJaD` | 248×auto |  | 330 |
 | Session Group Label | `rQVuA` | auto×auto |  | 161 |
-| Mobile Status Bar | `CLJUJ` | 390×44 |  | 41 |
-| Home Indicator | `mSdhx` | 390×28 |  | 14 |
-| Section Heading | `o1lqG` | auto×auto |  | 31 |
-| Tile Label | `Vu7nt` | auto×auto |  | 106 |
+| Mobile Status Bar | `CLJUJ` | 390×44 |  | 43 |
+| Home Indicator | `mSdhx` | 390×28 |  | 16 |
+| Section Heading | `o1lqG` | auto×auto |  | 32 |
+| Tile Label | `Vu7nt` | auto×auto |  | 110 |
 
 ### 5 Composer & Messages
 
@@ -172,7 +181,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 |---|---|---|---|---|
 | Composer | `K6k66O` | 760×auto | `Attachments` (I5xpa): Attachment Chip / Image Attachment | 80 |
 | User Message | `EfHME` | 760×auto |  | 121 |
-| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 125 |
+| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 130 |
 | Message Actions | `SnIqS` | auto×auto |  | 15 |
 | Message Editor | `x0laEo` | 520×auto |  | 1 |
 | Version Pager | `FVkS9` | auto×auto |  | 2 |
@@ -180,7 +189,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Image Attachment | `z1ehKR` | 54×54 |  | 4 |
 | File Card | `Mr5AY` | 260×auto |  | 10 |
 | Jump to Latest | `R2yN9` | auto×auto |  | 3 |
-| Typing Indicator | `eFeRx` | auto×auto |  | 3 |
+| Typing Indicator | `eFeRx` | auto×auto |  | 4 |
 | Thinking Row | `Fg95V` | 640×auto |  | 6 |
 | Starter Prompt | `fkUCB` | 320×auto |  | 32 |
 
@@ -188,11 +197,14 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
+| Inline Error / Warning | `U4HXP` | 560×auto |  | 3 |
 | Tool Call Chip | `Hbhy0` | auto×auto |  | 102 |
 | Tool Call Detail | `pkhri` | 640×auto |  | 16 |
 | Timeline Step | `JGoho` | 640×auto |  | 15 |
 | Plan Step | `aKwZB` | 480×auto |  | 38 |
 | Plan Card | `I05g84` | 520×auto | `Steps` (LlLdq): Plan Step | 7 |
+| Message Footer / Stopped | `XebGB` | 560×auto |  | 2 |
+| Message Footer / Still replying | `SjJKc` | 560×auto |  | 1 |
 | Status Banner | `dcn54` | 720×34 |  | 7 |
 | Inline Error | `Sl1FL` | 560×auto |  | 7 |
 | Notice Banner | `D9HsR` | 560×auto |  | 13 |
@@ -244,7 +256,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | New Session — /agents/health-assistant | `uBRCZ` | 1440×1024 |
 | States & Edge Cases | `D21ObU` | 1440×auto |
 | Chat Interaction Details | `Q6kwA2` | 2280×auto |
-| Agent Working & Failure States | `R9pQQP` | 2280×auto |
+| Agent Working & Failure States | `sx5f0` | 2280×auto |
 | Artifact — Document · Read | `oQYrz` | 1440×1024 |
 | Artifact — Document · Edit | `lKqzP` | 1440×1024 |
 | Artifact — Document · Agent editing | `rXi6e` | 1440×1024 |
@@ -267,28 +279,34 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Sessions — Dialogs & states | `vBr4V` | 2280×auto |
 | Catalog — empty | `j8NhJ` | 1440×1024 |
 | Agent detail — /agents/coding-agent/about | `x05s4W` | 1440×1024 |
-| Settings — /settings | `Ue3Jc` | 1440×1024 |
+| Settings — /settings | `RHrDH` | 1440×1024 |
 | Keyboard shortcuts overlay (⌘/) | `x8PmN9` | 1440×1024 |
 | Onboarding — first run | `RPCu8` | 1440×1024 |
 | Agent management — flows & states | `yzVIz` | 2280×auto |
 | Catalog — error | `Jchi9` | 1440×1024 |
-| Chat — auth expired | `jlDzd` | 1440×1024 |
+| Chat — auth expired | `N8ysh` | 1440×1024 |
 | Session not found | `H7ZqtC` | 1440×1024 |
 | Approval waiting in another session | `r5Gru` | 1440×1024 |
 | Shared session — /s/:shareId | `q1bvDq` | 1440×1024 |
+| Sign in | `MMxdZ` | 1440×1024 |
+| Sign in · Loading | `vkBhc` | 1440×1024 |
+| Sign in · Not allowed | `zte2v` | 1440×1024 |
+| Sign in · Signed out | `DfY8F` | 1440×1024 |
 | Mobile — Catalog error | `sMh7q` | 390×844 |
 | Mobile — Catalog empty | `iX1f6` | 390×844 |
-| Mobile — Auth expired | `xBrZk` | 390×844 |
+| Mobile — Auth expired | `DxTnt` | 390×844 |
 | Mobile — Approval waiting elsewhere | `B6G93s` | 390×844 |
 | Mobile — Artifact streaming | `ZQvzZ` | 390×844 |
 | Mobile — Agent not found | `V97EP` | 390×844 |
 | Mobile — Search | `P7n48` | 390×844 |
 | Mobile — Agent detail | `mN9zj` | 390×844 |
-| Mobile — Settings | `peFJG` | 390×844 |
+| Mobile — Settings | `RT72e` | 390×844 |
 | Mobile — Artifacts library | `GSi1C` | 390×844 |
 | Mobile — Archived | `grrlx` | 390×844 |
 | Mobile — Form | `m4Kt4` | 390×844 |
 | Mobile — Shared session | `W2aSQ` | 390×844 |
+| Mobile — Sign in | `U0HaRi` | 390×844 |
+| Mobile — Sign in · Not allowed | `dLCVX` | 390×844 |
 | Edge States (P0) | `OFj2k` | 1440×auto |
 
 ## User flows
@@ -450,7 +468,7 @@ The v1 phone states: loading, starting and composing, streaming with tools, plan
 | F11.5 Streaming reply | `DNypg` | 390×844 | The agent lays out a plan |
 | F11.6 Plan card | `DuSPU` | 390×844 | The agent asks who the brief is for |
 | F11.7 Question card | `wiL50` | 390×844 | Picks “Engineering team” |
-| F11.8 Reconnecting | `e6XAO` | 390×844 | Reconnecting fails twice |
+| F11.8 Reconnecting | `e6XAO` | 390×844 | The agent returns an error |
 | F11.9 Reply failed | `vBCdH` | 390×844 | Taps the agent name |
 | F11.10 Agent switcher sheet | `wE4kz` | 390×844 | Picks Home Ops |
 | F11.11 Agent offline | `t4QWfb` | 390×844 | Switches to Bank Agent; approves a transfer |
