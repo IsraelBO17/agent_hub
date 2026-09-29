@@ -343,7 +343,7 @@
       "x": 0,
       "y": -2932,
       "name": "Library · 6 Agent Activity & Feedback",
-      "width": 3296,
+      "width": 3928,
       "height": 841,
       "fill": "$sidebar",
       "cornerRadius": 28,
@@ -7173,7 +7173,7 @@
       "id": "TqvAv",
       "x": 2064,
       "y": -2404,
-      "name": "Callout",
+      "name": "Callout / Info",
       "reusable": true,
       "width": 560,
       "fill": "$info-soft",
@@ -36499,25 +36499,17 @@
                                   "fontWeight": "normal"
                                 },
                                 {
-                                  "id": "QKfmJ",
+                                  "id": "U8csa4",
                                   "type": "ref",
-                                  "ref": "TqvAv",
-                                  "name": "Warning Callout",
+                                  "ref": "sGs40",
+                                  "name": "Callout / Warning",
                                   "width": "fill_container",
-                                  "fill": "$warning-subtle",
-                                  "stroke": "$warning-line",
                                   "descendants": {
-                                    "HGhoz": {
-                                      "icon": "triangle-alert",
-                                      "fill": "$warning"
+                                    "xEszR": {
+                                      "content": "This isn't a diagnosis"
                                     },
-                                    "a08cQ7": {
-                                      "content": "This isn't a diagnosis",
-                                      "fill": "$warning-strong"
-                                    },
-                                    "o9PdS": {
-                                      "content": "See a clinician if it spreads, blisters, or comes with fever or swelling. Get urgent care if you have trouble breathing.",
-                                      "fill": "$warning-strong"
+                                    "TLPcu": {
+                                      "content": "See a clinician if it spreads, blisters, or comes with fever or swelling. Get urgent care if you have trouble breathing."
                                     }
                                   }
                                 }
@@ -41922,25 +41914,17 @@
                   ]
                 },
                 {
-                  "id": "D0zMo",
+                  "id": "kxYxM",
                   "type": "ref",
-                  "ref": "TqvAv",
+                  "ref": "arwhJ",
+                  "name": "Callout / Neutral",
                   "width": "fill_container",
-                  "name": "Citation behaviour note",
-                  "fill": "$surface",
-                  "stroke": "$border",
                   "descendants": {
-                    "HGhoz": {
-                      "icon": "quote",
-                      "fill": "$text-secondary"
+                    "xrx1d": {
+                      "content": "How citation chips behave"
                     },
-                    "a08cQ7": {
-                      "content": "How citation chips behave",
-                      "fill": "$text-primary"
-                    },
-                    "o9PdS": {
-                      "content": "Default chips are muted. Hover shows the preview card; click pins it and turns the chip accent green (see [4]). Esc or clicking outside closes it. Each number links to the same entry in the Sources list, which is highlighted while its chip is active.",
-                      "fill": "$text-secondary"
+                    "CHwFZ": {
+                      "content": "Default chips are muted. Hover shows the preview card; click pins it and turns the chip accent green (see [4]). Esc or clicking outside closes it. Each number links to the same entry in the Sources list, which is highlighted while its chip is active."
                     }
                   }
                 }
@@ -41996,48 +41980,32 @@
                   }
                 },
                 {
-                  "id": "OrX0E",
+                  "id": "Sh3Q5",
                   "type": "ref",
-                  "ref": "TqvAv",
-                  "name": "Warning",
+                  "ref": "sGs40",
+                  "name": "Callout / Warning",
                   "width": "fill_container",
-                  "fill": "$warning-subtle",
-                  "stroke": "$warning-line",
                   "descendants": {
-                    "HGhoz": {
-                      "icon": "triangle-alert",
-                      "fill": "$warning"
+                    "xEszR": {
+                      "content": "Not financial advice"
                     },
-                    "a08cQ7": {
-                      "content": "Not financial advice",
-                      "fill": "$warning-strong"
-                    },
-                    "o9PdS": {
-                      "content": "These projections use your past spending only. Talk to a licensed advisor before moving savings or investments.",
-                      "fill": "$warning-strong"
+                    "TLPcu": {
+                      "content": "These projections use your past spending only. Talk to a licensed advisor before moving savings or investments."
                     }
                   }
                 },
                 {
-                  "id": "m1snp",
+                  "id": "IsPni",
                   "type": "ref",
-                  "ref": "TqvAv",
-                  "name": "Success",
+                  "ref": "BGoTk",
+                  "name": "Callout / Success",
                   "width": "fill_container",
-                  "fill": "$accent-soft",
-                  "stroke": "$accent-line",
                   "descendants": {
-                    "HGhoz": {
-                      "icon": "circle-check",
-                      "fill": "$accent"
+                    "uY96q": {
+                      "content": "Transfer scheduled"
                     },
-                    "a08cQ7": {
-                      "content": "Transfer scheduled",
-                      "fill": "$success-strong"
-                    },
-                    "o9PdS": {
-                      "content": "$500.00 moves from Checking to Savings on Oct 1. You can cancel until 11:59 PM the day before.",
-                      "fill": "$diff-add-fg"
+                    "iqDDD": {
+                      "content": "$500.00 moves from Checking to Savings on Oct 1. You can cancel until 11:59 PM the day before."
                     }
                   }
                 }
@@ -114004,25 +113972,17 @@
                               "fontWeight": "normal"
                             },
                             {
-                              "id": "I61p8",
+                              "id": "ibAdv",
                               "type": "ref",
-                              "ref": "TqvAv",
-                              "name": "Care Note",
+                              "ref": "sGs40",
+                              "name": "Callout / Warning",
                               "width": "fill_container",
-                              "fill": "$warning-subtle",
-                              "stroke": "$warning-line",
                               "descendants": {
-                                "HGhoz": {
-                                  "icon": "triangle-alert",
-                                  "fill": "$warning"
+                                "xEszR": {
+                                  "content": "This isn't a diagnosis"
                                 },
-                                "a08cQ7": {
-                                  "content": "This isn't a diagnosis",
-                                  "fill": "$warning-strong"
-                                },
-                                "o9PdS": {
-                                  "content": "See a clinician if it spreads, blisters or comes with fever. Get urgent care if you have trouble breathing.",
-                                  "fill": "$text-secondary"
+                                "TLPcu": {
+                                  "content": "See a clinician if it spreads, blisters or comes with fever. Get urgent care if you have trouble breathing."
                                 }
                               }
                             }
@@ -114448,25 +114408,17 @@
                               "fontWeight": "normal"
                             },
                             {
-                              "id": "Vd6b5",
+                              "id": "pLFh9",
                               "type": "ref",
-                              "ref": "TqvAv",
-                              "name": "Care Note",
+                              "ref": "sGs40",
+                              "name": "Callout / Warning",
                               "width": "fill_container",
-                              "fill": "$warning-subtle",
-                              "stroke": "$warning-line",
                               "descendants": {
-                                "HGhoz": {
-                                  "icon": "triangle-alert",
-                                  "fill": "$warning"
+                                "xEszR": {
+                                  "content": "This isn't a diagnosis"
                                 },
-                                "a08cQ7": {
-                                  "content": "This isn't a diagnosis",
-                                  "fill": "$warning-strong"
-                                },
-                                "o9PdS": {
-                                  "content": "See a clinician if it spreads, blisters or comes with fever. Get urgent care if you have trouble breathing.",
-                                  "fill": "$text-secondary"
+                                "TLPcu": {
+                                  "content": "See a clinician if it spreads, blisters or comes with fever. Get urgent care if you have trouble breathing."
                                 }
                               }
                             }
@@ -115424,25 +115376,17 @@
                               "fontWeight": "normal"
                             },
                             {
-                              "id": "DZtQA",
+                              "id": "nKCns",
                               "type": "ref",
-                              "ref": "TqvAv",
-                              "name": "Care Note",
+                              "ref": "sGs40",
+                              "name": "Callout / Warning",
                               "width": "fill_container",
-                              "fill": "$warning-subtle",
-                              "stroke": "$warning-line",
                               "descendants": {
-                                "HGhoz": {
-                                  "icon": "triangle-alert",
-                                  "fill": "$warning"
+                                "xEszR": {
+                                  "content": "This isn't a diagnosis"
                                 },
-                                "a08cQ7": {
-                                  "content": "This isn't a diagnosis",
-                                  "fill": "$warning-strong"
-                                },
-                                "o9PdS": {
-                                  "content": "See a clinician if it spreads, blisters or comes with fever. Get urgent care if you have trouble breathing.",
-                                  "fill": "$text-secondary"
+                                "TLPcu": {
+                                  "content": "See a clinician if it spreads, blisters or comes with fever. Get urgent care if you have trouble breathing."
                                 }
                               }
                             }
@@ -137411,414 +137355,6 @@
     },
     {
       "type": "frame",
-      "id": "mz8oI",
-      "x": 4680,
-      "y": 39600,
-      "name": "Mobile — Artifacts library",
-      "clip": true,
-      "width": 390,
-      "height": 844,
-      "fill": "$bg",
-      "cornerRadius": 36,
-      "stroke": "$border-strong",
-      "strokeWidth": 1,
-      "layout": "vertical",
-      "children": [
-        {
-          "id": "iiOR0",
-          "type": "ref",
-          "ref": "CLJUJ",
-          "name": "Status Bar",
-          "width": "fill_container"
-        },
-        {
-          "type": "frame",
-          "id": "F17bUb",
-          "name": "Top Bar",
-          "width": "fill_container",
-          "height": 52,
-          "stroke": "$border",
-          "strokeWidth": {
-            "bottom": 1
-          },
-          "gap": 10,
-          "padding": [
-            0,
-            12
-          ],
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "icon",
-              "id": "ts5F8",
-              "name": "Lead",
-              "width": 20,
-              "height": 20,
-              "icon": "menu",
-              "library": "lucide",
-              "fill": "$text-primary"
-            },
-            {
-              "type": "text",
-              "id": "b8wGTK",
-              "name": "Title",
-              "fill": "$text-primary",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Artifacts",
-              "fontFamily": "$font-ui",
-              "fontSize": 15,
-              "fontWeight": "600"
-            },
-            {
-              "type": "icon",
-              "id": "vBqXZ",
-              "name": "Trail",
-              "width": 20,
-              "height": 20,
-              "icon": "search",
-              "library": "lucide",
-              "fill": "$text-primary"
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "d2pq4",
-          "name": "Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 12,
-          "padding": 16,
-          "children": [
-            {
-              "type": "frame",
-              "id": "RSfX2",
-              "name": "Type Chips",
-              "clip": true,
-              "width": "fill_container",
-              "gap": 6,
-              "children": [
-                {
-                  "id": "F1BRxy",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "All",
-                  "fill": "$text-primary",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "All",
-                      "fill": "$bg"
-                    },
-                    "LMev0": {
-                      "content": "24"
-                    }
-                  }
-                },
-                {
-                  "id": "rB8LH",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Documents",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "Documents"
-                    },
-                    "LMev0": {
-                      "content": "9"
-                    }
-                  }
-                },
-                {
-                  "id": "qVL3X",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Code",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "Code"
-                    },
-                    "LMev0": {
-                      "content": "7"
-                    }
-                  }
-                },
-                {
-                  "id": "t2fZN",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Tables",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "Tables"
-                    },
-                    "LMev0": {
-                      "content": "5"
-                    }
-                  }
-                },
-                {
-                  "id": "geeyr",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "HTML",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "HTML"
-                    },
-                    "LMev0": {
-                      "content": "3"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "qwXr8",
-              "name": "Row",
-              "width": "fill_container",
-              "gap": 10,
-              "children": [
-                {
-                  "id": "NfsCP",
-                  "type": "ref",
-                  "ref": "JCduD",
-                  "name": "Distillation for small agents",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ioVnq": {
-                      "height": 96
-                    },
-                    "j9idZ": {
-                      "icon": "file-text"
-                    },
-                    "z3ibK": {
-                      "content": "Document"
-                    },
-                    "Pr2Ox": {
-                      "content": "Distillation for small agents"
-                    },
-                    "Ytjxl": {
-                      "fill": "$agent-purple-bg"
-                    },
-                    "Ytjxl/Jg8uM": {
-                      "icon": "book-open-text",
-                      "fill": "$agent-purple-fg"
-                    },
-                    "YryPb": {
-                      "content": "Research Analyst"
-                    },
-                    "V6lHTB": {
-                      "content": "Today"
-                    }
-                  }
-                },
-                {
-                  "id": "IlsFW",
-                  "type": "ref",
-                  "ref": "JCduD",
-                  "name": "auth.spec.ts",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ioVnq": {
-                      "height": 96
-                    },
-                    "j9idZ": {
-                      "icon": "file-code"
-                    },
-                    "z3ibK": {
-                      "content": "Code"
-                    },
-                    "Pr2Ox": {
-                      "content": "auth.spec.ts"
-                    },
-                    "Ytjxl": {
-                      "fill": "$agent-blue-bg"
-                    },
-                    "Ytjxl/Jg8uM": {
-                      "icon": "code-xml",
-                      "fill": "$agent-blue-fg"
-                    },
-                    "YryPb": {
-                      "content": "Coding Agent"
-                    },
-                    "V6lHTB": {
-                      "content": "Today"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "qTVNp",
-              "name": "Row",
-              "width": "fill_container",
-              "gap": 10,
-              "children": [
-                {
-                  "id": "lxvpE",
-                  "type": "ref",
-                  "ref": "JCduD",
-                  "name": "September transactions",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ioVnq": {
-                      "height": 96
-                    },
-                    "j9idZ": {
-                      "icon": "table"
-                    },
-                    "z3ibK": {
-                      "content": "Table"
-                    },
-                    "Pr2Ox": {
-                      "content": "September transactions"
-                    },
-                    "Ytjxl": {
-                      "fill": "$agent-green-bg"
-                    },
-                    "Ytjxl/Jg8uM": {
-                      "icon": "landmark",
-                      "fill": "$agent-green-fg"
-                    },
-                    "YryPb": {
-                      "content": "Bank Agent"
-                    },
-                    "V6lHTB": {
-                      "content": "Sep 28"
-                    }
-                  }
-                },
-                {
-                  "id": "uWGWR",
-                  "type": "ref",
-                  "ref": "JCduD",
-                  "name": "Budget dashboard",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ioVnq": {
-                      "height": 96
-                    },
-                    "j9idZ": {
-                      "icon": "app-window"
-                    },
-                    "z3ibK": {
-                      "content": "HTML"
-                    },
-                    "Pr2Ox": {
-                      "content": "Budget dashboard"
-                    },
-                    "Ytjxl": {
-                      "fill": "$agent-green-bg"
-                    },
-                    "Ytjxl/Jg8uM": {
-                      "icon": "landmark",
-                      "fill": "$agent-green-fg"
-                    },
-                    "YryPb": {
-                      "content": "Bank Agent"
-                    },
-                    "V6lHTB": {
-                      "content": "Sep 27"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "zLe5b",
-              "name": "Row",
-              "width": "fill_container",
-              "gap": 10,
-              "children": [
-                {
-                  "id": "vCs6C",
-                  "type": "ref",
-                  "ref": "JCduD",
-                  "name": "Questions for cardiology visit",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ioVnq": {
-                      "height": 96
-                    },
-                    "j9idZ": {
-                      "icon": "file-text"
-                    },
-                    "z3ibK": {
-                      "content": "Document"
-                    },
-                    "Pr2Ox": {
-                      "content": "Questions for cardiology visit"
-                    },
-                    "Ytjxl": {
-                      "fill": "$agent-red-bg"
-                    },
-                    "Ytjxl/Jg8uM": {
-                      "icon": "heart-pulse",
-                      "fill": "$agent-red-fg"
-                    },
-                    "YryPb": {
-                      "content": "Health Assistant"
-                    },
-                    "V6lHTB": {
-                      "content": "Sep 25"
-                    }
-                  }
-                },
-                {
-                  "id": "YuNQ2",
-                  "type": "ref",
-                  "ref": "JCduD",
-                  "name": "Auth flow diagram",
-                  "width": "fill_container",
-                  "descendants": {
-                    "ioVnq": {
-                      "height": 96
-                    },
-                    "j9idZ": {
-                      "icon": "file-text"
-                    },
-                    "z3ibK": {
-                      "content": "Document"
-                    },
-                    "Pr2Ox": {
-                      "content": "Auth flow diagram"
-                    },
-                    "Ytjxl": {
-                      "fill": "$agent-purple-bg"
-                    },
-                    "Ytjxl/Jg8uM": {
-                      "icon": "book-open-text",
-                      "fill": "$agent-purple-fg"
-                    },
-                    "YryPb": {
-                      "content": "Research Analyst"
-                    },
-                    "V6lHTB": {
-                      "content": "Sep 18"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "Zbgvt",
-          "type": "ref",
-          "ref": "mSdhx",
-          "name": "Home Indicator",
-          "width": "fill_container"
-        }
-      ]
-    },
-    {
-      "type": "frame",
       "id": "grrlx",
       "x": 5200,
       "y": 39600,
@@ -139272,6 +138808,1607 @@
               "fontWeight": "normal"
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "sGs40",
+      "x": 3320,
+      "y": -2404,
+      "name": "Callout / Warning",
+      "reusable": true,
+      "width": 560,
+      "fill": "$warning-subtle",
+      "cornerRadius": 10,
+      "stroke": "$warning-line",
+      "strokeWidth": 1,
+      "gap": 12,
+      "padding": [
+        12,
+        14
+      ],
+      "children": [
+        {
+          "type": "icon",
+          "id": "rJstM",
+          "name": "Icon",
+          "width": 17,
+          "height": 17,
+          "icon": "triangle-alert",
+          "library": "lucide",
+          "fill": "$warning"
+        },
+        {
+          "type": "frame",
+          "id": "l2bwak",
+          "name": "Text",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 3,
+          "children": [
+            {
+              "type": "text",
+              "id": "xEszR",
+              "name": "Title",
+              "fill": "$warning-strong",
+              "content": "Heads up",
+              "fontFamily": "$font-ui",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "TLPcu",
+              "name": "Body",
+              "fill": "$warning-strong",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Body",
+              "lineHeight": 1.55,
+              "fontFamily": "$font-ui",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "S0AYO",
+      "x": 3320,
+      "y": -2328,
+      "name": "Callout / Danger",
+      "reusable": true,
+      "width": 560,
+      "fill": "$danger-soft",
+      "cornerRadius": 10,
+      "stroke": "$danger-line",
+      "strokeWidth": 1,
+      "gap": 12,
+      "padding": [
+        12,
+        14
+      ],
+      "children": [
+        {
+          "type": "icon",
+          "id": "sGgnN",
+          "name": "Icon",
+          "width": 17,
+          "height": 17,
+          "icon": "circle-alert",
+          "library": "lucide",
+          "fill": "$danger"
+        },
+        {
+          "type": "frame",
+          "id": "I8OMk",
+          "name": "Text",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 3,
+          "children": [
+            {
+              "type": "text",
+              "id": "uAOts",
+              "name": "Title",
+              "fill": "$danger-strong",
+              "content": "Something went wrong",
+              "fontFamily": "$font-ui",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "OkLhI",
+              "name": "Body",
+              "fill": "$danger-strong",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Body",
+              "lineHeight": 1.55,
+              "fontFamily": "$font-ui",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "BGoTk",
+      "x": 3320,
+      "y": -2252,
+      "name": "Callout / Success",
+      "reusable": true,
+      "width": 560,
+      "fill": "$accent-soft",
+      "cornerRadius": 10,
+      "stroke": "$accent-line",
+      "strokeWidth": 1,
+      "gap": 12,
+      "padding": [
+        12,
+        14
+      ],
+      "children": [
+        {
+          "type": "icon",
+          "id": "vLZ28",
+          "name": "Icon",
+          "width": 17,
+          "height": 17,
+          "icon": "circle-check",
+          "library": "lucide",
+          "fill": "$accent"
+        },
+        {
+          "type": "frame",
+          "id": "T3VJrW",
+          "name": "Text",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 3,
+          "children": [
+            {
+              "type": "text",
+              "id": "uY96q",
+              "name": "Title",
+              "fill": "$success-strong",
+              "content": "Done",
+              "fontFamily": "$font-ui",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "iqDDD",
+              "name": "Body",
+              "fill": "$success-strong",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Body",
+              "lineHeight": 1.55,
+              "fontFamily": "$font-ui",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "arwhJ",
+      "x": 3320,
+      "y": -2176,
+      "name": "Callout / Neutral",
+      "reusable": true,
+      "width": 560,
+      "fill": "$surface",
+      "cornerRadius": 10,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "gap": 12,
+      "padding": [
+        12,
+        14
+      ],
+      "children": [
+        {
+          "type": "icon",
+          "id": "OvvFC",
+          "name": "Icon",
+          "width": 17,
+          "height": 17,
+          "icon": "quote",
+          "library": "lucide",
+          "fill": "$text-secondary"
+        },
+        {
+          "type": "frame",
+          "id": "UVEL4",
+          "name": "Text",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 3,
+          "children": [
+            {
+              "type": "text",
+              "id": "xrx1d",
+              "name": "Title",
+              "fill": "$text-primary",
+              "content": "Note",
+              "fontFamily": "$font-ui",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "CHwFZ",
+              "name": "Body",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Body",
+              "lineHeight": 1.55,
+              "fontFamily": "$font-ui",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "GSi1C",
+      "x": 4680,
+      "y": 39600,
+      "name": "Mobile — Artifacts library",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "$border-strong",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "LJgbO",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Q75bU",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "height": 52,
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 10,
+          "padding": [
+            0,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "KrJ4r",
+              "name": "Lead",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "text",
+              "id": "V0yvpF",
+              "name": "Title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Artifacts",
+              "fontFamily": "$font-ui",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "icon",
+              "id": "Jysxf",
+              "name": "Trail",
+              "width": 20,
+              "height": 20,
+              "icon": "search",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "h2TXPN",
+          "name": "Body",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Uo8RG",
+              "name": "Type Chips",
+              "clip": true,
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "id": "NP5kH",
+                  "type": "ref",
+                  "ref": "W0HHV",
+                  "name": "All",
+                  "fill": "$text-primary",
+                  "descendants": {
+                    "G8zLP": {
+                      "content": "All",
+                      "fill": "$bg"
+                    },
+                    "LMev0": {
+                      "content": "24"
+                    }
+                  }
+                },
+                {
+                  "id": "ykCkV",
+                  "type": "ref",
+                  "ref": "W0HHV",
+                  "name": "Documents",
+                  "descendants": {
+                    "G8zLP": {
+                      "content": "Documents"
+                    },
+                    "LMev0": {
+                      "content": "9"
+                    }
+                  }
+                },
+                {
+                  "id": "eUzhC",
+                  "type": "ref",
+                  "ref": "W0HHV",
+                  "name": "Code",
+                  "descendants": {
+                    "G8zLP": {
+                      "content": "Code"
+                    },
+                    "LMev0": {
+                      "content": "7"
+                    }
+                  }
+                },
+                {
+                  "id": "X9yQB4",
+                  "type": "ref",
+                  "ref": "W0HHV",
+                  "name": "Tables",
+                  "descendants": {
+                    "G8zLP": {
+                      "content": "Tables"
+                    },
+                    "LMev0": {
+                      "content": "5"
+                    }
+                  }
+                },
+                {
+                  "id": "idYVf",
+                  "type": "ref",
+                  "ref": "W0HHV",
+                  "name": "HTML",
+                  "descendants": {
+                    "G8zLP": {
+                      "content": "HTML"
+                    },
+                    "LMev0": {
+                      "content": "3"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "J7mQq",
+              "name": "Row",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "ApBdl",
+                  "type": "ref",
+                  "ref": "JCduD",
+                  "name": "Distillation for small agents",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ioVnq": {
+                      "type": "frame",
+                      "id": "WyG2J",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 96,
+                      "fill": "$sidebar",
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ILPKL",
+                          "x": 0,
+                          "y": 26,
+                          "name": "Page",
+                          "width": 163,
+                          "height": 150,
+                          "fill": "$surface",
+                          "cornerRadius": 3,
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "tWCr7",
+                              "x": 14,
+                              "y": 16,
+                              "name": "Shape",
+                              "fill": "#2E2C28",
+                              "width": 100,
+                              "height": 9
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "q4JGzN",
+                              "x": 14,
+                              "y": 34,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "Upoh4",
+                              "x": 14,
+                              "y": 45,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "ruKE4",
+                              "x": 14,
+                              "y": 56,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 90,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "k3L5bA",
+                              "x": 14,
+                              "y": 67,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "gqWuy",
+                              "x": 14,
+                              "y": 78,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "H5lrGS",
+                              "x": 14,
+                              "y": 89,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 90,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "QmWDb",
+                              "x": 14,
+                              "y": 100,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "CIbEJ",
+                          "x": 10,
+                          "y": 10,
+                          "name": "Type Badge",
+                          "fill": "$surface-overlay",
+                          "cornerRadius": 999,
+                          "gap": 5,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "Gbx9F",
+                              "name": "Icon",
+                              "width": 11,
+                              "height": 11,
+                              "icon": "file-text",
+                              "library": "lucide",
+                              "fill": "$agent-purple-fg"
+                            },
+                            {
+                              "type": "text",
+                              "id": "A25yx",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Document",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "Pr2Ox": {
+                      "content": "Distillation for small agents"
+                    },
+                    "Ytjxl": {
+                      "fill": "$agent-purple-bg"
+                    },
+                    "Ytjxl/Jg8uM": {
+                      "icon": "book-open-text",
+                      "fill": "$agent-purple-fg"
+                    },
+                    "YryPb": {
+                      "content": "Research Analyst"
+                    },
+                    "V6lHTB": {
+                      "content": "Today"
+                    }
+                  }
+                },
+                {
+                  "id": "I1MndW",
+                  "type": "ref",
+                  "ref": "JCduD",
+                  "name": "auth.spec.ts",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ioVnq": {
+                      "type": "frame",
+                      "id": "z6WEM2",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 96,
+                      "fill": "$code",
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 1,
+                          "id": "pEYdr",
+                          "x": -32,
+                          "y": 44,
+                          "name": "Shape",
+                          "fill": "#5E5A52",
+                          "width": 10,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "S6bWuy",
+                          "x": -12,
+                          "y": 44,
+                          "name": "Shape",
+                          "fill": "#C792EA",
+                          "width": 70,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 1,
+                          "id": "xOvRG",
+                          "x": -32,
+                          "y": 56,
+                          "name": "Shape",
+                          "fill": "#5E5A52",
+                          "width": 10,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "c8yab",
+                          "x": -4,
+                          "y": 56,
+                          "name": "Shape",
+                          "fill": "#E9E6DE",
+                          "width": 110,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 1,
+                          "id": "yrZwD",
+                          "x": -32,
+                          "y": 68,
+                          "name": "Shape",
+                          "fill": "#5E5A52",
+                          "width": 10,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "Ywq4W",
+                          "x": -4,
+                          "y": 68,
+                          "name": "Shape",
+                          "fill": "#7FD1A3",
+                          "width": 90,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 1,
+                          "id": "B8vFVQ",
+                          "x": -32,
+                          "y": 80,
+                          "name": "Shape",
+                          "fill": "#5E5A52",
+                          "width": 10,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "AEdjY",
+                          "x": -12,
+                          "y": 80,
+                          "name": "Shape",
+                          "fill": "#C792EA",
+                          "width": 40,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 1,
+                          "id": "ECWFm",
+                          "x": -32,
+                          "y": 92,
+                          "name": "Shape",
+                          "fill": "#5E5A52",
+                          "width": 10,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "xTM2J",
+                          "x": 4,
+                          "y": 92,
+                          "name": "Shape",
+                          "fill": "#82AAFF",
+                          "width": 120,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 1,
+                          "id": "n3ZJC",
+                          "x": -32,
+                          "y": 104,
+                          "name": "Shape",
+                          "fill": "#5E5A52",
+                          "width": 10,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "QPcDO",
+                          "x": 4,
+                          "y": 104,
+                          "name": "Shape",
+                          "fill": "#E9E6DE",
+                          "width": 80,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 1,
+                          "id": "WaCD1",
+                          "x": -32,
+                          "y": 116,
+                          "name": "Shape",
+                          "fill": "#5E5A52",
+                          "width": 10,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "bedfO",
+                          "x": -4,
+                          "y": 116,
+                          "name": "Shape",
+                          "fill": "#F78C6C",
+                          "width": 60,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 1,
+                          "id": "EtWWh",
+                          "x": -32,
+                          "y": 128,
+                          "name": "Shape",
+                          "fill": "#5E5A52",
+                          "width": 10,
+                          "height": 4
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "yghcn",
+                          "x": -12,
+                          "y": 128,
+                          "name": "Shape",
+                          "fill": "#8E897E",
+                          "width": 100,
+                          "height": 4
+                        },
+                        {
+                          "type": "frame",
+                          "id": "N1uj5h",
+                          "x": 10,
+                          "y": 10,
+                          "name": "Type Badge",
+                          "fill": "$surface-overlay",
+                          "cornerRadius": 999,
+                          "gap": 5,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "ZUwTl",
+                              "name": "Icon",
+                              "width": 11,
+                              "height": 11,
+                              "icon": "file-code",
+                              "library": "lucide",
+                              "fill": "$agent-blue-fg"
+                            },
+                            {
+                              "type": "text",
+                              "id": "F6wHc",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Code",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "Pr2Ox": {
+                      "content": "auth.spec.ts"
+                    },
+                    "Ytjxl": {
+                      "fill": "$agent-blue-bg"
+                    },
+                    "Ytjxl/Jg8uM": {
+                      "icon": "code-xml",
+                      "fill": "$agent-blue-fg"
+                    },
+                    "YryPb": {
+                      "content": "Coding Agent"
+                    },
+                    "V6lHTB": {
+                      "content": "Today"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HQOST",
+              "name": "Row",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "GE9x9",
+                  "type": "ref",
+                  "ref": "JCduD",
+                  "name": "September transactions",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ioVnq": {
+                      "type": "frame",
+                      "id": "siAvG",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 96,
+                      "fill": "$sidebar",
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "z5sz82",
+                          "x": -22,
+                          "y": 40,
+                          "name": "Grid",
+                          "width": 207,
+                          "height": 120,
+                          "fill": "$surface",
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "id": "Jj1AB",
+                              "x": 0,
+                              "y": 0,
+                              "name": "Shape",
+                              "fill": "#E2EEE8",
+                              "width": 207,
+                              "height": 16
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "DAx8y",
+                              "x": 0,
+                              "y": 32,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 207,
+                              "height": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "JvnVw",
+                              "x": 0,
+                              "y": 48,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 207,
+                              "height": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "g1sUu",
+                              "x": 0,
+                              "y": 64,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 207,
+                              "height": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "hnpYc",
+                              "x": 0,
+                              "y": 80,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 207,
+                              "height": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "JmrQn",
+                              "x": 0,
+                              "y": 96,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 207,
+                              "height": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "HbRn3",
+                              "x": 0,
+                              "y": 112,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 207,
+                              "height": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "EDOsO",
+                              "x": 0,
+                              "y": 128,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 207,
+                              "height": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "ERyTK",
+                              "x": 52,
+                              "y": 0,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 1,
+                              "height": 120
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "Rl2rr",
+                              "x": 104,
+                              "y": 0,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 1,
+                              "height": 120
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "jOLxe",
+                              "x": 156,
+                              "y": 0,
+                              "name": "Shape",
+                              "fill": "#EFECE6",
+                              "width": 1,
+                              "height": 120
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "NZEbO",
+                          "x": 10,
+                          "y": 10,
+                          "name": "Type Badge",
+                          "fill": "$surface-overlay",
+                          "cornerRadius": 999,
+                          "gap": 5,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "yk4iG",
+                              "name": "Icon",
+                              "width": 11,
+                              "height": 11,
+                              "icon": "sheet",
+                              "library": "lucide",
+                              "fill": "$accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ZE487",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Spreadsheet",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "Pr2Ox": {
+                      "content": "September transactions"
+                    },
+                    "Ytjxl": {
+                      "fill": "$agent-green-bg"
+                    },
+                    "Ytjxl/Jg8uM": {
+                      "icon": "landmark",
+                      "fill": "$agent-green-fg"
+                    },
+                    "YryPb": {
+                      "content": "Bank Agent"
+                    },
+                    "V6lHTB": {
+                      "content": "Sep 28"
+                    }
+                  }
+                },
+                {
+                  "id": "qgJr0",
+                  "type": "ref",
+                  "ref": "JCduD",
+                  "name": "Budget dashboard",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ioVnq": {
+                      "type": "frame",
+                      "id": "lmTDq",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 96,
+                      "fill": "$sidebar",
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "nEC4Z",
+                          "x": -20,
+                          "y": 40,
+                          "name": "App",
+                          "width": 203,
+                          "height": 130,
+                          "fill": "#F8FAFC",
+                          "cornerRadius": 6,
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "qvyPE",
+                              "x": 10,
+                              "y": 10,
+                              "name": "Shape",
+                              "fill": "#0F172A",
+                              "width": 80,
+                              "height": 8
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 4,
+                              "id": "Hmgtt",
+                              "x": 10,
+                              "y": 26,
+                              "name": "Shape",
+                              "fill": "#FFFFFF",
+                              "width": 57,
+                              "height": 30,
+                              "stroke": "#E2E8F0",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 4,
+                              "id": "W0fOV",
+                              "x": 73,
+                              "y": 26,
+                              "name": "Shape",
+                              "fill": "#FFFFFF",
+                              "width": 57,
+                              "height": 30,
+                              "stroke": "#E2E8F0",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 4,
+                              "id": "Q9zpX",
+                              "x": 136,
+                              "y": 26,
+                              "name": "Shape",
+                              "fill": "#FFFFFF",
+                              "width": 57,
+                              "height": 30,
+                              "stroke": "#E2E8F0",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 3,
+                              "id": "S9WZU",
+                              "x": 10,
+                              "y": 66,
+                              "name": "Shape",
+                              "fill": "#6366F1",
+                              "width": 100,
+                              "height": 6
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 3,
+                              "id": "GUcXJ",
+                              "x": 10,
+                              "y": 78,
+                              "name": "Shape",
+                              "fill": "#0EA5E9",
+                              "width": 70,
+                              "height": 6
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 3,
+                              "id": "VLqEp",
+                              "x": 10,
+                              "y": 90,
+                              "name": "Shape",
+                              "fill": "#F59E0B",
+                              "width": 55,
+                              "height": 6
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 3,
+                              "id": "yn8Xd",
+                              "x": 10,
+                              "y": 102,
+                              "name": "Shape",
+                              "fill": "#EC4899",
+                              "width": 40,
+                              "height": 6
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "yvI2y",
+                          "x": 10,
+                          "y": 10,
+                          "name": "Type Badge",
+                          "fill": "$surface-overlay",
+                          "cornerRadius": 999,
+                          "gap": 5,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "oWU3H",
+                              "name": "Icon",
+                              "width": 11,
+                              "height": 11,
+                              "icon": "app-window",
+                              "library": "lucide",
+                              "fill": "$agent-blue-fg"
+                            },
+                            {
+                              "type": "text",
+                              "id": "HPnMg",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "HTML app",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "Pr2Ox": {
+                      "content": "Budget dashboard"
+                    },
+                    "Ytjxl": {
+                      "fill": "$agent-green-bg"
+                    },
+                    "Ytjxl/Jg8uM": {
+                      "icon": "landmark",
+                      "fill": "$agent-green-fg"
+                    },
+                    "YryPb": {
+                      "content": "Bank Agent"
+                    },
+                    "V6lHTB": {
+                      "content": "Sep 27"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "cnABD",
+              "name": "Row",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "RdzQt",
+                  "type": "ref",
+                  "ref": "JCduD",
+                  "name": "Questions for cardiology visit",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ioVnq": {
+                      "type": "frame",
+                      "id": "Wyu4W",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 96,
+                      "fill": "$sidebar",
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "LvvXj",
+                          "x": 0,
+                          "y": 26,
+                          "name": "Page",
+                          "width": 163,
+                          "height": 150,
+                          "fill": "$surface",
+                          "cornerRadius": 3,
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "Rv4en",
+                              "x": 14,
+                              "y": 16,
+                              "name": "Shape",
+                              "fill": "#2E2C28",
+                              "width": 100,
+                              "height": 9
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "bCpJj",
+                              "x": 14,
+                              "y": 34,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "cgVeX",
+                              "x": 14,
+                              "y": 45,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "XifWn",
+                              "x": 14,
+                              "y": 56,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 90,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "iF2Wz",
+                              "x": 14,
+                              "y": 67,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "Xa9T1",
+                              "x": 14,
+                              "y": 78,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "nlScW",
+                              "x": 14,
+                              "y": 89,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 90,
+                              "height": 4
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "Mm5bz",
+                              "x": 14,
+                              "y": 100,
+                              "name": "Shape",
+                              "fill": "#D9D5CC",
+                              "width": 135,
+                              "height": 4
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "cneYf",
+                          "x": 10,
+                          "y": 10,
+                          "name": "Type Badge",
+                          "fill": "$surface-overlay",
+                          "cornerRadius": 999,
+                          "gap": 5,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "bZQuD",
+                              "name": "Icon",
+                              "width": 11,
+                              "height": 11,
+                              "icon": "file-text",
+                              "library": "lucide",
+                              "fill": "$agent-purple-fg"
+                            },
+                            {
+                              "type": "text",
+                              "id": "F6EdI",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Document",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "Pr2Ox": {
+                      "content": "Questions for cardiology visit"
+                    },
+                    "Ytjxl": {
+                      "fill": "$agent-red-bg"
+                    },
+                    "Ytjxl/Jg8uM": {
+                      "icon": "heart-pulse",
+                      "fill": "$agent-red-fg"
+                    },
+                    "YryPb": {
+                      "content": "Health Assistant"
+                    },
+                    "V6lHTB": {
+                      "content": "Sep 25"
+                    }
+                  }
+                },
+                {
+                  "id": "B3i0a",
+                  "type": "ref",
+                  "ref": "JCduD",
+                  "name": "Auth flow diagram",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ioVnq": {
+                      "type": "frame",
+                      "id": "O7bru",
+                      "name": "Thumbnail",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 96,
+                      "fill": "$sidebar",
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 6,
+                          "id": "MPd0h",
+                          "x": -26,
+                          "y": 62,
+                          "name": "Shape",
+                          "fill": "#FFFFFF",
+                          "width": 50,
+                          "height": 26,
+                          "stroke": "#CFCAC0",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "CLevL",
+                          "x": 24,
+                          "y": 75,
+                          "name": "Shape",
+                          "fill": "#A8A398",
+                          "width": 18,
+                          "height": 1.5
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 6,
+                          "id": "z8BUuX",
+                          "x": 42,
+                          "y": 62,
+                          "name": "Shape",
+                          "fill": "#FBF3DA",
+                          "width": 56,
+                          "height": 26,
+                          "stroke": "#CFCAC0",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "KlkJ6",
+                          "x": 98,
+                          "y": 70,
+                          "name": "Shape",
+                          "fill": "#A8A398",
+                          "width": 18,
+                          "height": 1.5
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "eU8TC",
+                          "x": 98,
+                          "y": 84,
+                          "name": "Shape",
+                          "fill": "#A8A398",
+                          "width": 18,
+                          "height": 1.5
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 6,
+                          "id": "M79K8W",
+                          "x": 116,
+                          "y": 44,
+                          "name": "Shape",
+                          "fill": "#E2EEE8",
+                          "width": 70,
+                          "height": 26,
+                          "stroke": "#CFCAC0",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 6,
+                          "id": "kKbVs",
+                          "x": 116,
+                          "y": 86,
+                          "name": "Shape",
+                          "fill": "#E1E8F4",
+                          "width": 70,
+                          "height": 26,
+                          "stroke": "#CFCAC0",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "plgFt",
+                          "x": 10,
+                          "y": 10,
+                          "name": "Type Badge",
+                          "fill": "$surface-overlay",
+                          "cornerRadius": 999,
+                          "gap": 5,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "B91BH0",
+                              "name": "Icon",
+                              "width": 11,
+                              "height": 11,
+                              "icon": "workflow",
+                              "library": "lucide",
+                              "fill": "$agent-red-fg"
+                            },
+                            {
+                              "type": "text",
+                              "id": "csNeb",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Diagram",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "Pr2Ox": {
+                      "content": "Auth flow diagram"
+                    },
+                    "Ytjxl": {
+                      "fill": "$agent-purple-bg"
+                    },
+                    "Ytjxl/Jg8uM": {
+                      "icon": "book-open-text",
+                      "fill": "$agent-purple-fg"
+                    },
+                    "YryPb": {
+                      "content": "Research Analyst"
+                    },
+                    "V6lHTB": {
+                      "content": "Sep 18"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "uSpyt",
+          "type": "ref",
+          "ref": "mSdhx",
+          "name": "Home Indicator",
+          "width": "fill_container"
         }
       ]
     }

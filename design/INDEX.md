@@ -2,8 +2,8 @@
 
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
-- Top-level frames: 263
-- Reusable components: 88 (2800 references, nested ones included)
+- Top-level frames: 267
+- Reusable components: 92 (2800 references, nested ones included)
 - Reference screens and boards: 51
 - Flow screens: 93
 
@@ -196,8 +196,12 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Status Banner | `dcn54` | 720×34 |  | 7 |
 | Inline Error | `Sl1FL` | 560×auto |  | 7 |
 | Notice Banner | `D9HsR` | 560×auto |  | 13 |
-| Callout | `TqvAv` | 560×auto |  | 9 |
+| Callout / Info | `TqvAv` | 560×auto |  | 2 |
 | Empty State | `HUrKd` | 560×auto |  | 18 |
+| Callout / Warning | `sGs40` | 560×auto |  | 5 |
+| Callout / Danger | `S0AYO` | 560×auto |  | 0 |
+| Callout / Success | `BGoTk` | 560×auto |  | 1 |
+| Callout / Neutral | `arwhJ` | 560×auto |  | 1 |
 
 ### 7 Rich Content & Artifacts
 
@@ -281,7 +285,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Mobile — Search | `P7n48` | 390×844 |
 | Mobile — Agent detail | `mN9zj` | 390×844 |
 | Mobile — Settings | `peFJG` | 390×844 |
-| Mobile — Artifacts library | `mz8oI` | 390×844 |
+| Mobile — Artifacts library | `GSi1C` | 390×844 |
 | Mobile — Archived | `grrlx` | 390×844 |
 | Mobile — Form | `m4Kt4` | 390×844 |
 | Mobile — Shared session | `W2aSQ` | 390×844 |
