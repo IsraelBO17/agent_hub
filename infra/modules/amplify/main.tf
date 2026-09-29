@@ -37,7 +37,11 @@ resource "aws_amplify_app" "this" {
               - node_modules/**/*
   YAML
 
-  environment_variables = merge({ AMPLIFY_MONOREPO_APP_ROOT = "web" }, var.environment_variables)
+  # Empty values are left out (Amplify rejects them), e.g. the Google client ID before it exists.
+  environment_variables = merge(
+    { AMPLIFY_MONOREPO_APP_ROOT = "web" },
+    { for k, v in var.environment_variables : k => v if v != "" },
+  )
 
   # SPA: every path without a file extension serves index.html (React Router).
   custom_rule {
