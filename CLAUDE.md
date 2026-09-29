@@ -12,7 +12,9 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 ## Design file
 - The source of truth is `design/fleet_dev.pen` **in this repo**. Open this copy in Pencil, not an older one elsewhere on disk.
 - After any design change: save in Pencil, run `python3 design/tools/pen_index.py`, and commit `fleet_dev.pen` and `INDEX.md` together.
-- Tokens are Pencil variables (`$accent`, `$text-tertiary`, …). Use tokens, not raw hex, in anything new.
+- Tokens are Pencil variables (`$accent`, `$text-tertiary`, …). Use tokens, not raw hex, in anything new. Agent colours (`$agent-*`) are only for agent identity (avatars, tiles).
+- Type scale: 12 / 13 / 14 / 15 / 20 / 28 / 40. No other font sizes.
+- Charts: follow `docs/CHART_SPEC.md`; the drawn charts in the file are illustrations.
 - Layout conventions: desktop 1440×1024, sidebar 284 wide, chat column about 760, artifact panel about 50/50; mobile 390×844. Icons are lucide.
 - Flow screens are named `F<flow>.<step> Title`, and each flow row has a "Flow N · Step notes" strip underneath.
 
