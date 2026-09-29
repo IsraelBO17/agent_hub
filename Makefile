@@ -7,10 +7,10 @@ DB_PORT ?= 55432
 export DATABASE_URL_DIRECT ?= postgresql://postgres:dev@localhost:$(DB_PORT)/agent_hub
 
 .DEFAULT_GOAL := help
-.PHONY: help db-up db-down api-migrate api-check api-test contract-lint design-index
+.PHONY: help db-up db-down api-migrate api-check api-test contract-lint design-index infra-validate infra-plan-bootstrap infra-init infra-plan
 
 help: ## List targets
-	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-15s %s\n", $$1, $$2}'
+	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-22s %s\n", $$1, $$2}'
 
 db-up: ## Start the local Postgres 17 container
 	@docker start $(DB_CONTAINER) >/dev/null 2>&1 || docker run -d --rm --name $(DB_CONTAINER) \
@@ -35,3 +35,19 @@ contract-lint: ## Lint the OpenAPI contract
 
 design-index: ## Regenerate design/INDEX.md after saving the design in Pencil
 	python3 design/tools/pen_index.py
+
+# Terraform: plans only. Applying is a deliberate `terraform -chdir=... apply` after reading the plan (infra/README.md).
+infra-validate: ## Format-check and validate the Terraform (no AWS calls)
+	terraform -chdir=infra fmt -check -recursive
+	terraform -chdir=infra/bootstrap init -backend=false -input=false >/dev/null && terraform -chdir=infra/bootstrap validate
+	terraform -chdir=infra/envs/dev init -backend=false -input=false >/dev/null && terraform -chdir=infra/envs/dev validate
+
+infra-plan-bootstrap: ## Plan the state bucket and DNS zone (needs AWS_PROFILE)
+	terraform -chdir=infra/bootstrap init -input=false >/dev/null && terraform -chdir=infra/bootstrap plan
+
+infra-init: ## Point infra/envs/dev at the state bucket created by bootstrap
+	terraform -chdir=infra/envs/dev init -input=false -reconfigure \
+		-backend-config="bucket=$$(terraform -chdir=infra/bootstrap output -raw state_bucket)"
+
+infra-plan: ## Plan the dev environment (needs AWS_PROFILE and infra-init)
+	terraform -chdir=infra/envs/dev plan
