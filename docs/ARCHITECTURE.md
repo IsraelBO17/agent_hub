@@ -7,7 +7,7 @@
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
 
-This file is the single source of truth for technical decisions. When a decision changes, edit it here and add a line to the change log (§7).
+This file is the single source of truth for technical decisions. Architecture diagram: [`diagrams/architecture.mmd`](diagrams/architecture.mmd) ([PNG](diagrams/architecture.png)); keep it in sync with this file. When a decision changes, edit it here and add a line to the change log (§7).
 
 **It supersedes parts of `PRODUCT_PLAN.md`.** The plan was written before these decisions and still mentions DynamoDB, Cognito, a Next.js front end, a registry CLI writing to DynamoDB and "API Gateway or Lambda Function URL". Where the two disagree, this file wins:
 
@@ -187,3 +187,4 @@ Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (l
 |---|---|
 | 2026-09-29 | v0.1: decisions D1–D15 recorded; proposals P1–P8 and questions Q1–Q10 raised. |
 | 2026-09-29 | v0.2: Vite SPA (D16), dev only until v1 (D17), disconnect lets the agent finish with a time cap (D11), P1–P8 accepted. |
+| 2026-09-29 | Architecture diagram added (`docs/diagrams/`, step 2). |

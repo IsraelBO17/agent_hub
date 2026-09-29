@@ -1,0 +1,48 @@
+---
+config:
+  layout: dagre
+  flowchart:
+    curve: basis
+    nodeSpacing: 40
+    rankSpacing: 70
+---
+flowchart LR
+%% Agent Hub architecture (dev environment). Source of truth: docs/ARCHITECTURE.md.
+%% Render: see docs/diagrams/README.md
+  subgraph CLIENT["Browser"]
+    UI["Agent Hub UI<br/>Vite + React SPA (D16)"]
+  end
+
+  subgraph AWS["AWS us-east-1, managed with Terraform (dev only until v1)"]
+    AMPLIFY["AWS Amplify Hosting<br/>app.&lt;domain&gt;"]
+    ALB["Application Load Balancer<br/>api.&lt;domain&gt;, HTTPS<br/>idle timeout 300 s, drain 300 s"]
+    API["FastAPI container<br/>ECS Fargate, 1 task<br/>verifies Google token (JWKS),<br/>own session, history, stream translator"]
+    ECR[("ECR<br/>API image")]
+    S3[("S3<br/>artifacts and uploads")]
+    SECRETS["Secrets Manager<br/>Neon URLs, session key,<br/>Google client ID"]
+    subgraph AGENTCORE["Bedrock AgentCore"]
+      A1["Agent runtime<br/>Research Analyst"]
+      A2["Agent runtime<br/>Ledger"]
+      A3["Agent runtime<br/>more agents: rows in agents table"]
+      MEM["AgentCore Memory<br/>optional, per agent"]
+    end
+  end
+
+  GOOGLE["Google sign-in<br/>ID token, JWKS"]
+  subgraph NEONBOX["Neon, outside AWS"]
+    NEON[("Neon Postgres, us-east-1<br/>users, agents, sessions,<br/>messages, files")]
+  end
+
+  UI -->|"loads static app"| AMPLIFY
+  UI -->|"1. Google sign-in"| GOOGLE
+  UI -->|"2. ID token once, then REST + SSE<br/>with the API's own session"| ALB
+  UI -.->|"presigned PUT / GET"| S3
+  ALB --> API
+  ECR -->|"image pull"| API
+  SECRETS -->|"injected at task start"| API
+  API -->|"pooled connection"| NEON
+  API -->|"presign, artifact files"| S3
+  API -->|"InvokeAgentRuntime by ARN, stream back"| A1
+  API --> A2
+  API --> A3
+  A1 -.->|"optional"| MEM
