@@ -73,7 +73,7 @@ Two switches, so nothing is billed before it's needed:
 | VPC, subnets, internet gateway, security groups, IAM, ECS cluster, ACM, budget | free | $0 | $0 |
 | **Total** | | **≈ $2** | **≈ $37** |
 
-The ALB and its two addresses are about two-thirds of the running cost; cheaper setups were weighed and rejected in ARCHITECTURE D2. Budget alarm: 80 % of $50 actual and 100 % forecast, to `budget_alert_email`. Model tokens and Neon are billed separately.
+The ALB and its two addresses are about two-thirds of the running cost; cheaper setups were weighed and rejected in ARCHITECTURE D2. Budget alarm: 80 % of $50 actual and 100 % forecast, to `budget_alert_email`, counting **only costs tagged `Project=fleet`**: the account is shared with other projects (D27). That filter works only once `Project` is activated as a cost allocation tag in the organization's management account. Model tokens and Neon are billed separately.
 
 ## Everyday
 

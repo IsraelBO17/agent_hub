@@ -66,13 +66,17 @@ variable "google_client_id" {
 }
 
 variable "agent_runtime_arns" {
-  description = "AgentCore runtimes the API may invoke. Defaults to every runtime in this account and region."
+  description = "Fleet's AgentCore runtime ARNs the API may invoke. The account is shared, so no wildcard; required when enable_api is true."
   type        = list(string)
   default     = []
+  validation {
+    condition     = alltrue([for a in var.agent_runtime_arns : can(regex("^arn:aws:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:runtime/[A-Za-z0-9_-]+$", a))])
+    error_message = "List exact runtime ARNs (arn:aws:bedrock-agentcore:<region>:<account>:runtime/<id>), no wildcards."
+  }
 }
 
 variable "monthly_budget_usd" {
-  description = "AWS spend alarm (PRODUCT_PLAN A4, ARCHITECTURE Q8), excluding model tokens billed elsewhere."
+  description = "Fleet's AWS spend alarm (PRODUCT_PLAN A4, ARCHITECTURE Q8), counting only resources tagged Project=fleet."
   type        = number
   default     = 50
 }

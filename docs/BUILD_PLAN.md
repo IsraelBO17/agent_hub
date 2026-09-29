@@ -44,7 +44,7 @@ The ordered steps for building Agent Hub, their status, and how we work. Start a
 Kept current in [`ARCHITECTURE.md` §4](ARCHITECTURE.md#4-open-questions-answers-pending). As of 2026-09-29 these are still open:
 
 - **Q8 Budget:** is $50/month AWS (excluding model tokens) still the ceiling?
-- **Q10 AWS account:** the account exists; the owner will set up access and say when (step 7).
+- **Cost allocation tags:** ask the organization's management account (005151336112) to activate `Project`, `Owner`, `Environment` and `aws-apn-id` as cost allocation tags, so fleet's budget and Cost Explorer can see fleet's spend (D27).
 
 ## Where things are
 

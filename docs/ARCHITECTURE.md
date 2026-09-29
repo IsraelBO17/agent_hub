@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.4, D1–D26 and P1–P8 locked; §4 questions still open |
+| Status | v0.4, D1–D27 and P1–P8 locked; §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -177,6 +177,14 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Why.** Company convention for cost reporting, ownership and partner attribution. The product is still called Agent Hub; `fleet` is the project name in AWS.
 **Revisit if.** The convention changes: names and tags are defined once in each root.
 
+### D27. Shared AWS account: attribute and scope everything to fleet
+**Decision (2026-09-29, Q10).** Agent Hub runs in `ml_account` (992382810653, us-east-1), a **member account of an AWS Organization** (management account 005151336112) that other projects also use. Consequences:
+- **Budget** counts only costs tagged `Project=fleet` (`TagKeyValue` filter). It needs `Project` (and ideally `Owner`, `Environment`, `aws-apn-id`) **activated as cost allocation tags in the management account**; a member account can't do it. Until activation the budget sees $0, and tagged costs count only from activation onward.
+- **Least privilege across projects:** the API may invoke only fleet's AgentCore runtimes, listed by exact ARN (`agent_runtime_arns`, no wildcard). The S3, Secrets Manager and ECR permissions were already scoped to fleet's own resources.
+- **Model spend** (Bedrock, billed in this account) is attributed by invoking models through an **application inference profile tagged `Project=fleet`** in each fleet agent (step 8, issue #3).
+**Why.** An account-wide budget alarmed on other projects' spend ($289.68 in September before fleet existed), and a wildcard IAM grant would have let the API call other teams' agents.
+**Revisit if.** Fleet gets its own account: drop the tag filter and keep the explicit runtime list.
+
 ---
 
 ## 2. Networking (confirmed by the owner, 2026-09-29, Q3)
@@ -213,7 +221,7 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 |---|---|---|---|
 | ~~Q2~~ | **Answered → D25.** ~~Domain.~~ Which parent domain, is it in Route 53, and who issues TLS (ACM in us-east-1)? | ALB listener, Amplify custom domain, cookie domain, Google OAuth origins | Subdomains of your portfolio domain, ACM certificates, Route 53 if already there |
 | Q8 | **Budget.** Is the $50/month AWS ceiling in the plan still right, excluding model tokens? | Task size, alarms | Yes |
-| Q10 | **AWS account.** Is there a dedicated account (or at least credentials profile) for Agent Hub, and may I run read-only AWS CLI and `terraform plan` against it? | Step 7 | Ask again at step 7 |
+| ~~Q10~~ | **Answered → D27 (shared `ml_account`).** ~~AWS account.~~ Is there a dedicated account (or at least credentials profile) for Agent Hub, and may I run read-only AWS CLI and `terraform plan` against it? | Step 7 | Ask again at step 7 |
 
 ## 5. Open items (known, not yet decided)
 
@@ -255,3 +263,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-09-29 | Step 7: Terraform written (`infra/`); D2 Express Mode re-check recorded. Budget alarm at $50 (Q8 default) when an alert email is set. |
 | 2026-09-29 | D2: cheaper alternatives to the ALB weighed; ALB kept behind `enable_api` (off until step 8). |
 | 2026-09-29 | Domain changed to `fleet.qucoon.com` (D25; `qucoon.com` is on Route 53 in another account). D26: naming convention and required tags; `Owner` and `aws-apn-id` values kept out of git. |
+| 2026-09-29 | D27: shared member account; budget filtered to `Project=fleet` (needs tag activation in the management account); API runtime access by exact ARN only. |

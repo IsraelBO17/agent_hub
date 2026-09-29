@@ -1,7 +1,5 @@
 # The dev environment, the only one until v1 (D17). Apply order and the manual steps: infra/README.md.
 
-data "aws_caller_identity" "current" {}
-
 data "aws_route53_zone" "fleet" {
   name = var.zone_name
 }
@@ -12,10 +10,8 @@ locals {
   api_domain = "api.${var.zone_name}"              # https://api.fleet.qucoon.com (ALB)
   app_origin = "https://${local.app_domain}"
   api_port   = 8000
-  account_id = data.aws_caller_identity.current.account_id
-  runtime_arns = length(var.agent_runtime_arns) > 0 ? var.agent_runtime_arns : [
-    "arn:aws:bedrock-agentcore:${var.region}:${local.account_id}:runtime/*",
-  ]
+  # The account is shared: the API may invoke only fleet's own runtimes, listed explicitly.
+  runtime_arns = var.agent_runtime_arns
 }
 
 module "network" {
@@ -108,6 +104,14 @@ resource "aws_budgets_budget" "monthly" {
   limit_amount = tostring(var.monthly_budget_usd)
   limit_unit   = "USD"
   time_unit    = "MONTHLY"
+
+  # The account is shared with other projects: count only resources tagged Project=fleet (D26).
+  # Needs `Project` activated as a cost allocation tag in the organization's management account;
+  # until then this budget sees $0.
+  cost_filter {
+    name   = "TagKeyValue"
+    values = [format("user:Project$%s", var.project)] # user:Project$fleet
+  }
 
   notification {
     comparison_operator        = "GREATER_THAN"
