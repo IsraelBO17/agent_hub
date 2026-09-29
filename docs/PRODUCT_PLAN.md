@@ -7,6 +7,8 @@
 | Owner | Israel B. (product, engineering, approver) |
 | Inputs | `design/fleet_dev.pen` as pushed to this repo on 2026-09-28 (222 frames, 85 components, 74 flow screens), the project brief |
 
+> **Aligned (2026-09-29):** the design, data model and flows were checked against each other in [`ALIGNMENT_REVIEW.md`](ALIGNMENT_REVIEW.md); F01, F08, F10, F12, F13, F14 and F20 below were updated from it.
+>
 > **Stack superseded (2026-09-29):** technical decisions now live in [`ARCHITECTURE.md`](ARCHITECTURE.md). Mentions below of DynamoDB, Cognito, Next.js and Lambda Function URLs are out of date; see its table at the top.
 
 This is the plan to build from. It makes decisions; where a decision rests on something I don't know, it is marked **[A#]** (assumption) and collected in §7. Open questions that block the build are ranked at the end (§11).
@@ -87,7 +89,7 @@ This is the plan to build from. It makes decisions; where a decision rests on so
 | Face ID / passkey step-up for approvals (F4.2) | Yes | An in-app approval is enough while the bank is synthetic. The design copy also implies a real bank integration ("sent to your bank"), which we are not building. P2, and only if real money ever becomes real. |
 | Message edit and branching | Yes | Turns the transcript into a tree and complicates every backend. Regenerate with a version pager (P1) covers most of it. P2. |
 | Session too long → auto-summary new session (F6.6–6.7) | Yes | Depends on agent memory strategy. Show a clear error and a "New session" action in v1. P2. |
-| Background task toasts "anywhere" (F4.6) | Yes | Needs a cross-session event channel. In v1 the sidebar shows a working dot on the session instead. P2. |
+| ~~Background task toasts "anywhere" (F4.6)~~ **Moved into v1 (2026-09-29, alignment review D4)** | Yes | The sidebar already polls the sessions list every 20 s for the P0 approval badge (ARCHITECTURE D22), so the "Task complete" toast comes from the same poll at almost no cost. Web push stays P2. |
 | Rate-limit countdown | Yes | A generic "try again" with the backend's `retryAfter` is enough. |
 | Dark mode | Only the settings picker | No dark tokens or dark screens exist. Shipping it undesigned produces bad contrast. Hide it in v1; P2. |
 | Onboarding tips, shortcuts overlay | Yes | Single expert user. P2. |
@@ -115,20 +117,20 @@ This is the plan to build from. It makes decisions; where a decision rests on so
 
 | ID | Feature | Acceptance criteria |
 |---|---|---|
-| F01 | **Agent registry and catalog** | `GET /agents` drives the catalog; there is no agent list in front-end code. Registering a new agent descriptor (CLI → DynamoDB) makes it appear on reload with its icon, colours, description and status. Catalog search appears only when there are more than 8 agents. Loading, empty and error states exist. |
+| F01 | **Agent registry and catalog** | `GET /v1/agents` drives the catalog; there is no agent list in front-end code. Registering a new agent (CLI or SQL seed inserting a row in the `agents` table, D6) makes it appear on reload with its icon, colours, description and status. Catalog search appears only when there are more than 8 agents. Loading, empty and error states exist. |
 | F02 | **Descriptor-driven UI** | Each agent descriptor declares `icon`, `color`, `starters[]`, `disclaimer`, `capabilities` (`attachments: {types, maxMB}`, `artifacts`, `approvals`, `questions`), `tools[]` (`name`, `description`, `requiresApproval`), `stage` (`beta`/`stable`) and `runtime` (`agentcore`/`http`). The UI hides what an agent doesn't support: no "+" button without attachments. The disclaimer under the composer is the agent's own text. |
 | F03 | **New session, lazy creation** | `/agents/:id` shows starters and the composer. No session exists until the first send. The server creates it and returns an id, and the URL becomes `/agents/:id/:sessionId` without a reload. If the first send fails, no session is created, the draft is kept, and Retry works. |
 | F04 | **Streaming chat** | Tokens render progressively with no layout jumps. The view auto-scrolls only when already at the bottom; otherwise "Jump to latest" appears. Stop (button or Esc) ends generation, keeps the partial reply and marks it "Stopped". Markdown covers headings, lists, tables, inline and fenced code with a copy button, and links. Each message has Copy and a timestamp. |
 | F05 | **Agent activity** | `thinking` events render as a collapsed "Thought for Ns" row; if the agent emits none, the row doesn't appear. Tool calls render as chips (name, short summary, duration, state) that expand to input and output. `plan`/`progress` events render the Plan Card with steps. All of these persist and look the same after reload. |
-| F06 | **Session history** | The sidebar lists the current agent's sessions, grouped Today / Yesterday / Previous 7 days / Earlier, newest first. A new session appears at the top the moment it's created (this fixes the design bug). Sessions are auto-titled by the backend after the first reply. Rename inline. Delete removes the session immediately with a 10-second Undo toast and no dialog. Reopening a session restores its full transcript, including tool calls, artifacts and approvals. |
+| F06 | **Session history** | The sidebar lists the current agent's sessions, grouped Today / Yesterday / Previous 7 days / Earlier, newest first. A new session appears at the top the moment it's created (this fixes the design bug). Sessions are titled from the first message when created (ARCHITECTURE D21). Rename inline. Delete removes the session immediately with a 10-second Undo toast and no dialog. Reopening a session restores its full transcript, including tool calls, artifacts and approvals. |
 | F07 | **Agent switching** | The Agent Switcher in the sidebar lists all agents with status. Choosing one opens a fresh session for it. The header always shows agent, status and session title. Offline agents can be selected but are read-only. |
-| F08 | **Errors and recovery** | Six states each have their own copy and next action: reply failed (Retry resends the same message); stream dropped (the partial reply is kept, Retry, and the stream resumes from the last event id if the backend supports it); connection lost (banner, then "Back online"); agent offline (composer disabled, past sessions readable); agent or session not found (404 view); auth expired (re-login keeps the draft). No spinner can hang: 60 s without an event is an error. |
+| F08 | **Errors and recovery** | Six states each have their own copy and next action: reply failed (Retry reruns the same message); stopped or interrupted (the partial reply is kept, Retry); connection lost (banner, the agent keeps working, the reply loads by polling, then "Back online"; no stream resume in v1, P3); agent offline (composer disabled, past sessions readable, unlocks by itself when the agent is back); agent or session not found (404 view); auth expired (re-login keeps the draft). No spinner can hang: after 45 s with no bytes the client switches to polling; after 60 s with no events it shows a soft "Still working" note, not an error (`SEND_MESSAGE.md`). |
 | F09 | **Artifacts v1** | `artifact.create` and `artifact.update` events create a versioned artifact. A card in the chat opens the side panel, split 50/50; on mobile it opens as a full-screen sheet. Supported types: **document** (markdown, serif rendering), **code** (syntax highlight, line numbers), **html** (sandboxed iframe on a separate origin, no `allow-same-origin`), **table** (CSV/JSON with sticky header, sortable). The version menu lists versions, and choosing one shows that version read-only. Copy, Download (native format), and Expand are available. |
-| F10 | **Approvals (human in the loop)** | When a tool with `requiresApproval` is called, the backend pauses the run and emits `approval.request`. The card is rendered from backend-validated tool arguments, not model prose. It supports pending, approved, denied (with an optional reason sent to the agent) and expired, and shows a visible countdown. The approval survives reload and shows on the session in the sidebar. Double-submit is impossible. The backend refuses to execute a denied or expired call. There is an audit record per decision. |
+| F10 | **Approvals (human in the loop)** | When a tool with `requiresApproval` is called, the run ends with the reply marked `awaiting_approval` and an `approval.requested` event (ARCHITECTURE D19). The card is rendered from backend-validated tool arguments, not model prose. It supports pending, approved, denied (with an optional reason sent to the agent), expired and cancelled (the user sent a new message instead), and shows a visible countdown. Approving or denying continues the same reply. The approval survives reload and shows on the session in the sidebar and as a toast elsewhere. Double-submit is impossible. The backend refuses to execute a denied, expired or cancelled call. There is an audit record per decision. |
 | F11 | **Agent questions** | `question` events render as quick replies or single / multiple choice. Answering sends a structured reply. Once answered, the question shows its answer and becomes read-only. |
-| F12 | **Attachments** | Images and PDFs can be added by the "+" button, drag and drop, or paste. They upload to S3 through a presigned URL and show progress, failure with retry, and "not allowed" states, enforcing the type and size limits in the descriptor. Sent attachments render in the user message and can be downloaded. |
-| F13 | **Auth** | Cognito, single user. `useAuth()` is the only auth surface in the UI. Every route and API call is authenticated. No AWS credentials reach the browser; the backend calls AgentCore with its own IAM role. |
-| F14 | **AgentApi and the contract** | One `AgentApi` interface with two implementations: a mock (localStorage, scripted scenarios) and an HTTP/SSE client, switched by an env var. `docs/BACKEND_CONTRACT.md` documents endpoints, JSON shapes and every SSE event. A Playwright suite runs every Scenario Agent script against the mock in CI. |
+| F12 | **Attachments** | Files can be added by the "+" button, drag and drop, or paste: PDF, PNG, JPEG, WebP, GIF, CSV and TXT, up to 20 MB each and 10 per message, narrowed per agent by the descriptor (the limits shown in the UI come from it). They upload to S3 through a presigned URL and show progress, failure with retry, and "not allowed" states. Sent attachments render in the user message and can be downloaded. The agent receives them as short-lived signed URLs (D20). |
+| F13 | **Auth** | Google sign-in, then the API's own session: short-lived access token in memory, rotating refresh cookie (ARCHITECTURE D8). Allowlist, single user. `useAuth()` is the only auth surface in the UI. Every route and API call is authenticated except the public share page. No AWS credentials reach the browser; the backend calls AgentCore with its own IAM role. |
+| F14 | **AgentApi and the contract** | One `AgentApi` interface with two implementations: a mock (localStorage, scripted scenarios) and an HTTP/SSE client, switched by an env var. The OpenAPI 3.1 spec (build step 5) documents endpoints, JSON shapes and every SSE event and block; the client is typed from it. A Playwright suite runs every Scenario Agent script against the mock in CI. |
 | F15 | **Mobile web, core flows** | At 390 px width, these work: catalog, new session, chat with streaming, sessions drawer, artifact sheet, approval. The composer stays above the keyboard. Tap targets are at least 44 px. No horizontal scroll. |
 
 ### P1
@@ -139,7 +141,7 @@ This is the plan to build from. It makes decisions; where a decision rests on so
 | F17 | Pin and archive | Pinned sessions show in their own section at the top. Archived sessions are hidden from the sidebar and ⌘K by default and shown in an Archived view with Restore. |
 | F18 | Read-only share link | "Share" creates an unguessable link to a frozen snapshot of the session and its artifacts. Viewers don't need to log in and can't send messages. The link can be revoked, after which it returns 404. It renders well on mobile. |
 | F19 | Agent detail page | `/agents/:id/about` shows the descriptor: capabilities with "Asks first" flags, starters, runtime details and recent sessions. |
-| F20 | Feedback and regenerate | 👍 / 👎 (with a reason) is stored per message and exportable as an eval signal. Regenerate creates a sibling reply, with a pager between versions (1/2). |
+| F20 | Feedback and regenerate | **👍 / 👎 moved into v1 (2026-09-29, alignment review D4):** stored per message with optional reasons and details, exportable as an eval signal. Regenerate stays P1: it creates a sibling reply, with a pager between versions (1/2). |
 | F21 | Structured forms | A `form` event renders labelled fields with validation. Submitting sends structured JSON; afterwards the form becomes a read-only summary. |
 | F22 | Rich reply content | Citations as chips, with a source preview and a Sources list. Images in replies with a lightbox. Charts from a declarative spec (line and bar, one library; see `docs/CHART_SPEC.md`). Download for generated files. |
 | F23 | Computed status | The backend health check sets Online / Degraded / Offline from probes and error rate. "Beta" becomes a separate stage tag, not a status (see §9). |
@@ -207,21 +209,26 @@ Status key:
 | Chat: auth expired, draft kept | ✅ `N8ysh` | ✅ `DxTnt` | P0 |
 | Sign in (Google only; loading, signed out) | ✅ `MMxdZ`, loading `vkBhc`, signed out `DfY8F` | ✅ `U0HaRi` | P0 |
 | Sign in: account not allowed | ✅ `zte2v` | ✅ `dLCVX` | P0 |
+| Sign in: failed (popup closed, network) | ✅ `G7FDcP` | ➕ (same pattern as `U0HaRi`) | P0 |
 | Composer states (attachments, disabled, drag-drop) | ✅ | ✅ `Composer / Mobile` `OUcXN`; keyboard open F11.3 `w1IZ2`; disabled F11.11 | P0 |
 | Sessions sidebar / drawer | ✅ | ✅ F10.5 `i46aRN` | P0 |
 | Sessions: loading skeleton | ✅ States board | ✅ F11.15 `JgaZ9` | P0 |
+| Sessions: failed to load | ✅ `P3wQ4` ("Couldn't load sessions · Try again") | ➕ (same block in the drawer) | P0 |
 | Delete + undo | ✅ no dialog: F7.6 `Ba2LD`, F7.7 `ZX9nG` | ✅ long-press F11.16 `G6iHV`, swipe F11.17 `mepQO`, undo F11.18 `XRu2z` | P0 |
 | Agent switcher | ✅ F8.2 | ✅ bottom sheet F11.10 `wE4kz` | P0 |
 | Agent offline / not found | ✅ States board | ✅ offline F11.11 `t4QWfb`, agent not found `V97EP` | P0 |
-| Artifact panel: document / code / html / table | ✅ `oQYrz`, `fUZV4`, `j2uc1W`, `LrhPn` (trim to v1 scope) | ✅ sheet `KXQcB`, chat `JLUHx` | P0 |
-| Artifact: streaming while generating | ✅ F3.2 | ✅ `ZQvzZ` | P0 |
+| Artifact panel: document / code / html / table | ✅ `hixKy`, `fUZV4`, `j2uc1W`, `LrhPn` (trim to v1 scope) | ✅ sheet `KXQcB`, chat `JLUHx` | P0 |
+| Artifact: streaming while generating | ✅ F3.2 `vrh0m` (`Artifact Card / Generating`: indeterminate bar + section) | ✅ `vJpDE` | P0 |
+| Artifact: version failed to load | ✅ `p0Nx1` ("Couldn't open v3 · Try again") | ➕ (same block in the sheet) | P0 |
 | Approval card (all 4 states) | ✅ | ✅ pending F10.6 `GCuQ2`; approved F11.12 `c16G99`, denied F11.13 `s9qGv`, expired F11.14 `AKLDi` | P0 |
+| Approval: cancelled by a new message, deny with reason, decision failed to send | ✅ components `Approval Card / Cancelled` `G4yJz`, `/ Deny reason` `J6Ep4h`, `/ Decision failed` `F2LNrs`; shown on Agent-Initiated board `zaZHd` §4 and Edge States `l77UCh`; reason shown on F4.4 | ✅ reason shown on F11.13 `s9qGv` | P0 |
+| Reply still working (no events for 60 s, not an error) | ✅ `Message Footer / Still working` `K5UJmM` on the Working & Failure and States boards | uses the same footer | P0 |
 | Approval waiting in another session (sidebar dot) | ✅ `r5Gru` (session badge + toast); other agent: Edge States board | ✅ `B6G93s` (menu dot + toast) | P0 |
 | Questions (quick reply / choice) | ✅ Agent-Initiated board | ✅ choice F11.7 `wiL50` | P0 |
 | Attachments: upload, fail, too large, wrong type | ✅ Chat Interaction Details board, "Too large or wrong type" `jSKjM` | ✅ attach sheet F11.4 `BXfKu`; unsupported type F11.3 | P0 |
 | 404 session | ✅ `H7ZqtC` | ✅ F11.19 `HfWCC` | P0 |
 | ⌘K palette | ✅ `B5LZKO` | ✅ search screen `P7n48` | P1 |
-| Share dialog + public shared view | ✅ dialog; public page `q1bvDq` | ✅ public page `W2aSQ` | P1 |
+| Share dialog + public shared view | ✅ dialog; public page `q1bvDq`; link revoked `Jj5C0` | ✅ public page `W2aSQ`; link revoked `rYc1d` | P1 |
 | Agent detail | ✅ `x05s4W` | ✅ `mN9zj` | P1 |
 | Settings | ✅ `RHrDH`: Account (Google, Sign out), Light only, shortcuts in the ⌘/ overlay | ✅ `RT72e` (Account; no shortcuts on mobile) | P1 |
 | Artifacts library / Archived | ✅ | ✅ `GSi1C` / `grrlx` | P1 |
@@ -234,7 +241,7 @@ The remaining P0 mobile states (catalog error and empty, auth expired, artifact 
 
 P1 adds the public shared session, search and agent detail.
 
-**Edge states (P0), designed on the "Edge States (P0)" board `OFj2k`:**
+**Edge states (P0), designed on the "Edge States (P0)" board `l77UCh`:**
 - **Orphaned sessions.** An agent is removed from the registry but its sessions still exist. They stay readable, with the note "This agent is no longer available".
 - **Mid-session version change.** The agent was redeployed during a session; show an inline "Agent updated to v15" divider.
 - **Same session in two tabs.** The second tab becomes read-only until focused.
@@ -258,7 +265,7 @@ No third-party analytics. The client sends a small set of events to `POST /telem
 | Responsive | Send → first rendered event (UI overhead only) | ≤ 150 ms after first SSE byte | `send_started`, `first_event`, `first_render` timestamps |
 | Smooth streaming | Long tasks during a 2k-token reply; layout shift in chat | 0 tasks > 50 ms; CLS = 0 | Playwright + PerformanceObserver in CI |
 | Nothing hangs | Sends that end in `done` or a handled error state | ≥ 99.5 % | `reply_done`, `reply_error`, `reply_abandoned` |
-| Recovers | Streams that drop for < 30 s and resume without data loss | ≥ 99 % | Fault-injection scenarios, plus `stream_resumed` events |
+| Recovers | Replies whose stream drops for < 30 s still arrive complete, by polling (no stream resume in v1) | ≥ 99 % | Fault-injection scenarios, plus `stream_recovered` events |
 | Trust | Sensitive tool calls executed without an approval record; executions after deny or expiry | **0** / **0** | Backend audit log query, alarmed |
 | Accessible | axe serious / critical issues; P0 flows completable by keyboard | 0; 100 % | axe in Playwright; keyboard-only e2e |
 | Portfolio | Shared-link views, median time on page; demos given | Tracked, no target in v1 | `share_viewed` events (no personal data) |
