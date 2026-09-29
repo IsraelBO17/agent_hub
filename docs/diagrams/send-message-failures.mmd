@@ -8,13 +8,13 @@ sequenceDiagram
   participant R as AgentCore runtime
 
   alt Access token expired
-    B->>A: POST /sessions/{id}/messages (expired token)
+    B->>A: POST /v1/sessions/{id}/messages (expired token)
     A-->>B: 401 token_expired
-    B->>A: POST /auth/refresh (cookie)
+    B->>A: POST /v1/auth/refresh (cookie)
     alt refresh token valid
       A->>DB: rotate refresh token
       A-->>B: 200 new access token
-      B->>A: resend with the same clientMessageId (no duplicate message)
+      B->>A: resend with the same clientMessageId<br/>(unique per user: no duplicate message or session)
     else refresh token expired, revoked or reused
       A->>DB: reuse detected → revoke the whole token family
       A-->>B: 401 session_expired
@@ -23,13 +23,16 @@ sequenceDiagram
     end
 
   else Agent marked offline
-    B->>A: POST /sessions/{id}/messages
+    B->>A: POST /v1/sessions/{id}/messages
     A->>DB: agent status offline
     A-->>B: 503 agent_unavailable (JSON, no stream) · nothing saved
     B->>U: composer disabled, draft kept, past sessions readable
+    loop every 30 s while offline (D22)
+      B->>A: GET /v1/agents/{slug}
+    end
 
-  else A reply is already running in this session
-    B->>A: POST /sessions/{id}/messages
+  else A reply is already streaming in this session
+    B->>A: POST /v1/sessions/{id}/messages
     A-->>B: 409 run_in_progress · nothing saved
 
   else Agent unreachable when called
@@ -37,7 +40,7 @@ sequenceDiagram
     R-->>A: error (not found, throttled, 5xx, timeout)
     A->>DB: assistant message status failed, error code
     A-->>B: event run.failed {code, retryable} · stream closes
-    B->>U: "Reply failed" + Retry (reruns the same user message)
+    B->>U: "Reply failed" + Retry (POST /v1/messages/{id}/retry, same user message)
 
   else Agent error mid-stream
     R-->>A: error event, or the stream breaks
@@ -47,33 +50,35 @@ sequenceDiagram
 
   else User presses Stop
     U->>B: Stop button or Esc
-    B->>A: POST /sessions/{id}/runs/{runId}/stop
+    B->>A: POST /v1/messages/{id}/stop
+    A->>DB: set cancel_requested_at
+    A-->>B: 202 (stop request, may land on any task)
+    Note over A: The task running the reply sees the flag<br/>within 2 s (checkpoint or keep-alive tick)
     A->>R: cancel (close the AgentCore stream)
     A->>DB: keep partial blocks, status stopped
     A-->>B: event run.stopped · stream closes
-    A-->>B: 200 (stop request)
-    B->>U: partial reply marked "Stopped"
+    B->>U: partial reply marked "Stopped" + Retry
 
   else Browser disconnects (network drop, tab closed, laptop sleeps)
     B--xA: connection lost
-    Note over B: Client also treats 45 s with no bytes<br/>(3 missed pings) as a lost connection
+    Note over B: Client also treats 45 s with no bytes<br/>(3 missed pings) as a lost connection.<br/>60 s with pings but no events is not an error:<br/>"Still working" note, no Retry
     A->>A: stop writing SSE · the agent task keeps running (D11)
     loop until the agent finishes or the 15-min cap
       R-->>A: chunk
-      A->>DB: checkpoint
+      A->>DB: checkpoint + heartbeat_at
     end
     A->>DB: status complete (interrupted if the cap was hit)
     B->>U: banner "Connection lost. The agent is still working"
-    B->>A: on reconnect or reload: GET /sessions/{id}/messages
+    B->>A: on reconnect or reload: GET /v1/sessions/{id}/messages
     loop every 2 s while status is streaming
-      B->>A: GET /sessions/{id}/messages/{messageId}
+      B->>A: GET /v1/messages/{messageId}
     end
     B->>U: full reply (or "Interrupted" + Retry)
 
   else API task stops mid-reply (deploy, crash)
-    Note over A: SIGTERM: refuse new streams, let open ones finish (up to 120 s, P2)
-    A--xB: task killed before the reply finished
-    Note over A,DB: On next start, rows still "streaming" become "interrupted" (P1)
-    B->>A: lost connection → poll GET /sessions/{id}/messages/{messageId}
+    Note over A: New task starts while the old one drains (two tasks).<br/>Old task: SIGTERM, refuse new streams, let open ones finish (up to 120 s, P2)
+    A--xB: old task killed before the reply finished
+    Note over A,DB: Sweep (startup + every minute): "streaming" rows with<br/>heartbeat_at older than 60 s become "interrupted" (P1).<br/>Replies still running on the old task keep a fresh heartbeat.
+    B->>A: lost connection → poll GET /v1/messages/{messageId}
     B->>U: partial reply + "Interrupted" + Retry
   end

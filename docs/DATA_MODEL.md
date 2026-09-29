@@ -1,6 +1,6 @@
 # Data model
 
-Step 4 of the build plan. Postgres (Neon), 12 tables.
+Step 4 of the build plan, amended by the alignment review ([`ALIGNMENT_REVIEW.md`](ALIGNMENT_REVIEW.md), migration `0002`). Postgres (Neon), 12 tables.
 
 - ER diagram: [`diagrams/er.mmd`](diagrams/er.mmd) ([PNG](diagrams/er.png)), key columns only.
 - Source of truth: [`api/app/db/models.py`](../api/app/db/models.py) (SQLAlchemy 2). Migrations: [`api/migrations/`](../api/migrations) (Alembic), generated from the models and reviewed by hand.
@@ -13,6 +13,7 @@ Step 4 of the build plan. Postgres (Neon), 12 tables.
 - **Every user-owned table has `user_id`** (D9). `agents` is the only table without it: it's global configuration, and per-user access later is an `agent_access` table, not a column.
 - **Composite foreign keys** `(session_id, user_id) → sessions(id, user_id)` and `(message_id, user_id) → messages(id, user_id)`. A row can't point at another user's session or message, even if application code has a bug. Tested.
 - **Timestamps** are `timestamptz`. `updated_at` is set by the application.
+- **S3 keys start with `u/{userId}/`** (D7).
 - **Deletes cascade from the session.** Deleting a session removes its messages, files, tool calls, approvals, artifacts, versions, feedback and share links. S3 objects are deleted by the purge job before the rows (Postgres can't reach S3).
 
 ## Tables
@@ -21,9 +22,9 @@ Step 4 of the build plan. Postgres (Neon), 12 tables.
 |---|---|---|
 | `users` | People who can sign in | Keyed by Google `sub`; `status` invited / active / disabled; email unique case-insensitively; `preferences` for Settings (default agent) |
 | `refresh_tokens` | Rotating refresh tokens | SHA-256 hash only; `family_id` so reuse of an old token revokes the whole sign-in (D8) |
-| `agents` | The registry (D6) | Health `status` and maturity `stage` are separate (design critique §9.6); `visibility = hidden` for the Scenario Agent; `retired_at` keeps old sessions readable; `version` drives the "Agent updated" divider; `settings` holds the history budget (D18), run cap (D11) and the future memory flag |
-| `sessions` | One conversation with one agent | `pinned_at`, `archived_at`, `deleted_at` (undo window); `last_message_at` orders the sidebar |
-| `messages` | One turn each | `blocks` is the ordered transcript (P6); `status` streaming / complete / stopped / failed / interrupted; `seq` orders the session; `client_message_id` makes sends idempotent; `reply_to_id` links a reply to its user message (Retry now, Regenerate in P1) |
+| `agents` | The registry (D6) | Health `status` and maturity `stage` are separate (design critique §9.6); `status_changed_at` for "Offline since"; `tagline` (mobile catalog) and `greeting` (new-session heading); `details` for display-only model, region and framework version; `visibility = hidden` for the Scenario Agent; `retired_at` keeps old sessions readable; `version` and `deployed_at` drive the "Agent updated" divider and agent detail; `settings` holds the history budget (D18), run cap (D11), approval expiry and the future memory flag |
+| `sessions` | One conversation with one agent | `title` set from the first message at creation (D21); `pinned_at`, `archived_at`, `deleted_at` (undo window); `last_message_at` orders the sidebar |
+| `messages` | One turn each | `blocks` is the ordered transcript (P6); `status` streaming / awaiting_approval / complete / stopped / failed / interrupted (D19); `seq` orders the session; `client_message_id` makes sends idempotent per user; `heartbeat_at` and `cancel_requested_at` let any task find dead runs and honour Stop (P1, P4); `reply_to_id` links a reply to its user message (Retry now, Regenerate in P1) |
 | `files` | Every S3 object (D7) | Uploads can exist before their session (lazy session creation, F03), so `session_id` and `message_id` are nullable until send |
 | `tool_calls` | Tools the agent ran | Keyed by the agent's `tool_use_id`; big outputs go to a file |
 | `approval_requests` | Human-in-the-loop decisions (F10) | One per tool call; the card renders `arguments` validated by the API; the row is the audit record |
@@ -40,10 +41,10 @@ Step 4 of the build plan. Postgres (Neon), 12 tables.
 
 | Rule | How |
 |---|---|
-| One running reply per session (`409 run_in_progress`) | Unique partial index on `messages(session_id) WHERE status = 'streaming'` |
-| Resending a message never duplicates it | Unique `(session_id, client_message_id)` |
+| One open reply per session: streaming or awaiting approval (`409 run_in_progress`; a new send cancels a pending approval first, D19) | Unique partial index on `messages(session_id) WHERE status IN ('streaming', 'awaiting_approval')` |
+| Resending a message never duplicates it, even the first send of a new session | Unique `(user_id, client_message_id)` |
 | Messages have a single order | Unique `(session_id, seq)` |
-| User messages are never "streaming" | Check constraint |
+| User messages are always "complete" | Check constraint |
 | No row can belong to another user's session or message | Composite foreign keys |
 | An approval can only be executed if approved | `CHECK (executed_at IS NULL OR status = 'approved')` |
 | Decided approvals have a decision time; pending ones don't | Check constraint |
@@ -59,8 +60,9 @@ Step 4 of the build plan. Postgres (Neon), 12 tables.
 | Live sessions across agents | Catalog "continue", ⌘K, agent detail recent sessions | `ix_sessions_recent (user_id, last_message_at DESC) WHERE deleted_at IS NULL` |
 | Archived sessions | Archived (P1) | `ix_sessions_archived` (partial) |
 | Reload a session in order | Chat | unique `(session_id, seq)` |
-| Is a reply running here? | Sidebar working dot, `409` | `uq_messages_streaming_per_session` (partial) |
-| Pending approvals per session | Sidebar badge, "approval waiting elsewhere" | `ix_approvals_pending (user_id, session_id) WHERE status = 'pending'` |
+| Is a reply running or paused here? | Sidebar working dot (`isRunning`, D22), `409` | `uq_messages_open_reply_per_session` (partial) |
+| Runs of a dead task | Heartbeat sweep (P1) | Same partial index; at most one row per session, so no extra index |
+| Pending approvals per session | Sidebar badge and toast, polled every 20 s (D22) | `ix_approvals_pending (user_id, session_id) WHERE status = 'pending'` |
 | Approvals to expire | Background sweep | `ix_approvals_expiry` (partial) |
 | Full-text search of messages | ⌘K (P1) | GIN on generated `search_vector` (from `search_text`, which the API flattens from blocks) |
 | Artifacts newest first, by type | Artifacts library (P1) | `ix_artifacts_library`, `(user_id, type)` |
@@ -70,14 +72,14 @@ Step 4 of the build plan. Postgres (Neon), 12 tables.
 
 ## Checked against the screens
 
-Checked against `design/INDEX.md`, the screen inventory and acceptance criteria in `PRODUCT_PLAN.md`, and `SEND_MESSAGE.md`. Pencil wasn't open during this step, so individual screen fields weren't read from the file.
+Checked against `design/INDEX.md`, the screen inventory and acceptance criteria in `PRODUCT_PLAN.md`, and `SEND_MESSAGE.md`. Pencil wasn't open during this step, so individual screen fields weren't read from the file. The alignment review then read every screen's text and checked each field (`ALIGNMENT_REVIEW.md` §2).
 
 **The step 4 entity list lacked these, so they were added:**
 
 | Needed by | Added |
 |---|---|
 | Pin, archive, delete with undo (F06, F17; F7.6–F7.8) | `sessions.pinned_at`, `archived_at`, `deleted_at` |
-| Stopped / failed / interrupted / still replying (board `R9pQQP`) | `messages.status`, `messages.error` |
+| Stopped / failed / interrupted / still replying (board `sx5f0`) | `messages.status`, `messages.error` |
 | "Agent updated to v15" divider (Edge States `OFj2k`) | `agents.version`, `messages.agent_version` |
 | Orphaned sessions stay readable (Edge States) | `agents.retired_at`, `ON DELETE RESTRICT` |
 | Health vs. Beta tag (critique §9.6), hidden Scenario Agent | `agents.stage`, `agents.visibility` |
@@ -89,22 +91,26 @@ Checked against `design/INDEX.md`, the screen inventory and acceptance criteria 
 | Artifact interrupted (Edge States), version menu, library tiles | `artifact_versions.status`, `change_note`, `thumbnail_file_id` |
 | Approval countdown, deny reason (F10, F4.4) | `approval_requests.expires_at`, `decision_reason`, `display` |
 | Retry, Regenerate pager (F08, F20) | `messages.reply_to_id` |
+| Alignment review (migration `0002`): approval pause, idempotent first send, two tasks during deploys, descriptor fields on screens | `messages.status = awaiting_approval`, unique `(user_id, client_message_id)`, `messages.heartbeat_at`, `cancel_requested_at`, `agents.tagline`, `greeting`, `details`, `status_changed_at`, `deployed_at` |
 
 **Not modelled, on purpose:**
 
 | Screen need | Why no table |
 |---|---|
-| Question and form answers (F11, F21) | The answer is the next user message, holding an `answer` block that references the question block's id. "Answered" is derived when loading. No second place to keep in sync. |
+| Question and form answers (F11, F21) | The answer is the next user message, holding an `answer` block `{questionRef: {messageId, blockId}, optionIds, text?}`. "Answered" is derived when loading; a question followed by a user message without an answer shows as skipped. No second place to keep in sync. |
 | Plan card progress (F05) | Lives in the `plan` block; updated while streaming, final at the end |
 | Citations, charts, images (F22, P1) | Blocks; images and files they point to are `files` rows |
 | Message count, session info drawer | `count(*)` on an indexed column |
-| "New" and unread states in the sidebar, same session in two tabs | Browser-only state |
+| "New" and unread states in the sidebar, same session in two tabs, toasts | Browser-only state; toasts come from diffing the polled sessions list (D22) |
+| Session and agent counts (messages, tool calls, tokens, sessions per agent) | Computed on read (`count(*)`, sum of `messages.usage`); add counters only if slow |
 | Computed agent health (F23, P1) | Needs a health-check history table; add it with F23 |
 | Export all data (F24, P1) | Output is a `files` row (`purpose = export`); how it runs is decided with F24, since long background jobs are out of v1 |
 | Telemetry | CloudWatch (`PRODUCT_PLAN.md` §6), not Postgres |
 
 ## Picked defaults (say if you disagree)
 
+- **Retry resets in place**: same id and `seq`, blocks and error cleared, the attempt's `tool_calls` deleted (approvals cascade), its unfinished artifact versions marked `incomplete` (`SEND_MESSAGE.md` rule 8).
+- **Deleting a session** stops its running reply and cancels pending approvals first; the purge skips rows still `streaming`.
 - **`seq` is assigned by the API** inside the send transaction (`max(seq) + 1` under a row lock on the session). No sequences per session.
 - **Deleted sessions are purged by a periodic in-process task** a short while after the 10-second undo window (single task, P7), deleting S3 objects first.
 - **Search uses the `english` text configuration.** Fine for English; switch to `simple` if agents reply in several languages.

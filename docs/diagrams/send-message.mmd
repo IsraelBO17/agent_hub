@@ -1,5 +1,6 @@
 %% Sequence: user sends a message (normal path). Failure paths: send-message-failures.mmd.
-%% Rules and timers: docs/SEND_MESSAGE.md. Decisions: docs/ARCHITECTURE.md (D5, D8, D10, D11, D18, P1).
+%% Rules and timers: docs/SEND_MESSAGE.md. Decisions: docs/ARCHITECTURE.md (D5, D8, D10, D11, D18, D20, D21, P1).
+%% Attachments and approvals: approval-and-upload.mmd.
 sequenceDiagram
   autonumber
   actor U as User
@@ -16,17 +17,17 @@ sequenceDiagram
     U->>B: Continue with Google
     B->>G: Google Identity Services
     G-->>B: ID token (JWT)
-    B->>A: POST /auth/google {idToken}
+    B->>A: POST /v1/auth/google {idToken}
     A->>G: JWKS (cached)
     A->>A: verify signature, aud, iss, exp, email_verified
     A->>DB: user by Google sub, must be active
     A->>DB: insert refresh token (hashed, new family)
-    A-->>B: 200 {accessToken, ~15 min} + Set-Cookie refresh (HttpOnly, Secure, SameSite=Strict)
+    A-->>B: 200 {accessToken, ~15 min} + Set-Cookie refresh (HttpOnly, Secure, SameSite=Strict, Path=/v1/auth)
   end
 
   rect rgb(238, 235, 228)
     Note over B,DB: Session check on app load (access token lives in memory only)
-    B->>A: POST /auth/refresh (cookie)
+    B->>A: POST /v1/auth/refresh (cookie)
     A->>DB: token hash valid, not revoked → rotate
     A-->>B: 200 {accessToken} + new cookie
   end
@@ -34,14 +35,14 @@ sequenceDiagram
   rect rgb(251, 250, 247)
     Note over U,R: Send a message
     U->>B: type, press Enter
-    B->>A: POST /sessions/{id}/messages · Bearer · {clientMessageId, text}
-    Note right of B: First send in a new session: POST /agents/{agentId}/sessions<br/>creates the session and sends in one call (F03)
+    B->>A: POST /v1/sessions/{id}/messages · Bearer · {clientMessageId, text, fileIds}
+    Note right of B: First send in a new session: POST /v1/agents/{slug}/sessions<br/>creates and titles the session and sends in one call (F03, D21)
     A->>A: verify access token (signature only, no DB)
-    A->>DB: session + agent: owner, agent online, no run in progress
-    A->>DB: one transaction: user message + assistant message (status streaming)
+    A->>DB: session + agent: owner, agent online, no reply streaming<br/>(a reply awaiting approval is cancelled, D19)
+    A->>DB: one transaction: user message + assistant message (status streaming)<br/>clientMessageId unique per user: a resend returns the existing rows
     A->>DB: recent history for the payload (D18)
-    A-->>B: 200 text/event-stream · event run.started {runId, messageIds}
-    A->>R: InvokeAgentRuntime(ARN, runtimeSessionId, {messages, input})
+    A-->>B: 200 text/event-stream · event run.started {sessionId, runId, messageIds}
+    A->>R: InvokeAgentRuntime(ARN, runtimeSessionId, {messages, input, attachments})
     Note over A: The agent call runs in its own task,<br/>not tied to the HTTP response (D11)
     par agent stream
       loop until the agent finishes
@@ -49,19 +50,17 @@ sequenceDiagram
         A->>A: translate to app blocks (D10)
         A-->>B: event block.* (text, thinking, tool step, plan, ...)
         opt block ended, or 2 s since last save
-          A->>DB: checkpoint assistant blocks (P1)
+          A->>DB: checkpoint assistant blocks + heartbeat_at (P1)
         end
       end
     and keep-alive
       loop every 15 s, from the API's own timer
         A-->>B: ": ping" (SSE comment)
+        A->>DB: heartbeat_at, check cancel_requested_at
       end
     end
     R-->>A: end of stream
     A->>DB: final blocks, status complete
     A-->>B: event run.completed · stream closes
-    opt first reply in the session
-      A->>DB: auto-title the session (background)
-    end
     B->>U: finished reply, composer ready
   end

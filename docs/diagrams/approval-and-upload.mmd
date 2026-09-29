@@ -1,0 +1,67 @@
+%% Sequence: attach a file, then an approval pause and continuation (ALIGNMENT_REVIEW B1, B4).
+%% Decisions: docs/ARCHITECTURE.md D7, D19, D20, D22. Rules and timers: docs/SEND_MESSAGE.md.
+sequenceDiagram
+  autonumber
+  actor U as User
+  participant B as Browser (SPA)
+  participant A as API (FastAPI, Fargate)
+  participant DB as Postgres (Neon)
+  participant S3 as S3
+  participant R as AgentCore runtime
+
+  rect rgb(243, 248, 245)
+    Note over U,S3: Attach a file (before or after the session exists)
+    U->>B: drop / pick / paste a file
+    B->>B: check type and size against agent capabilities.attachments
+    B->>A: POST /v1/files {agentSlug, name, contentType, sizeBytes}
+    A->>A: check limits (20 MB, 10 per message, allowed types, agent may narrow)
+    A->>DB: files row (purpose upload, status pending, key u/{userId}/...)
+    A-->>B: 201 {fileId, presigned POST with content-length-range}
+    B->>S3: upload (progress shown on the chip)
+    B->>A: POST /v1/files/{fileId}/complete
+    A->>S3: HeadObject: size and type match
+    A->>DB: status uploaded
+    A-->>B: 200 · chip ready
+  end
+
+  rect rgb(251, 250, 247)
+    Note over U,R: Send with the file, the agent asks for approval
+    U->>B: Enter
+    B->>A: POST /v1/sessions/{id}/messages {clientMessageId, text, fileIds}
+    A->>DB: user message + assistant message (streaming) + files.message_id
+    A->>S3: presign GET per file (15 min)
+    A-->>B: event run.started
+    A->>R: InvokeAgentRuntime {messages, input, attachments: [{fileId, name, contentType, sizeBytes, url}]}
+    R->>S3: GET via signed URL
+    R-->>A: chunks, then a tool call that requires approval
+    A->>DB: tool_calls (awaiting_approval) + approval_requests (pending, expires_at)
+    A->>DB: assistant message: blocks checkpointed, status awaiting_approval
+    A-->>B: event approval.requested, then run.awaiting_approval · stream closes
+    B->>U: approval card with countdown, composer stays enabled
+  end
+
+  alt Approve or deny
+    U->>B: Approve (or Deny, optional reason)
+    B->>A: POST /v1/approvals/{id}/decision {decision, reason?}
+    A->>DB: UPDATE ... WHERE status = 'pending' (decided_at, decided_user_agent)
+    Note right of A: Already decided the same way → 200.<br/>Otherwise → 409 approval_not_pending
+    A->>DB: assistant message back to streaming
+    A-->>B: 200 text/event-stream · event run.started (same messageId)
+    A->>R: InvokeAgentRuntime {messages + decision}
+    R-->>A: approved: tool runs, result and reply · denied: acknowledgement
+    A->>DB: executed_at (approved only), blocks, status complete
+    A-->>B: events, then run.completed
+
+  else User sends a new message instead
+    U->>B: types and sends
+    B->>A: POST /v1/sessions/{id}/messages
+    A->>DB: one transaction: approval cancelled, paused reply complete,<br/>new user + assistant messages
+    A-->>B: normal send (send-message.mmd)
+
+  else Nobody decides in time
+    A->>DB: sweep: approval expired, paused reply complete (agent not called)
+    B->>A: sessions list refresh (every 20 s, D22)
+    B->>U: card shows Expired · "Ask again" prefills the composer
+  end
+
+  Note over B,A: In another session: the 20 s sessions list refresh returns pendingApprovals,<br/>which drives the sidebar badge and the "Approval needed" toast (D22)

@@ -92,10 +92,27 @@ def test_one_streaming_reply_per_session(db, world):
     fails(db, lambda: add_message(db, world, 4, role="assistant", status="streaming"))
 
 
+def test_reply_waiting_for_approval_blocks_another_open_reply(db, world):
+    add_message(db, world, 1)
+    add_message(db, world, 2, role="assistant", status="awaiting_approval")
+    add_message(db, world, 3)
+    fails(db, lambda: add_message(db, world, 4, role="assistant", status="streaming"))
+
+
 def test_send_is_idempotent(db, world):
     cid = uuid.uuid4()
     add_message(db, world, 1, client_id=cid)
     fails(db, lambda: add_message(db, world, 2, client_id=cid))
+
+
+def test_send_is_idempotent_across_a_users_sessions(db, world):
+    # The first send creates the session, so a resend must collide even though it targets a new session (F03).
+    cid = uuid.uuid4()
+    add_message(db, world, 1, client_id=cid)
+    other = insert(db, "INSERT INTO sessions (user_id, agent_id) VALUES (:u, :a) RETURNING id", u=world["a"], a=world["agent"])
+    fails(db, lambda: add_message(db, {**world, "session": other}, 1, client_id=cid))
+    b_session = insert(db, "INSERT INTO sessions (user_id, agent_id) VALUES (:u, :a) RETURNING id", u=world["b"], a=world["agent"])
+    add_message(db, {**world, "session": b_session}, 1, client_id=cid, user=world["b"])
 
 
 def test_seq_unique_within_session(db, world):

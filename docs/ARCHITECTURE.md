@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.3, D1–D18 and P1–P8 locked; §2 default and §4 questions still open |
+| Status | v0.4, D1–D23 and P1–P8 locked; §2 default and §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -49,7 +49,7 @@ Each entry: the decision, why, and what would make us revisit it.
 **Context for the agent:** see D18.
 
 ### D5. Streaming: SSE over a `fetch` POST
-**Decision.** `POST /sessions/{id}/messages` returns `text/event-stream`. The client reads it with `fetch` and a stream reader, not `EventSource` (which can't send an `Authorization` header or a body). The API writes a keep-alive comment (`: ping`) every 15 s from its own task, independent of the agent. The ALB idle timeout is set explicitly (300 s proposed) rather than relying on the 60 s default.
+**Decision.** `POST /v1/sessions/{id}/messages` returns `text/event-stream`. The client reads it with `fetch` and a stream reader, not `EventSource` (which can't send an `Authorization` header or a body). The API writes a keep-alive comment (`: ping`) every 15 s from its own task, independent of the agent. The ALB idle timeout is set explicitly (300 s proposed) rather than relying on the 60 s default.
 **Why.** SSE is plain HTTP, passes the ALB, and is enough for one-way streaming; the client never needs to push mid-stream (Stop is a separate request, see P4).
 **Revisit if.** SSE fails through the ALB in the step 8 proof, or we need bidirectional traffic (then WebSockets on the same ALB).
 
@@ -61,14 +61,15 @@ Each entry: the decision, why, and what would make us revisit it.
 ### D7. Files in S3, metadata in Postgres
 **Decision.** Uploads and artifact files live in one private S3 bucket. Postgres holds metadata and ownership. The browser uploads with a short-lived presigned PUT (or POST with size and type conditions) and downloads with a short-lived presigned GET. The API checks ownership before signing.
 **Why.** Keeps large bodies off the API task; S3 handles size, durability and range requests.
+**Keys.** Every object key starts with `u/{userId}/`, so per-user lifecycle rules, exports and IAM conditions stay possible when there are more users.
 **Note.** The bucket needs a CORS rule for the app origin. HTML artifacts are served from a separate origin for the sandbox (F09); that origin is decided in step 9 with artifacts.
 **Revisit if.** We need virus scanning or image processing on upload (add an S3 event, not a proxy).
 
 ### D8. Auth: Google sign-in, then the API's own session
-**Decision.** The browser gets a Google ID token (Google Identity Services) and posts it once to `POST /auth/google`. The API verifies signature (Google JWKS), `aud` (our client ID), `iss`, `exp` and `email_verified`, looks the user up by Google `sub`, and rejects unknown or inactive users. It then issues:
+**Decision.** The browser gets a Google ID token (Google Identity Services) and posts it once to `POST /v1/auth/google`. The API verifies signature (Google JWKS), `aud` (our client ID), `iss`, `exp` and `email_verified`, looks the user up by Google `sub`, and rejects unknown or inactive users. It then issues:
 - a short-lived **access token** (JWT, ~15 min, signed with the session key from Secrets Manager), held in memory by the client and sent as `Authorization: Bearer`;
-- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Domain=api.<domain>; Path=/auth`.
-Refresh rotates the token and detects reuse (reuse of an old token revokes the whole family). App (`app.`) and API (`api.`) share a parent domain, so the cookie is same-site; CORS allows only the app origin with credentials, and `/auth/*` also checks `Origin`.
+- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Domain=api.<domain>; Path=/v1/auth` (all routes live under `/v1`, D23).
+Refresh rotates the token and detects reuse (reuse of an old token revokes the whole family). App (`app.`) and API (`api.`) share a parent domain, so the cookie is same-site; CORS allows only the app origin with credentials, and `/v1/auth/*` also checks `Origin`.
 **Why.** No Cognito to operate; Google does the hard part; our own session gives revocation and short token lifetime.
 **Revisit if.** We need non-Google sign-in, SSO, or passkey step-up (P2).
 
@@ -90,6 +91,7 @@ Refresh rotates the token and detects reuse (reuse of an old token revokes the w
 - The assistant message row is created when the agent is called and checkpointed during the stream (P1), so "partial text is saved" holds even if the task dies.
 - **A browser disconnect does not cancel the agent.** The API keeps consuming the agent stream, saves the full reply and marks it `complete`; the client picks it up on reload (P3). A hard per-run time cap (default 15 min, configurable per agent) ends runaway runs as `interrupted`.
 - **Only Stop cancels** (P4). A stopped reply keeps its partial text and is marked `stopped`.
+- **Amended 2026-09-29 (alignment review B3):** Stop is a flag in Postgres (`messages.cancel_requested_at`), not an in-memory signal, and dead runs are found by a stale `messages.heartbeat_at`, not by "any `streaming` row at startup". Rolling deploys run two tasks at once, so both P1 and P4 had to work across tasks now, not later.
 **Revisit if.** Model cost from orphaned runs becomes noticeable (lower the cap, or cancel after N minutes with no client attached).
 
 ### D12. Region: us-east-1
@@ -121,10 +123,34 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 ### D18. The API sends conversation history on every call
 **Decision.** Agents are stateless between turns. On each invocation the API reads the session's recent history from Postgres and sends it in the payload, together with the new user message. The API also passes our session id as the AgentCore `runtimeSessionId`, so a warm runtime session can reuse whatever it still has in memory, but no agent may depend on it.
 - **What is sent:** prior user and assistant turns as plain role + text (the app's blocks flattened: text kept, thinking dropped, tool steps and artifacts summarised by name and a short result), newest last, trimmed to a per-agent budget (default: last 20 turns or ~32k characters, configurable in the agent's descriptor).
-- **Contract:** every agent must accept `{ "messages": [...history], "input": "..." }` (exact shape fixed in the OpenAPI/agent contract, step 5). An agent that can't gets an adapter (D10).
+- **Contract:** every agent must accept `{ "messages": [...history], "input": "...", "attachments": [...] }` (exact shape fixed in the OpenAPI/agent contract, step 5; attachments per D20). An agent that can't gets an adapter (D10).
 **Why.** AgentCore keeps state only while its runtime session is alive; after the idle timeout the agent forgets. Sending history from the record we already own (D4) keeps agents interchangeable, makes reloads, retries and redeploys behave the same, and needs nothing extra from each agent.
 **Later: AgentCore Memory.** An agent may add AgentCore Memory for long-term memory (facts and preferences across sessions, summaries of long sessions), and it can later replace or shorten the history the API sends for that agent. It is opt-in per agent, enabled by a descriptor flag, and Postgres stays the record of the conversation (D4). The UI never reads from it.
 **Revisit if.** Payloads get large enough to hurt latency or token cost (summarise older turns, or move that agent to AgentCore Memory), or an agent framework insists on owning its own thread state (LangGraph checkpointer): then that agent's adapter maps our session to its thread.
+
+### D19. An approval ends the run; the decision continues it
+**Decision (owner, 2026-09-29).** When an agent asks for approval, the API saves the `approval_requests` row, marks the assistant message `awaiting_approval` and ends the run (the stream closes with `run.awaiting_approval`). `POST /v1/approvals/{id}/decision` records approve or deny, then re-invokes the agent with the history plus the decision and streams the continuation into the **same** assistant message (status back to `streaming`). Deny also re-invokes, so the agent can acknowledge; expiry does not (the message becomes `complete`, the card shows Expired). Sending a new message while an approval is pending cancels it (`cancelled`) and completes the paused message in the same transaction.
+**Why.** Agents are stateless between calls anyway (D18). Waiting costs nothing: no open stream, no run-cap time, no session lock, and a deploy can't kill it. The database enforces one open reply per session (`streaming` or `awaiting_approval`).
+**Revisit if.** The P8 spike shows a Strands agent can't resume from a re-invocation; then fall back to holding the run open (alignment review D1, option B).
+
+### D20. Agents get attachments as short-lived signed URLs
+**Decision (owner, 2026-09-29).** The agent payload carries `attachments: [{fileId, name, contentType, sizeBytes, url}]` for the files on the new message, where `url` is a presigned S3 GET valid for 15 minutes. Earlier attachments appear in history by name only. Agent roles get no S3 permissions.
+**Why.** Works for any runtime (AgentCore or `http`, LangGraph included) with no IAM change per agent; the API keeps ownership checks (D7).
+**Revisit if.** Agents need a file again after 15 minutes (add a tool-side refresh), or files outgrow a single download.
+
+### D21. Session title = the first message, trimmed
+**Decision (owner, 2026-09-29).** The API sets `sessions.title` when it creates the session: the first user message, whitespace collapsed, cut at a word boundary to about 60 characters (`title_source = auto`). Rename sets `title_source = user`. No model call and no title event.
+**Why.** Instant (the sidebar shows it before the reply), free, and needs nothing from agents or new IAM.
+**Revisit if.** Titles are noticeably poor; then have the API ask a small Bedrock model after the first reply and emit `session.updated`.
+
+### D22. Cross-session activity by polling
+**Decision (2026-09-29).** There is no per-user push channel in v1. `GET /v1/sessions` rows carry `isRunning` and `pendingApprovals`; the client refreshes the list every 20 s while the tab is visible and diffs it to show the sidebar working dot, the approval badge and toast (P0), and the "Task complete" toast (moved into v1 by the owner, alignment review D4). While the open agent is offline the client polls it every 30 s to unlock the composer.
+**Why.** Two indexed queries every 20 s for one user cost nothing; a push channel needs shared state across tasks.
+**Revisit if.** There are many users or the 20 s delay feels slow; then add a per-user SSE channel.
+
+### D23. API conventions
+**Decision (picked defaults, 2026-09-29; details in `ALIGNMENT_REVIEW.md` §6).** All routes under `/v1`. Errors are RFC 9457 `application/problem+json` with `code`, `requestId`, `retryable` and optional `retryAfter`; the SSE `run.failed` event and `messages.error` use the same object, and every response carries `X-Request-Id`. Cursor pagination (`cursor`, `limit` ≤ 100); messages page backwards by `seq`. Uploads: 20 MB per file, 10 per message, `pdf png jpeg webp gif csv txt`, narrowed per agent by `capabilities.attachments`. At most 3 concurrent runs per user (`429 too_many_runs`). Agents are addressed by slug. UUIDs, RFC 3339 UTC timestamps, camelCase JSON.
+**Revisit if.** A second client needs different shapes.
 
 ---
 
@@ -138,13 +164,13 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 
 These refine D1–D15 and are binding for the steps that follow.
 
-**P1. Write the assistant message at stream start, checkpoint during it.** Saving only at stream end means a task crash, OOM or deploy mid-reply loses everything, and the "partial text saved on disconnect" path is the same code in a worse place. Proposal: insert the assistant row with `status = streaming` when the agent is called; update its blocks at block boundaries and at most every ~2 s; set `complete | stopped | interrupted | failed` at the end. On startup, any row still `streaming` becomes `interrupted`. Same number of saves in the happy path plus a few cheap updates; D11's guarantees become crash-safe.
+**P1. Write the assistant message at stream start, checkpoint during it.** Saving only at stream end means a task crash, OOM or deploy mid-reply loses everything, and the "partial text saved on disconnect" path is the same code in a worse place. Proposal: insert the assistant row with `status = streaming` when the agent is called; update its blocks at block boundaries and at most every ~2 s; set `complete | stopped | interrupted | failed` at the end. The running task also writes `heartbeat_at` at every checkpoint and on its 15 s keep-alive tick; a sweep (on startup and every minute) marks `streaming` rows whose heartbeat is older than 60 s as `interrupted`. *(Amended 2026-09-29: "any row still streaming on startup" would also catch replies still running on the old task during a deploy.)* Same number of saves in the happy path plus a few cheap updates; D11's guarantees become crash-safe.
 
 **P2. Deploys should drain, not cut.** Set the ALB target group's deregistration delay to ~300 s and the container's `stopTimeout` to the ECS maximum (120 s), and have the app stop accepting new streams on SIGTERM while finishing open ones. With rolling deploys (min healthy 100 %, max 200 %) most in-flight replies then finish. Replies longer than the drain window are still cut and saved as `interrupted`.
 
-**P3. v1 has no stream resume; reload is the recovery.** `PRODUCT_PLAN.md` F08 mentions resuming from `Last-Event-ID`. With one task and no event buffer that isn't cheap. Proposal: events carry ids from day one (so resume can be added later), but in v1 a dropped stream means the client reloads the message from Postgres. Because the agent keeps running after a disconnect (D11), the client polls the message until its status leaves `streaming`, then renders it; Retry is offered only for `failed` or `interrupted`.
+**P3. v1 has no stream resume; reload is the recovery.** `PRODUCT_PLAN.md` F08 mentions resuming from `Last-Event-ID`. With one task and no event buffer that isn't cheap. Proposal: events carry ids from day one (so resume can be added later), but in v1 a dropped stream means the client reloads the message from Postgres. Because the agent keeps running after a disconnect (D11), the client polls the message until its status leaves `streaming`, then renders it; Retry is offered for `stopped`, `failed` and `interrupted` (amended 2026-09-29; the design and `SEND_MESSAGE.md` table already allowed Retry after Stop). There is no "agent silent for 60 s" error: a long silence shows a soft "still working" note, because the run may well finish.
 
-**P4. Stop is an explicit request, not just a closed connection.** The client can't distinguish its own abort from a network drop, and neither can the server. Proposal: `POST /sessions/{id}/runs/{runId}/stop` cancels the agent call and saves `stopped`; the client also aborts the fetch. A plain disconnect does not cancel (D11). With one task this needs no shared state; with more tasks later it needs a cancel flag in Postgres.
+**P4. Stop is an explicit request, not just a closed connection.** The client can't distinguish its own abort from a network drop, and neither can the server. Proposal: `POST /v1/messages/{id}/stop` (the run id is the assistant message id) cancels the agent call and saves `stopped`; the client also aborts the fetch. A plain disconnect does not cancel (D11). The stop request sets `messages.cancel_requested_at`; the task running the reply checks it at each checkpoint (≤ 2 s) and on the keep-alive tick, so Stop works whichever task receives it (amended 2026-09-29: rolling deploys already run two tasks).
 
 **P5. Extend the closed block set** to include `plan` and `status/error` now (P0 screens use them), and reserve `citation`, `chart`, `image`, `file`, `form` for P1 (D10).
 
@@ -152,7 +178,7 @@ These refine D1–D15 and are binding for the steps that follow.
 
 **P7. One API task, no autoscaling in v1.** Keeps Stop, keep-alives and approval waits simple. Revisit when there's more than one user.
 
-**P8. Approvals are P0 but depend on pausing a Strands run.** Long-running background tasks are out of v1, but F10 approvals still need the agent to wait for a human, possibly for minutes. The API owns approval state in Postgres and enforces it; *how* the agent pauses and resumes (Strands interrupt, re-invoke with the decision, AgentCore session idle limits) must be spiked before approvals are built. I've kept it out of step 8 (one agent, plain chat) and will spike it at the start of the approvals slice.
+**P8. Approvals are P0 but depend on pausing a Strands run.** Long-running background tasks are out of v1, but F10 approvals still need the agent to wait for a human, possibly for minutes. The API owns approval state in Postgres and enforces it; *how* the agent pauses and resumes (Strands interrupt, re-invoke with the decision, AgentCore session idle limits) must be spiked before approvals are built. I've kept it out of step 8 (one agent, plain chat) and will spike it at the start of the approvals slice. *The API side is now decided (D19); the spike proves the agent side: that a Strands agent can end its turn on an approval request and resume correctly when re-invoked with the decision.*
 
 ## 4. Open questions (answers pending)
 
@@ -198,3 +224,4 @@ Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (l
 | 2026-09-29 | v0.3: D18, the API sends history on every call; AgentCore Memory recorded as a later, per-agent option. |
 | 2026-09-29 | Send-message sequence diagrams and `SEND_MESSAGE.md` (step 3). Picked defaults: run id = assistant message id, idempotent sends via `clientMessageId`, refresh token 30 days. |
 | 2026-09-29 | Data model, Postgres schema and first Alembic migration (step 4): `DATA_MODEL.md`, `api/app/db/models.py`, `api/migrations/`. |
+| 2026-09-29 | v0.4, alignment review (`ALIGNMENT_REVIEW.md`): D19 approval pause, D20 attachments to agents, D21 session titles, D22 polling for cross-session activity, D23 API conventions; D7 key prefix; D8 cookie path `/v1/auth`; D11, P1, P3, P4 amended for two tasks during deploys and Retry after Stop; D18 payload gains `attachments`. Migration `0002`. |

@@ -87,7 +87,8 @@ RUNTIME_TYPES = ("agentcore", "http")
 AGENT_VISIBILITY = ("listed", "hidden")
 TITLE_SOURCES = ("auto", "user")
 MESSAGE_ROLES = ("user", "assistant")
-MESSAGE_STATUSES = ("streaming", "complete", "stopped", "failed", "interrupted")
+MESSAGE_STATUSES = ("streaming", "awaiting_approval", "complete", "stopped", "failed", "interrupted")
+OPEN_REPLY = "status IN ('streaming', 'awaiting_approval')"
 FILE_PURPOSES = ("upload", "artifact", "thumbnail", "export", "tool_output")
 FILE_STATUSES = ("pending", "uploaded", "failed")
 TOOL_CALL_STATUSES = ("running", "awaiting_approval", "succeeded", "failed", "denied", "cancelled")
@@ -151,11 +152,14 @@ class Agent(Base):
     slug: Mapped[str] = mapped_column(Text, unique=True)  # used in URLs: /agents/:slug
     name: Mapped[str] = mapped_column(Text)
     description: Mapped[str] = mapped_column(Text)
+    tagline: Mapped[str | None] = mapped_column(Text)  # short description for the mobile catalog
+    greeting: Mapped[str | None] = mapped_column(Text)  # new-session heading, e.g. "What are we building today?"
     icon: Mapped[str] = mapped_column(Text)  # lucide icon name
     color: Mapped[str] = mapped_column(Text)
     stage: Mapped[str] = mapped_column(Text, server_default="stable")
     status: Mapped[str] = mapped_column(Text, server_default="online")
     status_checked_at: Mapped[datetime | None]
+    status_changed_at: Mapped[datetime | None]  # "Offline since …", "last seen …"
     visibility: Mapped[str] = mapped_column(Text, server_default="listed")
     runtime_type: Mapped[str] = mapped_column(Text)
     runtime_arn: Mapped[str | None] = mapped_column(Text)  # AgentCore runtime ARN
@@ -163,6 +167,8 @@ class Agent(Base):
     runtime_endpoint: Mapped[str | None] = mapped_column(Text)  # URL for runtime_type = http
     framework: Mapped[str | None] = mapped_column(Text)  # display only: strands, langgraph
     version: Mapped[str | None] = mapped_column(Text)  # deployed version, shown as "Agent updated to vN"
+    deployed_at: Mapped[datetime | None]
+    details: Mapped[dict[str, Any]] = mapped_column(server_default=text("'{}'::jsonb"))  # display only: model, region, framework version
     disclaimer: Mapped[str | None] = mapped_column(Text)
     capabilities: Mapped[dict[str, Any]] = mapped_column(server_default=text("'{}'::jsonb"))
     tools: Mapped[list[Any]] = mapped_column(server_default=text("'[]'::jsonb"))
@@ -251,6 +257,8 @@ class Message(Base):
         TSVECTOR, Computed("to_tsvector('english', coalesce(search_text, ''))", persisted=True)
     )
     started_at: Mapped[datetime | None]
+    heartbeat_at: Mapped[datetime | None]  # written by the task running the reply; a stale one means that task died
+    cancel_requested_at: Mapped[datetime | None]  # Stop; the running task checks it, whichever task received the request
     completed_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = created_at()
     updated_at: Mapped[datetime] = updated_at()
@@ -266,12 +274,10 @@ class Message(Base):
         UniqueConstraint("id", "user_id"),
         # Reload a session in order; also enforces a unique order.
         UniqueConstraint("session_id", "seq"),
-        UniqueConstraint("session_id", "client_message_id"),
-        # One running reply per session (the run_in_progress rule), and the sidebar "working" dot.
-        Index(
-            "uq_messages_streaming_per_session", "session_id",
-            unique=True, postgresql_where=text("status = 'streaming'"),
-        ),
+        # Per user, not per session: the first send creates the session, so a resend must find it (F03).
+        UniqueConstraint("user_id", "client_message_id"),
+        # One open reply per session: running or waiting for an approval (run_in_progress, ALIGNMENT_REVIEW D1).
+        Index("uq_messages_open_reply_per_session", "session_id", unique=True, postgresql_where=text(OPEN_REPLY)),
         Index("ix_messages_search", "search_vector", postgresql_using="gin"),
         Index(None, "reply_to_id"),
     )

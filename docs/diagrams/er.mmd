@@ -12,6 +12,8 @@ erDiagram
   tool_calls ||--o| approval_requests : "may need"
   agents ||--o{ approval_requests : "asked by"
   sessions ||--o{ artifacts : produces
+  messages |o--o{ artifacts : "created in"
+  messages |o--o{ artifact_versions : "written by"
   artifacts ||--|{ artifact_versions : "has versions"
   files |o--o| artifact_versions : "large body / thumbnail"
   messages ||--o{ feedback : "rated by"
@@ -37,13 +39,18 @@ erDiagram
     uuid id PK
     text slug UK
     text name
+    text tagline "short, mobile catalog"
+    text greeting "new-session heading"
     text icon "lucide"
     text color "red | blue | green | purple | amber | grey"
     text stage "beta | stable"
     text status "online | degraded | offline"
+    timestamptz status_changed_at "offline since"
     text runtime_type "agentcore | http"
     text runtime_arn
     text version
+    timestamptz deployed_at
+    jsonb details "model, region, framework version"
     jsonb capabilities
     jsonb tools "incl. requiresApproval"
     jsonb starters
@@ -66,12 +73,14 @@ erDiagram
     uuid user_id FK
     int seq "order in session"
     text role "user | assistant"
-    text status "streaming | complete | stopped | failed | interrupted"
+    text status "streaming | awaiting_approval | complete | stopped | failed | interrupted"
     jsonb blocks "ordered typed blocks"
-    uuid client_message_id "idempotent send"
+    uuid client_message_id "idempotent send, unique per user"
     uuid reply_to_id FK
     text agent_version
     jsonb error
+    timestamptz heartbeat_at "stale = task died"
+    timestamptz cancel_requested_at "Stop"
     tsvector search_vector "generated"
   }
   files {
@@ -81,7 +90,7 @@ erDiagram
     uuid message_id FK "nullable"
     text purpose "upload | artifact | thumbnail | export | tool_output"
     text status "pending | uploaded | failed"
-    text s3_key UK
+    text s3_key UK "u/{userId}/..."
     text content_type
     bigint size_bytes
   }
