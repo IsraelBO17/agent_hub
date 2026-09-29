@@ -1815,6 +1815,7 @@
           "id": "p89GY",
           "name": "Tags",
           "gap": 6,
+          "alignItems": "center",
           "children": [
             {
               "type": "text",
@@ -1845,6 +1846,15 @@
               "fontFamily": "$font-mono",
               "fontSize": 11.5,
               "fontWeight": "normal"
+            },
+            {
+              "id": "bsqwr",
+              "type": "ref",
+              "ref": "nC6tf",
+              "name": "Stage",
+              "x": 134,
+              "y": 0,
+              "enabled": false
             }
           ]
         },
@@ -2718,7 +2728,10 @@
             {
               "type": "text",
               "id": "LbIfx",
+              "x": 0,
+              "y": 8.5,
               "name": "Session Meta",
+              "enabled": false,
               "fill": "$text-tertiary",
               "content": "ses_7f3a91 · 6 messages",
               "fontFamily": "$font-mono",
@@ -2728,7 +2741,10 @@
             {
               "type": "frame",
               "id": "bzubh",
+              "x": 163,
+              "y": 15.5,
               "name": "Spacer",
+              "enabled": false,
               "width": 8,
               "height": 1
             },
@@ -2737,6 +2753,7 @@
               "type": "ref",
               "ref": "btfe4",
               "name": "Delete session",
+              "enabled": false,
               "descendants": {
                 "xaABz": {
                   "icon": "trash-2"
@@ -3739,7 +3756,10 @@
             {
               "type": "text",
               "id": "MLgV2",
+              "x": 0,
+              "y": 16,
               "name": "Env",
+              "enabled": false,
               "fill": "$text-tertiary",
               "content": "Mock API · local",
               "fontFamily": "$font-mono",
@@ -3959,7 +3979,10 @@
             {
               "type": "frame",
               "id": "PP3av",
+              "x": 0,
+              "y": 3.5,
               "name": "Env Pill",
+              "enabled": false,
               "cornerRadius": 999,
               "stroke": "$border",
               "strokeWidth": 1,
@@ -10290,130 +10313,21 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "id": "yHZ8L",
+                      "id": "aLZXm",
                       "type": "ref",
-                      "ref": "Wjnvx",
-                      "name": "Search",
-                      "width": 260
-                    },
-                    {
-                      "id": "wLoz8",
-                      "type": "ref",
-                      "ref": "ZWD7y",
-                      "name": "Sort",
-                      "fill": "$surface",
-                      "padding": [
-                        7,
-                        11
-                      ],
-                      "cornerRadius": 9,
+                      "ref": "XBZK2",
+                      "name": "Register an agent",
                       "descendants": {
-                        "JXAWM": {
+                        "mfSA0": {
                           "enabled": true,
-                          "icon": "arrow-down-wide-narrow"
+                          "icon": "book-open"
                         },
-                        "K0TCb": {
-                          "content": "Recently used"
-                        }
-                      }
-                    },
-                    {
-                      "id": "zixgX",
-                      "type": "ref",
-                      "ref": "H0OSN",
-                      "name": "Add agent",
-                      "descendants": {
-                        "W8udYR": {
-                          "enabled": true
-                        },
-                        "aMS2a": {
-                          "content": "Add agent"
+                        "BsWQ6": {
+                          "content": "Register an agent"
                         }
                       }
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "OYy39",
-              "name": "Filter Chips",
-              "width": "fill_container",
-              "gap": 8,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "xoFzQ",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "All",
-                  "fill": "$text-primary",
-                  "stroke": "$text-primary",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "All",
-                      "fill": "$bg"
-                    },
-                    "LMev0": {
-                      "content": "6",
-                      "fill": "#A8A398"
-                    }
-                  }
-                },
-                {
-                  "id": "k6REs",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Online",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$online"
-                    },
-                    "G8zLP": {
-                      "content": "Online"
-                    },
-                    "LMev0": {
-                      "content": "4"
-                    }
-                  }
-                },
-                {
-                  "id": "t3gqu",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Beta",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$busy"
-                    },
-                    "G8zLP": {
-                      "content": "Beta"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
-                },
-                {
-                  "id": "PdQ7w",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Offline",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$offline"
-                    },
-                    "G8zLP": {
-                      "content": "Offline"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
                 }
               ]
             },
@@ -10609,10 +10523,10 @@
                           "fill": "#8A5A12"
                         },
                         "QU6R2/ULA8T": {
-                          "fill": "$busy"
+                          "fill": "$online"
                         },
                         "QU6R2/vhw7V": {
-                          "content": "Beta"
+                          "content": "Online"
                         },
                         "oocDB": {
                           "content": "Travel Planner"
@@ -10625,6 +10539,9 @@
                         },
                         "x1H6I": {
                           "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": true
                         },
                         "KVGpx": {
                           "content": "3 sessions · Beta since Sep 20"
@@ -44392,7 +44309,7 @@
                                       "enabled": true
                                     },
                                     "S1YVK": {
-                                      "content": "Approved by you with Face ID · 14:33"
+                                      "content": "Approved by you · 14:33"
                                     }
                                   }
                                 },
@@ -55425,747 +55342,6 @@
     },
     {
       "type": "frame",
-      "id": "S1S8vL",
-      "x": 0,
-      "y": 16700,
-      "name": "Catalog — sort menu open",
-      "clip": true,
-      "width": 1440,
-      "height": 1024,
-      "fill": "$bg",
-      "layout": "vertical",
-      "children": [
-        {
-          "id": "iF8C3",
-          "type": "ref",
-          "ref": "fqLch",
-          "name": "App Header",
-          "width": "fill_container"
-        },
-        {
-          "type": "frame",
-          "id": "qY1lt",
-          "name": "Main",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 32,
-          "padding": [
-            48,
-            120
-          ],
-          "children": [
-            {
-              "type": "frame",
-              "id": "d15uf",
-              "name": "Page Heading",
-              "width": "fill_container",
-              "justifyContent": "space_between",
-              "alignItems": "end",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "o8r1sW",
-                  "name": "Title Group",
-                  "layout": "vertical",
-                  "gap": 8,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "UVeWv",
-                      "name": "Title",
-                      "fill": "$text-primary",
-                      "content": "Your agents",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 30,
-                      "fontWeight": "600",
-                      "letterSpacing": -0.6
-                    },
-                    {
-                      "type": "text",
-                      "id": "aQm2C",
-                      "name": "Subtitle",
-                      "fill": "$text-secondary",
-                      "content": "Pick an agent to start a new session. 6 agents registered · 5 available now.",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 15,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "W7f3C",
-                  "name": "Controls",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "id": "o7fL1T",
-                      "type": "ref",
-                      "ref": "Wjnvx",
-                      "name": "Search",
-                      "width": 260
-                    },
-                    {
-                      "id": "Eadsa",
-                      "type": "ref",
-                      "ref": "ZWD7y",
-                      "name": "Sort",
-                      "fill": "$surface",
-                      "padding": [
-                        7,
-                        11
-                      ],
-                      "cornerRadius": 9,
-                      "descendants": {
-                        "JXAWM": {
-                          "enabled": true,
-                          "icon": "arrow-down-wide-narrow"
-                        },
-                        "K0TCb": {
-                          "content": "Recently used"
-                        }
-                      }
-                    },
-                    {
-                      "id": "xvYyf",
-                      "type": "ref",
-                      "ref": "H0OSN",
-                      "name": "Add agent",
-                      "descendants": {
-                        "W8udYR": {
-                          "enabled": true
-                        },
-                        "aMS2a": {
-                          "content": "Add agent"
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "ARjFi",
-              "name": "Filter Chips",
-              "width": "fill_container",
-              "gap": 8,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "O1yRB",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "All",
-                  "fill": "$text-primary",
-                  "stroke": "$text-primary",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "All",
-                      "fill": "$bg"
-                    },
-                    "LMev0": {
-                      "content": "6",
-                      "fill": "#A8A398"
-                    }
-                  }
-                },
-                {
-                  "id": "YF1cs",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Online",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$online"
-                    },
-                    "G8zLP": {
-                      "content": "Online"
-                    },
-                    "LMev0": {
-                      "content": "4"
-                    }
-                  }
-                },
-                {
-                  "id": "WFA7S",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Beta",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$busy"
-                    },
-                    "G8zLP": {
-                      "content": "Beta"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
-                },
-                {
-                  "id": "c3oxvm",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Offline",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$offline"
-                    },
-                    "G8zLP": {
-                      "content": "Offline"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "odw4V",
-              "name": "Agent Grid",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 20,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "b0SQWc",
-                  "name": "Row 1",
-                  "width": "fill_container",
-                  "gap": 20,
-                  "children": [
-                    {
-                      "id": "t4wXfB",
-                      "type": "ref",
-                      "ref": "VZuIf",
-                      "name": "Health Assistant",
-                      "width": "fill_container",
-                      "height": "fit_content",
-                      "descendants": {
-                        "xjiXy": {
-                          "fill": "#F6E3E3"
-                        },
-                        "xjiXy/Jg8uM": {
-                          "icon": "heart-pulse",
-                          "fill": "#A23B3B"
-                        },
-                        "QU6R2/ULA8T": {
-                          "fill": "$online"
-                        },
-                        "QU6R2/vhw7V": {
-                          "content": "Online"
-                        },
-                        "oocDB": {
-                          "content": "Health Assistant"
-                        },
-                        "NrH3H": {
-                          "content": "Answers questions about symptoms, medications and lab results, grounded in your uploaded records."
-                        },
-                        "ohlRV": {
-                          "content": "Strands"
-                        },
-                        "x1H6I": {
-                          "content": "AgentCore"
-                        },
-                        "KVGpx": {
-                          "content": "14 sessions · 2h ago"
-                        }
-                      }
-                    },
-                    {
-                      "id": "B5aqbo",
-                      "type": "ref",
-                      "ref": "VZuIf",
-                      "name": "Coding Agent",
-                      "width": "fill_container",
-                      "height": "fit_content",
-                      "descendants": {
-                        "xjiXy": {
-                          "fill": "#E1E8F4"
-                        },
-                        "xjiXy/Jg8uM": {
-                          "icon": "code-xml",
-                          "fill": "#2F5597"
-                        },
-                        "QU6R2/ULA8T": {
-                          "fill": "$online"
-                        },
-                        "QU6R2/vhw7V": {
-                          "content": "Online"
-                        },
-                        "oocDB": {
-                          "content": "Coding Agent"
-                        },
-                        "NrH3H": {
-                          "content": "Reads repositories, proposes patches and runs the test suite in an isolated sandbox."
-                        },
-                        "ohlRV": {
-                          "content": "Strands"
-                        },
-                        "x1H6I": {
-                          "content": "AgentCore"
-                        },
-                        "KVGpx": {
-                          "content": "31 sessions · 18m ago"
-                        }
-                      }
-                    },
-                    {
-                      "id": "zU093",
-                      "type": "ref",
-                      "ref": "VZuIf",
-                      "name": "Bank Agent",
-                      "width": "fill_container",
-                      "height": "fit_content",
-                      "descendants": {
-                        "xjiXy": {
-                          "fill": "#E2EEE8"
-                        },
-                        "xjiXy/Jg8uM": {
-                          "icon": "landmark",
-                          "fill": "#1F5C4A"
-                        },
-                        "QU6R2/ULA8T": {
-                          "fill": "$online"
-                        },
-                        "QU6R2/vhw7V": {
-                          "content": "Online"
-                        },
-                        "oocDB": {
-                          "content": "Bank Agent"
-                        },
-                        "NrH3H": {
-                          "content": "Checks balances, categorizes transactions and drafts transfers that wait for your approval."
-                        },
-                        "ohlRV": {
-                          "content": "Strands"
-                        },
-                        "x1H6I": {
-                          "content": "AgentCore"
-                        },
-                        "KVGpx": {
-                          "content": "9 sessions · Yesterday"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "Ynai9",
-                  "name": "Row 2",
-                  "width": "fill_container",
-                  "gap": 20,
-                  "children": [
-                    {
-                      "id": "k0PlNk",
-                      "type": "ref",
-                      "ref": "VZuIf",
-                      "name": "Research Analyst",
-                      "width": "fill_container",
-                      "height": "fit_content",
-                      "descendants": {
-                        "xjiXy": {
-                          "fill": "#EFE8F5"
-                        },
-                        "xjiXy/Jg8uM": {
-                          "icon": "book-open-text",
-                          "fill": "#6A4A94"
-                        },
-                        "QU6R2/ULA8T": {
-                          "fill": "$online"
-                        },
-                        "QU6R2/vhw7V": {
-                          "content": "Online"
-                        },
-                        "oocDB": {
-                          "content": "Research Analyst"
-                        },
-                        "NrH3H": {
-                          "content": "Searches papers and the web, then writes briefs with inline citations you can verify."
-                        },
-                        "ohlRV": {
-                          "content": "LangGraph"
-                        },
-                        "x1H6I": {
-                          "content": "Lambda"
-                        },
-                        "KVGpx": {
-                          "content": "22 sessions · 5h ago"
-                        }
-                      }
-                    },
-                    {
-                      "id": "iH2IZ",
-                      "type": "ref",
-                      "ref": "VZuIf",
-                      "name": "Travel Planner",
-                      "width": "fill_container",
-                      "height": "fit_content",
-                      "descendants": {
-                        "xjiXy": {
-                          "fill": "#F5ECDD"
-                        },
-                        "xjiXy/Jg8uM": {
-                          "icon": "plane",
-                          "fill": "#8A5A12"
-                        },
-                        "QU6R2/ULA8T": {
-                          "fill": "$busy"
-                        },
-                        "QU6R2/vhw7V": {
-                          "content": "Beta"
-                        },
-                        "oocDB": {
-                          "content": "Travel Planner"
-                        },
-                        "NrH3H": {
-                          "content": "Builds day-by-day itineraries with flights, stays and a running budget."
-                        },
-                        "ohlRV": {
-                          "content": "Strands"
-                        },
-                        "x1H6I": {
-                          "content": "AgentCore"
-                        },
-                        "KVGpx": {
-                          "content": "3 sessions · Beta since Sep 20"
-                        },
-                        "e9nGV": {
-                          "content": "New session",
-                          "fill": "$accent",
-                          "fontWeight": "600"
-                        },
-                        "yKtEF": {
-                          "icon": "arrow-right",
-                          "fill": "$accent"
-                        }
-                      }
-                    },
-                    {
-                      "id": "JvTWQ",
-                      "type": "ref",
-                      "ref": "VZuIf",
-                      "name": "Home Ops",
-                      "width": "fill_container",
-                      "height": "fit_content",
-                      "opacity": 0.72,
-                      "fill": "$bg",
-                      "descendants": {
-                        "xjiXy": {
-                          "fill": "#ECEAE5"
-                        },
-                        "xjiXy/Jg8uM": {
-                          "icon": "house",
-                          "fill": "#77726A"
-                        },
-                        "QU6R2/ULA8T": {
-                          "fill": "$offline"
-                        },
-                        "QU6R2/vhw7V": {
-                          "content": "Offline"
-                        },
-                        "oocDB": {
-                          "content": "Home Ops"
-                        },
-                        "NrH3H": {
-                          "content": "Controls smart-home devices and schedules appliances around energy prices."
-                        },
-                        "ohlRV": {
-                          "content": "Strands"
-                        },
-                        "x1H6I": {
-                          "content": "AgentCore"
-                        },
-                        "KVGpx": {
-                          "content": "Offline since Sep 24"
-                        },
-                        "e9nGV": {
-                          "content": "Unavailable",
-                          "fill": "$text-tertiary",
-                          "fontWeight": "500"
-                        },
-                        "yKtEF": {
-                          "icon": "lock",
-                          "fill": "$text-tertiary"
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "O7Nwh5",
-              "name": "Recent Sessions",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "o9Itdh",
-                  "name": "Heading",
-                  "width": "fill_container",
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "u9paty",
-                      "name": "Title",
-                      "fill": "$text-primary",
-                      "content": "Continue where you left off",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 15,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "uquaA",
-                  "name": "List",
-                  "clip": true,
-                  "width": "fill_container",
-                  "fill": "$surface",
-                  "cornerRadius": 12,
-                  "stroke": "$border",
-                  "strokeWidth": 1,
-                  "layout": "vertical",
-                  "children": [
-                    {
-                      "id": "r5kxBJ",
-                      "type": "ref",
-                      "ref": "V8961f",
-                      "name": "Row Fix flaky auth middleware test",
-                      "width": "fill_container",
-                      "descendants": {
-                        "h0tjF": {
-                          "icon": "code-xml",
-                          "fill": "#2F5597"
-                        },
-                        "sXPHE": {
-                          "content": "Fix flaky auth middleware test"
-                        },
-                        "mkQCL": {
-                          "content": "Coding Agent"
-                        },
-                        "bxb5P": {
-                          "content": "18m ago"
-                        }
-                      }
-                    },
-                    {
-                      "id": "Ydf10",
-                      "type": "ref",
-                      "ref": "V8961f",
-                      "name": "Row Compare my March and August lipid panels",
-                      "width": "fill_container",
-                      "descendants": {
-                        "h0tjF": {
-                          "icon": "heart-pulse",
-                          "fill": "#A23B3B"
-                        },
-                        "sXPHE": {
-                          "content": "Compare my March and August lipid panels"
-                        },
-                        "mkQCL": {
-                          "content": "Health Assistant"
-                        },
-                        "bxb5P": {
-                          "content": "2h ago"
-                        }
-                      }
-                    },
-                    {
-                      "id": "ncaMU",
-                      "type": "ref",
-                      "ref": "V8961f",
-                      "name": "Row Brief: small-model distillation papers 2026",
-                      "width": "fill_container",
-                      "strokeWidth": 0,
-                      "descendants": {
-                        "h0tjF": {
-                          "icon": "book-open-text",
-                          "fill": "#6A4A94"
-                        },
-                        "sXPHE": {
-                          "content": "Brief: small-model distillation papers 2026"
-                        },
-                        "mkQCL": {
-                          "content": "Research Analyst"
-                        },
-                        "bxb5P": {
-                          "content": "5h ago"
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "cipq9",
-              "name": "Registry Note",
-              "gap": 8,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "PlSlG",
-                  "name": "Icon",
-                  "width": 14,
-                  "height": 14,
-                  "icon": "info",
-                  "library": "lucide",
-                  "fill": "$text-tertiary"
-                },
-                {
-                  "type": "text",
-                  "id": "f9UkjI",
-                  "name": "Text",
-                  "fill": "$text-tertiary",
-                  "content": "Agents are loaded from GET /agents. Register a new agent in the backend and it appears here, no UI changes needed.",
-                  "fontFamily": "$font-ui",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "mx18w",
-          "type": "ref",
-          "ref": "QRlRa",
-          "name": "Sort Menu",
-          "layoutPosition": "absolute",
-          "x": 1046,
-          "y": 179,
-          "width": 210,
-          "padding": 5,
-          "cornerRadius": 12,
-          "effect": {
-            "type": "shadow",
-            "shadowType": "outer",
-            "color": "#1B1A171F",
-            "offset": {
-              "x": 0,
-              "y": 12
-            },
-            "blur": 32
-          },
-          "descendants": {
-            "p97XhG": {
-              "type": "frame",
-              "id": "D6dPj",
-              "name": "Items",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 1,
-              "children": [
-                {
-                  "id": "P0vjU",
-                  "type": "ref",
-                  "ref": "koWWb",
-                  "name": "Recently used",
-                  "width": "fill_container",
-                  "fill": "$sidebar",
-                  "descendants": {
-                    "txpkO": {
-                      "icon": "history"
-                    },
-                    "Q3XeXt": {
-                      "content": "Recently used",
-                      "fontWeight": "600"
-                    },
-                    "LNVvg": {
-                      "enabled": true,
-                      "content": "✓",
-                      "fill": "$accent"
-                    }
-                  }
-                },
-                {
-                  "id": "rCq9p",
-                  "type": "ref",
-                  "ref": "koWWb",
-                  "name": "Name A–Z",
-                  "width": "fill_container",
-                  "descendants": {
-                    "txpkO": {
-                      "icon": "arrow-down-a-z"
-                    },
-                    "Q3XeXt": {
-                      "content": "Name A–Z"
-                    }
-                  }
-                },
-                {
-                  "id": "S59YJ",
-                  "type": "ref",
-                  "ref": "koWWb",
-                  "name": "Status",
-                  "width": "fill_container",
-                  "descendants": {
-                    "txpkO": {
-                      "icon": "activity"
-                    },
-                    "Q3XeXt": {
-                      "content": "Status"
-                    }
-                  }
-                },
-                {
-                  "id": "Cwn0L",
-                  "type": "ref",
-                  "ref": "koWWb",
-                  "name": "Most sessions",
-                  "width": "fill_container",
-                  "descendants": {
-                    "txpkO": {
-                      "icon": "messages-square"
-                    },
-                    "Q3XeXt": {
-                      "content": "Most sessions"
-                    }
-                  }
-                },
-                {
-                  "id": "mCfCZ",
-                  "type": "ref",
-                  "ref": "koWWb",
-                  "name": "Date added",
-                  "width": "fill_container",
-                  "descendants": {
-                    "txpkO": {
-                      "icon": "calendar-plus"
-                    },
-                    "Q3XeXt": {
-                      "content": "Date added"
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "type": "frame",
       "id": "j8NhJ",
       "x": 1560,
       "y": 16700,
@@ -58049,7 +57225,7 @@
                       "id": "WP5Wx",
                       "name": "Desc",
                       "fill": "$text-tertiary",
-                      "content": "Everything is stored by your backend · currently Mock API (localStorage, 2.4 MB)",
+                      "content": "Everything is stored by your backend (DynamoDB and S3)",
                       "fontFamily": "$font-ui",
                       "fontSize": 13,
                       "fontWeight": "normal"
@@ -68402,10 +67578,10 @@
                           "fill": "#8A5A12"
                         },
                         "QU6R2/ULA8T": {
-                          "fill": "$busy"
+                          "fill": "$online"
                         },
                         "QU6R2/vhw7V": {
-                          "content": "Beta"
+                          "content": "Online"
                         },
                         "oocDB": {
                           "content": "Travel Planner"
@@ -68418,6 +67594,9 @@
                         },
                         "x1H6I": {
                           "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": true
                         },
                         "KVGpx": {
                           "content": "3 sessions · Beta since Sep 20"
@@ -68734,130 +67913,21 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "id": "V2MDIZ",
+                      "id": "hpxoJ",
                       "type": "ref",
-                      "ref": "Wjnvx",
-                      "name": "Search",
-                      "width": 260
-                    },
-                    {
-                      "id": "l5miul",
-                      "type": "ref",
-                      "ref": "ZWD7y",
-                      "name": "Sort",
-                      "fill": "$surface",
-                      "padding": [
-                        7,
-                        11
-                      ],
-                      "cornerRadius": 9,
+                      "ref": "XBZK2",
+                      "name": "Register an agent",
                       "descendants": {
-                        "JXAWM": {
+                        "mfSA0": {
                           "enabled": true,
-                          "icon": "arrow-down-wide-narrow"
+                          "icon": "book-open"
                         },
-                        "K0TCb": {
-                          "content": "Recently used"
-                        }
-                      }
-                    },
-                    {
-                      "id": "A9dvMP",
-                      "type": "ref",
-                      "ref": "H0OSN",
-                      "name": "Add agent",
-                      "descendants": {
-                        "W8udYR": {
-                          "enabled": true
-                        },
-                        "aMS2a": {
-                          "content": "Add agent"
+                        "BsWQ6": {
+                          "content": "Register an agent"
                         }
                       }
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "kETPB",
-              "name": "Filter Chips",
-              "width": "fill_container",
-              "gap": 8,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "q5UAp6",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "All",
-                  "fill": "$text-primary",
-                  "stroke": "$text-primary",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "All",
-                      "fill": "$bg"
-                    },
-                    "LMev0": {
-                      "content": "6",
-                      "fill": "#A8A398"
-                    }
-                  }
-                },
-                {
-                  "id": "bn9tw",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Online",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$online"
-                    },
-                    "G8zLP": {
-                      "content": "Online"
-                    },
-                    "LMev0": {
-                      "content": "4"
-                    }
-                  }
-                },
-                {
-                  "id": "O5JSbv",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Beta",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$busy"
-                    },
-                    "G8zLP": {
-                      "content": "Beta"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
-                },
-                {
-                  "id": "qDDQf",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Offline",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$offline"
-                    },
-                    "G8zLP": {
-                      "content": "Offline"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
                 }
               ]
             },
@@ -69053,10 +68123,10 @@
                           "fill": "#8A5A12"
                         },
                         "QU6R2/ULA8T": {
-                          "fill": "$busy"
+                          "fill": "$online"
                         },
                         "QU6R2/vhw7V": {
-                          "content": "Beta"
+                          "content": "Online"
                         },
                         "oocDB": {
                           "content": "Travel Planner"
@@ -69069,6 +68139,9 @@
                         },
                         "x1H6I": {
                           "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": true
                         },
                         "KVGpx": {
                           "content": "3 sessions · Beta since Sep 20"
@@ -81074,7 +80147,7 @@
                   "fill": "#E9E6DE",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Confirm with Face ID",
+                  "content": "Face ID step (P2, parked)",
                   "fontFamily": "$font-ui",
                   "fontSize": 15,
                   "fontWeight": "normal"
@@ -81369,7 +80442,7 @@
                   "id": "F58Jr",
                   "name": "L",
                   "fill": "$text-secondary",
-                  "content": "Reviews details, clicks “Approve transfer”",
+                  "content": "Clicks “Approve transfer”; in v1 this goes straight to step 3",
                   "fontFamily": "$font-ui",
                   "fontSize": 15,
                   "fontWeight": "normal"
@@ -81402,7 +80475,7 @@
               "id": "wvKmi",
               "name": "Title",
               "fill": "$text-primary",
-              "content": "Confirm with Face ID",
+              "content": "Face ID step (P2, parked)",
               "fontFamily": "$font-ui",
               "fontSize": 20,
               "fontWeight": "600"
@@ -81429,7 +80502,7 @@
                   "id": "NSInS",
                   "name": "L",
                   "fill": "$text-secondary",
-                  "content": "Authenticates",
+                  "content": "Authenticates (P2 only)",
                   "fontFamily": "$font-ui",
                   "fontSize": 15,
                   "fontWeight": "normal"
@@ -82113,7 +81186,7 @@
       "id": "RPA2L",
       "x": 2280,
       "y": 26200,
-      "name": "F4.2 Confirm with Face ID",
+      "name": "F4.2 Confirm with Face ID (P2, parked)",
       "clip": true,
       "width": 1440,
       "height": 1024,
@@ -82917,7 +81990,7 @@
                                   "enabled": true
                                 },
                                 "S1YVK": {
-                                  "content": "Approved by you with Face ID · 14:33"
+                                  "content": "Approved by you · 14:33"
                                 }
                               }
                             },
@@ -83944,130 +83017,21 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "id": "k8vQX",
+                      "id": "Y1efr",
                       "type": "ref",
-                      "ref": "Wjnvx",
-                      "name": "Search",
-                      "width": 260
-                    },
-                    {
-                      "id": "ZDtF7",
-                      "type": "ref",
-                      "ref": "ZWD7y",
-                      "name": "Sort",
-                      "fill": "$surface",
-                      "padding": [
-                        7,
-                        11
-                      ],
-                      "cornerRadius": 9,
+                      "ref": "XBZK2",
+                      "name": "Register an agent",
                       "descendants": {
-                        "JXAWM": {
+                        "mfSA0": {
                           "enabled": true,
-                          "icon": "arrow-down-wide-narrow"
+                          "icon": "book-open"
                         },
-                        "K0TCb": {
-                          "content": "Recently used"
-                        }
-                      }
-                    },
-                    {
-                      "id": "ti9fz",
-                      "type": "ref",
-                      "ref": "H0OSN",
-                      "name": "Add agent",
-                      "descendants": {
-                        "W8udYR": {
-                          "enabled": true
-                        },
-                        "aMS2a": {
-                          "content": "Add agent"
+                        "BsWQ6": {
+                          "content": "Register an agent"
                         }
                       }
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "bEXTg",
-              "name": "Filter Chips",
-              "width": "fill_container",
-              "gap": 8,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "Cw4Z8",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "All",
-                  "fill": "$text-primary",
-                  "stroke": "$text-primary",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "All",
-                      "fill": "$bg"
-                    },
-                    "LMev0": {
-                      "content": "6",
-                      "fill": "#A8A398"
-                    }
-                  }
-                },
-                {
-                  "id": "MQzIA",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Online",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$online"
-                    },
-                    "G8zLP": {
-                      "content": "Online"
-                    },
-                    "LMev0": {
-                      "content": "4"
-                    }
-                  }
-                },
-                {
-                  "id": "pnY60",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Beta",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$busy"
-                    },
-                    "G8zLP": {
-                      "content": "Beta"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
-                },
-                {
-                  "id": "vEioo",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Offline",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$offline"
-                    },
-                    "G8zLP": {
-                      "content": "Offline"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
                 }
               ]
             },
@@ -84263,10 +83227,10 @@
                           "fill": "#8A5A12"
                         },
                         "QU6R2/ULA8T": {
-                          "fill": "$busy"
+                          "fill": "$online"
                         },
                         "QU6R2/vhw7V": {
-                          "content": "Beta"
+                          "content": "Online"
                         },
                         "oocDB": {
                           "content": "Travel Planner"
@@ -84279,6 +83243,9 @@
                         },
                         "x1H6I": {
                           "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": true
                         },
                         "KVGpx": {
                           "content": "3 sessions · Beta since Sep 20"
@@ -104698,7 +103665,7 @@
                       "content": "Travel Planner"
                     },
                     "hZlcR": {
-                      "content": "Beta"
+                      "content": "Online · Beta"
                     }
                   }
                 },
@@ -105489,7 +104456,7 @@
                       "id": "RI8iF",
                       "name": "Desc",
                       "fill": "$text-tertiary",
-                      "content": "Everything is stored by your backend · currently Mock API (localStorage, 2.4 MB)",
+                      "content": "Everything is stored by your backend (DynamoDB and S3)",
                       "fontFamily": "$font-ui",
                       "fontSize": 13,
                       "fontWeight": "normal"
@@ -110433,7 +109400,7 @@
                       "id": "rZBKQ",
                       "name": "Desc",
                       "fill": "$text-tertiary",
-                      "content": "Everything is stored by your backend · currently Mock API (localStorage, 2.4 MB)",
+                      "content": "Everything is stored by your backend (DynamoDB and S3)",
                       "fontFamily": "$font-ui",
                       "fontSize": 13,
                       "fontWeight": "normal"
@@ -111940,7 +110907,7 @@
                       "id": "vW2sJ",
                       "name": "Desc",
                       "fill": "$text-tertiary",
-                      "content": "Everything is stored by your backend · currently Mock API (localStorage, 2.4 MB)",
+                      "content": "Everything is stored by your backend (DynamoDB and S3)",
                       "fontFamily": "$font-ui",
                       "fontSize": 13,
                       "fontWeight": "normal"
@@ -113850,130 +112817,21 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "id": "uGwrM",
+                      "id": "CIZU1",
                       "type": "ref",
-                      "ref": "Wjnvx",
-                      "name": "Search",
-                      "width": 260
-                    },
-                    {
-                      "id": "R9EzPK",
-                      "type": "ref",
-                      "ref": "ZWD7y",
-                      "name": "Sort",
-                      "fill": "$surface",
-                      "padding": [
-                        7,
-                        11
-                      ],
-                      "cornerRadius": 9,
+                      "ref": "XBZK2",
+                      "name": "Register an agent",
                       "descendants": {
-                        "JXAWM": {
+                        "mfSA0": {
                           "enabled": true,
-                          "icon": "arrow-down-wide-narrow"
+                          "icon": "book-open"
                         },
-                        "K0TCb": {
-                          "content": "Recently used"
-                        }
-                      }
-                    },
-                    {
-                      "id": "imxa2",
-                      "type": "ref",
-                      "ref": "H0OSN",
-                      "name": "Add agent",
-                      "descendants": {
-                        "W8udYR": {
-                          "enabled": true
-                        },
-                        "aMS2a": {
-                          "content": "Add agent"
+                        "BsWQ6": {
+                          "content": "Register an agent"
                         }
                       }
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "EXMPo",
-              "name": "Filter Chips",
-              "width": "fill_container",
-              "gap": 8,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "FSpQH",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "All",
-                  "fill": "$text-primary",
-                  "stroke": "$text-primary",
-                  "descendants": {
-                    "G8zLP": {
-                      "content": "All",
-                      "fill": "$bg"
-                    },
-                    "LMev0": {
-                      "content": "6",
-                      "fill": "#A8A398"
-                    }
-                  }
-                },
-                {
-                  "id": "gILXz",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Online",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$online"
-                    },
-                    "G8zLP": {
-                      "content": "Online"
-                    },
-                    "LMev0": {
-                      "content": "4"
-                    }
-                  }
-                },
-                {
-                  "id": "EZ5tb",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Beta",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$busy"
-                    },
-                    "G8zLP": {
-                      "content": "Beta"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
-                },
-                {
-                  "id": "ib1rR",
-                  "type": "ref",
-                  "ref": "W0HHV",
-                  "name": "Offline",
-                  "descendants": {
-                    "jI7h0": {
-                      "enabled": true,
-                      "fill": "$offline"
-                    },
-                    "G8zLP": {
-                      "content": "Offline"
-                    },
-                    "LMev0": {
-                      "content": "1"
-                    }
-                  }
                 }
               ]
             },
@@ -114173,10 +113031,10 @@
                           "fill": "#8A5A12"
                         },
                         "QU6R2/ULA8T": {
-                          "fill": "$busy"
+                          "fill": "$online"
                         },
                         "QU6R2/vhw7V": {
-                          "content": "Beta"
+                          "content": "Online"
                         },
                         "oocDB": {
                           "content": "Travel Planner"
@@ -114189,6 +113047,9 @@
                         },
                         "x1H6I": {
                           "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": true
                         },
                         "KVGpx": {
                           "content": "3 sessions · Beta since Sep 20"
@@ -116967,565 +115828,6 @@
     },
     {
       "type": "frame",
-      "id": "UK1JP",
-      "x": 720,
-      "y": 35290,
-      "name": "F10.1 Mobile catalog",
-      "clip": true,
-      "width": 390,
-      "height": 844,
-      "fill": "$bg",
-      "cornerRadius": 36,
-      "stroke": "#D9D5CC",
-      "strokeWidth": 1,
-      "layout": "vertical",
-      "children": [
-        {
-          "id": "p9AxP",
-          "type": "ref",
-          "ref": "CLJUJ",
-          "name": "Status Bar",
-          "width": "fill_container"
-        },
-        {
-          "type": "frame",
-          "id": "Snmq8",
-          "name": "Top Bar",
-          "width": "fill_container",
-          "gap": 10,
-          "padding": [
-            4,
-            16,
-            10,
-            16
-          ],
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "icon",
-              "id": "m10Rts",
-              "name": "Menu",
-              "width": 20,
-              "height": 20,
-              "icon": "menu",
-              "library": "lucide",
-              "fill": "$text-primary"
-            },
-            {
-              "type": "text",
-              "id": "AAwOy",
-              "name": "Title",
-              "fill": "$text-primary",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Your agents",
-              "fontFamily": "$font-ui",
-              "fontSize": 22,
-              "fontWeight": "600",
-              "letterSpacing": -0.4
-            },
-            {
-              "type": "icon",
-              "id": "xl9eO",
-              "name": "Search",
-              "width": 20,
-              "height": 20,
-              "icon": "search",
-              "library": "lucide",
-              "fill": "$text-primary"
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "zvBOy",
-          "name": "Agents",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 10,
-          "padding": [
-            0,
-            16
-          ],
-          "children": [
-            {
-              "type": "frame",
-              "id": "ASPhr",
-              "name": "Health Assistant",
-              "width": "fill_container",
-              "fill": "$surface",
-              "cornerRadius": 14,
-              "stroke": "$border",
-              "strokeWidth": 1,
-              "gap": 12,
-              "padding": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "t9RcN",
-                  "type": "ref",
-                  "ref": "vCJQN",
-                  "name": "Avatar",
-                  "width": 42,
-                  "height": 42,
-                  "cornerRadius": 11,
-                  "fill": "#F6E3E3",
-                  "descendants": {
-                    "Jg8uM": {
-                      "icon": "heart-pulse",
-                      "fill": "#A23B3B",
-                      "width": 20,
-                      "height": 20
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "t69Cdm",
-                  "name": "Text",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "apLsB",
-                      "name": "N",
-                      "fill": "$text-primary",
-                      "content": "Health Assistant",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 15,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "aTW59",
-                      "name": "D",
-                      "fill": "$text-tertiary",
-                      "content": "Symptoms, meds and lab results",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "tlK18",
-                  "type": "ref",
-                  "ref": "JQ0rx",
-                  "name": "Status",
-                  "descendants": {
-                    "ULA8T": {
-                      "fill": "$online"
-                    },
-                    "vhw7V": {
-                      "content": "Online"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "J0UPtP",
-              "name": "Coding Agent",
-              "width": "fill_container",
-              "fill": "$surface",
-              "cornerRadius": 14,
-              "stroke": "$border",
-              "strokeWidth": 1,
-              "gap": 12,
-              "padding": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "wh4Ho",
-                  "type": "ref",
-                  "ref": "vCJQN",
-                  "name": "Avatar",
-                  "width": 42,
-                  "height": 42,
-                  "cornerRadius": 11,
-                  "fill": "#E1E8F4",
-                  "descendants": {
-                    "Jg8uM": {
-                      "icon": "code-xml",
-                      "fill": "#2F5597",
-                      "width": 20,
-                      "height": 20
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "W8TYan",
-                  "name": "Text",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "iEgMg",
-                      "name": "N",
-                      "fill": "$text-primary",
-                      "content": "Coding Agent",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 15,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "X9OTp",
-                      "name": "D",
-                      "fill": "$text-tertiary",
-                      "content": "Patches, tests and code review",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "omPsd",
-                  "type": "ref",
-                  "ref": "JQ0rx",
-                  "name": "Status",
-                  "descendants": {
-                    "ULA8T": {
-                      "fill": "$online"
-                    },
-                    "vhw7V": {
-                      "content": "Online"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "FzlNK",
-              "name": "Bank Agent",
-              "width": "fill_container",
-              "fill": "$surface",
-              "cornerRadius": 14,
-              "stroke": "$border",
-              "strokeWidth": 1,
-              "gap": 12,
-              "padding": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "pk8wn",
-                  "type": "ref",
-                  "ref": "vCJQN",
-                  "name": "Avatar",
-                  "width": 42,
-                  "height": 42,
-                  "cornerRadius": 11,
-                  "fill": "#E2EEE8",
-                  "descendants": {
-                    "Jg8uM": {
-                      "icon": "landmark",
-                      "fill": "#1F5C4A",
-                      "width": 20,
-                      "height": 20
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "LFzkK",
-                  "name": "Text",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "t6JXW",
-                      "name": "N",
-                      "fill": "$text-primary",
-                      "content": "Bank Agent",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 15,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "S9SFIg",
-                      "name": "D",
-                      "fill": "$text-tertiary",
-                      "content": "Balances, transfers, reconciling",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "dKLbd",
-                  "type": "ref",
-                  "ref": "JQ0rx",
-                  "name": "Status",
-                  "descendants": {
-                    "ULA8T": {
-                      "fill": "$online"
-                    },
-                    "vhw7V": {
-                      "content": "Online"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "jyrXr",
-              "name": "Research Analyst",
-              "width": "fill_container",
-              "fill": "$surface",
-              "cornerRadius": 14,
-              "stroke": "$accent",
-              "strokeWidth": 1.5,
-              "gap": 12,
-              "padding": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "hnBBv",
-                  "type": "ref",
-                  "ref": "vCJQN",
-                  "name": "Avatar",
-                  "width": 42,
-                  "height": 42,
-                  "cornerRadius": 11,
-                  "fill": "#EFE8F5",
-                  "descendants": {
-                    "Jg8uM": {
-                      "icon": "book-open-text",
-                      "fill": "#6A4A94",
-                      "width": 20,
-                      "height": 20
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "PRCHc",
-                  "name": "Text",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "LTxat",
-                      "name": "N",
-                      "fill": "$text-primary",
-                      "content": "Research Analyst",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 15,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "e4fec",
-                      "name": "D",
-                      "fill": "$text-tertiary",
-                      "content": "Papers, briefs and citations",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "AbCty",
-                  "type": "ref",
-                  "ref": "JQ0rx",
-                  "name": "Status",
-                  "descendants": {
-                    "ULA8T": {
-                      "fill": "$online"
-                    },
-                    "vhw7V": {
-                      "content": "Online"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "i1wBa",
-              "name": "Travel Planner",
-              "width": "fill_container",
-              "fill": "$surface",
-              "cornerRadius": 14,
-              "stroke": "$border",
-              "strokeWidth": 1,
-              "gap": 12,
-              "padding": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "coLuW",
-                  "type": "ref",
-                  "ref": "vCJQN",
-                  "name": "Avatar",
-                  "width": 42,
-                  "height": 42,
-                  "cornerRadius": 11,
-                  "fill": "#F5ECDD",
-                  "descendants": {
-                    "Jg8uM": {
-                      "icon": "plane",
-                      "fill": "#8A5A12",
-                      "width": 20,
-                      "height": 20
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "B7v7c",
-                  "name": "Text",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "pQAEu",
-                      "name": "N",
-                      "fill": "$text-primary",
-                      "content": "Travel Planner",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 15,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "V0qB9",
-                      "name": "D",
-                      "fill": "$text-tertiary",
-                      "content": "Itineraries and budgets",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "PkkgO",
-                  "type": "ref",
-                  "ref": "JQ0rx",
-                  "name": "Status",
-                  "descendants": {
-                    "ULA8T": {
-                      "fill": "$busy"
-                    },
-                    "vhw7V": {
-                      "content": "Beta"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "e9dsI",
-              "name": "Home Ops",
-              "opacity": 0.6,
-              "width": "fill_container",
-              "fill": "$surface",
-              "cornerRadius": 14,
-              "stroke": "$border",
-              "strokeWidth": 1,
-              "gap": 12,
-              "padding": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "vu7K8",
-                  "type": "ref",
-                  "ref": "vCJQN",
-                  "name": "Avatar",
-                  "width": 42,
-                  "height": 42,
-                  "cornerRadius": 11,
-                  "fill": "#ECEAE5",
-                  "descendants": {
-                    "Jg8uM": {
-                      "icon": "house",
-                      "fill": "#77726A",
-                      "width": 20,
-                      "height": 20
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "gGOGS",
-                  "name": "Text",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "zDg1S",
-                      "name": "N",
-                      "fill": "$text-primary",
-                      "content": "Home Ops",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 15,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "lwctW",
-                      "name": "D",
-                      "fill": "$text-tertiary",
-                      "content": "Devices and energy schedules",
-                      "fontFamily": "$font-ui",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "h3qTmq",
-                  "type": "ref",
-                  "ref": "JQ0rx",
-                  "name": "Status",
-                  "descendants": {
-                    "ULA8T": {
-                      "fill": "$offline"
-                    },
-                    "vhw7V": {
-                      "content": "Offline"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "u0tn9T",
-          "type": "ref",
-          "ref": "mSdhx",
-          "name": "Home Indicator",
-          "width": "fill_container"
-        }
-      ]
-    },
-    {
-      "type": "frame",
       "id": "i46aRN",
       "x": 2800,
       "y": 35290,
@@ -118467,7 +116769,7 @@
                       "id": "Fw7zb",
                       "name": "D",
                       "fill": "$text-secondary",
-                      "content": "Approval → Face ID → sent / denied → background task → result",
+                      "content": "Approval → sent / denied → background task → result",
                       "fontFamily": "$font-ui",
                       "fontSize": 14,
                       "fontWeight": "normal"
@@ -137240,6 +135542,599 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "nC6tf",
+      "x": 2301,
+      "y": -7094,
+      "name": "Stage Tag",
+      "reusable": true,
+      "cornerRadius": 999,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "padding": [
+        2,
+        8
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "o0pyE",
+          "name": "Label",
+          "fill": "$text-secondary",
+          "content": "Beta",
+          "fontFamily": "$font-ui",
+          "fontSize": 12,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ulBUE",
+      "x": 720,
+      "y": 35290,
+      "name": "F10.1 Mobile catalog",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "#D9D5CC",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "Rr4Ep",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "hpJ4X",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            4,
+            16,
+            10,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "lJdB7",
+              "name": "Menu",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "text",
+              "id": "k8esM",
+              "name": "Title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Your agents",
+              "fontFamily": "$font-ui",
+              "fontSize": 22,
+              "fontWeight": "600",
+              "letterSpacing": -0.4
+            },
+            {
+              "type": "icon",
+              "id": "hiZDn",
+              "name": "Search",
+              "width": 20,
+              "height": 20,
+              "icon": "search",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Q1EQ4u",
+          "name": "Agents",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            0,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "anaSn",
+              "name": "Health Assistant",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 14,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "cW70W",
+                  "type": "ref",
+                  "ref": "vCJQN",
+                  "name": "Avatar",
+                  "width": 42,
+                  "height": 42,
+                  "cornerRadius": 11,
+                  "fill": "#F6E3E3",
+                  "descendants": {
+                    "Jg8uM": {
+                      "icon": "heart-pulse",
+                      "fill": "#A23B3B",
+                      "width": 20,
+                      "height": 20
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "h5Wid",
+                  "name": "Text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "o4qRL",
+                      "name": "N",
+                      "fill": "$text-primary",
+                      "content": "Health Assistant",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "m9bEpb",
+                      "name": "D",
+                      "fill": "$text-tertiary",
+                      "content": "Symptoms, meds and lab results",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "ERlZq",
+                  "type": "ref",
+                  "ref": "JQ0rx",
+                  "name": "Status",
+                  "descendants": {
+                    "ULA8T": {
+                      "fill": "$online"
+                    },
+                    "vhw7V": {
+                      "content": "Online"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "le0Bt",
+              "name": "Coding Agent",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 14,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "LzDJi",
+                  "type": "ref",
+                  "ref": "vCJQN",
+                  "name": "Avatar",
+                  "width": 42,
+                  "height": 42,
+                  "cornerRadius": 11,
+                  "fill": "#E1E8F4",
+                  "descendants": {
+                    "Jg8uM": {
+                      "icon": "code-xml",
+                      "fill": "#2F5597",
+                      "width": 20,
+                      "height": 20
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "xiurv",
+                  "name": "Text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "mh279",
+                      "name": "N",
+                      "fill": "$text-primary",
+                      "content": "Coding Agent",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "WPNqi",
+                      "name": "D",
+                      "fill": "$text-tertiary",
+                      "content": "Patches, tests and code review",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "TKYRP",
+                  "type": "ref",
+                  "ref": "JQ0rx",
+                  "name": "Status",
+                  "descendants": {
+                    "ULA8T": {
+                      "fill": "$online"
+                    },
+                    "vhw7V": {
+                      "content": "Online"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "z5GRgG",
+              "name": "Bank Agent",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 14,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "l05an",
+                  "type": "ref",
+                  "ref": "vCJQN",
+                  "name": "Avatar",
+                  "width": 42,
+                  "height": 42,
+                  "cornerRadius": 11,
+                  "fill": "#E2EEE8",
+                  "descendants": {
+                    "Jg8uM": {
+                      "icon": "landmark",
+                      "fill": "#1F5C4A",
+                      "width": 20,
+                      "height": 20
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "b7oqlb",
+                  "name": "Text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TigoF",
+                      "name": "N",
+                      "fill": "$text-primary",
+                      "content": "Bank Agent",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "UAfYR",
+                      "name": "D",
+                      "fill": "$text-tertiary",
+                      "content": "Balances, transfers, reconciling",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "kdw72",
+                  "type": "ref",
+                  "ref": "JQ0rx",
+                  "name": "Status",
+                  "descendants": {
+                    "ULA8T": {
+                      "fill": "$online"
+                    },
+                    "vhw7V": {
+                      "content": "Online"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "s08Ux",
+              "name": "Research Analyst",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 14,
+              "stroke": "$accent",
+              "strokeWidth": 1.5,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "RpPCk",
+                  "type": "ref",
+                  "ref": "vCJQN",
+                  "name": "Avatar",
+                  "width": 42,
+                  "height": 42,
+                  "cornerRadius": 11,
+                  "fill": "#EFE8F5",
+                  "descendants": {
+                    "Jg8uM": {
+                      "icon": "book-open-text",
+                      "fill": "#6A4A94",
+                      "width": 20,
+                      "height": 20
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "GjNqv",
+                  "name": "Text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "P4eY3d",
+                      "name": "N",
+                      "fill": "$text-primary",
+                      "content": "Research Analyst",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "U74ZsM",
+                      "name": "D",
+                      "fill": "$text-tertiary",
+                      "content": "Papers, briefs and citations",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "Eli6G",
+                  "type": "ref",
+                  "ref": "JQ0rx",
+                  "name": "Status",
+                  "descendants": {
+                    "ULA8T": {
+                      "fill": "$online"
+                    },
+                    "vhw7V": {
+                      "content": "Online"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JFPJ2",
+              "name": "Travel Planner",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 14,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "Qp3cW",
+                  "type": "ref",
+                  "ref": "vCJQN",
+                  "name": "Avatar",
+                  "width": 42,
+                  "height": 42,
+                  "cornerRadius": 11,
+                  "fill": "#F5ECDD",
+                  "descendants": {
+                    "Jg8uM": {
+                      "icon": "plane",
+                      "fill": "#8A5A12",
+                      "width": 20,
+                      "height": 20
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "FJUla",
+                  "name": "Text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LHYpZ",
+                      "name": "N",
+                      "fill": "$text-primary",
+                      "content": "Travel Planner",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "gBHpg",
+                      "name": "D",
+                      "fill": "$text-tertiary",
+                      "content": "Itineraries and budgets",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "sgoQD",
+                  "type": "ref",
+                  "ref": "nC6tf",
+                  "name": "Stage"
+                },
+                {
+                  "id": "r1EMPE",
+                  "type": "ref",
+                  "ref": "JQ0rx",
+                  "name": "Status",
+                  "descendants": {
+                    "ULA8T": {
+                      "fill": "$online"
+                    },
+                    "vhw7V": {
+                      "content": "Online"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Ipdj0",
+              "name": "Home Ops",
+              "opacity": 0.6,
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 14,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "QMVbD",
+                  "type": "ref",
+                  "ref": "vCJQN",
+                  "name": "Avatar",
+                  "width": 42,
+                  "height": 42,
+                  "cornerRadius": 11,
+                  "fill": "#ECEAE5",
+                  "descendants": {
+                    "Jg8uM": {
+                      "icon": "house",
+                      "fill": "#77726A",
+                      "width": 20,
+                      "height": 20
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "dnAOV",
+                  "name": "Text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "D1XWA6",
+                      "name": "N",
+                      "fill": "$text-primary",
+                      "content": "Home Ops",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "HfMkL",
+                      "name": "D",
+                      "fill": "$text-tertiary",
+                      "content": "Devices and energy schedules",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "T6H1S",
+                  "type": "ref",
+                  "ref": "JQ0rx",
+                  "name": "Status",
+                  "descendants": {
+                    "ULA8T": {
+                      "fill": "$offline"
+                    },
+                    "vhw7V": {
+                      "content": "Offline"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "F0jbP",
+          "type": "ref",
+          "ref": "mSdhx",
+          "name": "Home Indicator",
+          "width": "fill_container"
         }
       ]
     }

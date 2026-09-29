@@ -3,8 +3,8 @@
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
 - Top-level frames: 255
-- Reusable components: 87 (2766 references, nested ones included)
-- Reference screens and boards: 44
+- Reusable components: 88 (2721 references, nested ones included)
+- Reference screens and boards: 43
 - Flow screens: 93
 
 Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID>"`).
@@ -41,8 +41,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Button / Primary | `H0OSN` | auto×auto |  | 37 |
-| Button / Secondary | `XBZK2` | auto×auto |  | 76 |
+| Button / Primary | `H0OSN` | auto×auto |  | 32 |
+| Button / Secondary | `XBZK2` | auto×auto |  | 80 |
 | Button / Danger | `HsXdL` | auto×auto |  | 5 |
 | Icon Button | `btfe4` | 32×32 |  | 97 |
 | Kbd | `rjWo1` | auto×20 |  | 124 |
@@ -53,15 +53,16 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Inline Code | `Uzd9M` | auto×auto |  | 2 |
 | Citation Chip | `q3C9LM` | auto×18 |  | 4 |
 | Resize Handle | `accqR` | 1×400 |  | 9 |
+| Stage Tag | `nC6tf` | auto×auto |  | 2 |
 
 ### 2 Inputs & Selection
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Search Field | `Wjnvx` | 240×auto |  | 21 |
-| Select Button | `ZWD7y` | auto×auto |  | 21 |
+| Search Field | `Wjnvx` | 240×auto |  | 16 |
+| Select Button | `ZWD7y` | auto×auto |  | 16 |
 | Segmented Item | `K1CWuA` | auto×auto |  | 14 |
-| Filter Chip | `W0HHV` | auto×auto |  | 34 |
+| Filter Chip | `W0HHV` | auto×auto |  | 14 |
 | Reason Chip | `c3s8Su` | auto×auto |  | 33 |
 | Suggestion Pill | `wULfL` | auto×auto |  | 12 |
 | Form Field | `s2kV7R` | 300×auto |  | 28 |
@@ -73,8 +74,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Menu Item | `koWWb` | 180×auto |  | 78 |
-| Menu Panel | `QRlRa` | 220×auto | `Items` (p97XhG): Menu Item | 18 |
+| Menu Item | `koWWb` | 180×auto |  | 73 |
+| Menu Panel | `QRlRa` | 220×auto | `Items` (p97XhG): Menu Item | 17 |
 | Agent Menu Item | `UauTJ` | 288×auto |  | 21 |
 | Palette Row | `QrHIB` | 600×auto |  | 33 |
 | Command Palette | `ZHC9i` | 640×auto | `Results` (NF5Vl): Palette Row | 5 |
@@ -88,7 +89,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| App Header | `fqLch` | 1440×64 |  | 18 |
+| App Header | `fqLch` | 1440×64 |  | 17 |
 | Chat Header | `H0YWK` | 1156×60 |  | 64 |
 | Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 67 |
 | Sidebar Brand | `T8TdZq` | 256×auto |  | 1 |
@@ -156,9 +157,9 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Approval Card | `m1FtM` | 520×auto |  | 14 |
 | Permission Prompt | `YwhPJ` | 560×auto |  | 3 |
 | Detail Row | `wGPRe` | 400×auto |  | 35 |
-| Agent Card | `VZuIf` | 392×auto |  | 41 |
+| Agent Card | `VZuIf` | 392×auto |  | 35 |
 | Capability Row | `V6Dax` | 560×auto |  | 24 |
-| Recent Session Row | `V8961f` | 800×auto |  | 30 |
+| Recent Session Row | `V8961f` | 800×auto |  | 27 |
 | Info Row | `NEFiE` | 320×auto |  | 12 |
 | Tip Card | `HFzDp` | 300×auto | `Extra` (IepYs): Kbd | 6 |
 
@@ -197,7 +198,6 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Artifacts library | `g2nGvw` | 1440×1024 |
 | Session info drawer | `E3lQz` | 1440×1024 |
 | Sessions — Dialogs & states | `vBr4V` | 2280×auto |
-| Catalog — sort menu open | `S1S8vL` | 1440×1024 |
 | Catalog — empty | `j8NhJ` | 1440×1024 |
 | Agent detail — /agents/coding-agent/about | `x05s4W` | 1440×1024 |
 | Settings — /settings | `Za8Qd` | 1440×1024 |
@@ -269,8 +269,8 @@ Bank Agent pauses for approval before moving money, then runs a long background 
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
-| F4.1 Approval requested | `C6Znz` | 1440×1024 | Reviews details, clicks “Approve transfer” |
-| F4.2 Confirm with Face ID | `RPA2L` | 1440×1024 | Authenticates |
+| F4.1 Approval requested | `C6Znz` | 1440×1024 | Clicks “Approve transfer”; in v1 this goes straight to step 3 |
+| F4.2 Confirm with Face ID (P2, parked) | `RPA2L` | 1440×1024 | Authenticates (P2 only) |
 | F4.3 Transfer sent | `Xju40` | 1440×1024 | Asks for a monthly reconciliation |
 | F4.4 Branch · Denied | `oTQRM` | 1440×1024 | If the user clicks Deny instead |
 | F4.5 Long task running | `l7fEn` | 1440×1024 | Leaves the page |
@@ -355,7 +355,7 @@ The same product on a phone: browse agents, chat, open artifacts as full-screen 
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
-| F10.1 Mobile catalog | `UK1JP` | 390×844 | Taps Research Analyst |
+| F10.1 Mobile catalog | `ulBUE` | 390×844 | Taps Research Analyst |
 | F10.2 Chat with artifact | `j57Yaa` | 390×844 | Taps the artifact card |
 | F10.3 Artifact sheet | `o3XCU` | 390×844 | Taps ⋯ |
 | F10.4 Overflow menu | `oNbW3` | 390×844 | Downloads; taps back, opens menu |
