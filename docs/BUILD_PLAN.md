@@ -24,9 +24,9 @@ The ordered steps for building Agent Hub, their status, and how we work. Start a
 | 4b | **Alignment review.** Check screens, data model, stream and flows against each other before the API contract; fix blockers, record the owner's decisions. | ✅ Done | ARCHITECTURE D19–D23, migration `0002`, [`diagrams/approval-and-upload.mmd`](diagrams/approval-and-upload.mmd), design fixes in `fleet_dev.pen`. The review doc was removed once the spec covered it (git history: `docs/ALIGNMENT_REVIEW.md` at `63b0ca7`); its open items are under "Follow-ups" below. |
 | 5 | **OpenAPI spec.** OpenAPI 3.1 covering auth, agents, sessions, messages, streaming (the SSE event schema defined precisely, including all block types), uploads and artifacts (signed URLs), feedback and errors. Then connect the front end to it through a single API client layer. | ✅ Spec done; client layer waits for the front end | [`api/openapi.yaml`](../api/openapi.yaml) (lint: `npx @redocly/cli lint api/openapi.yaml`; TypeScript types: `npx openapi-typescript api/openapi.yaml`). The typed client module is written when the Vite app is created. |
 | 6 | **Repo layout.** Propose a simple monorepo (`web/`, `api/`, `infra/`, `docs/`) fitted to what's already here, without breaking the existing front end. | ✅ Done | ARCHITECTURE D24; layout in the root [`README.md`](../README.md); root `Makefile`. `web/`, `infra/` and `agents/` are created by the steps that fill them. |
-| 7 | **Terraform foundation (dev first).** State bucket bootstrap, network, ECR, ECS cluster and service, ALB with the explicit idle timeout, S3 bucket, Secrets Manager entries, IAM roles, Amplify app. Show `terraform plan` output before any apply. Re-check ECS Express Mode docs first (D2). | ⬜ | |
-| 8 | **First end-to-end slice with ONE real agent.** Google sign-in, load the agent from the `agents` table, send a message, stream the reply from the real AgentCore runtime through the ALB, save the history, reload it in the real UI. Deployed to dev. Must prove SSE works through the ALB with keep-alives, and must record what the AgentCore runtime actually emits so the translator (D10) is written against real output. Also verify: Stop actually stops the run on AgentCore; Neon pooler vs. driver prepared statements. | ⬜ | |
-| 9 | **Remaining features, one small slice at a time:** agent catalog and sessions CRUD from the database, Stop generation, tool-call steps, artifacts and uploads, questions and approvals (spike the approval pause/resume first, P8), feedback, share links, invite flow for more users, optional AgentCore Memory, CI/CD, logging and monitoring. Later: mobile screens. | ⬜ | |
+| 7 | **Terraform foundation (dev first).** State bucket bootstrap, network, ECR, ECS cluster and service, ALB with the explicit idle timeout, S3 bucket, Secrets Manager entries, IAM roles, Amplify app. Show `terraform plan` output before any apply. Re-check ECS Express Mode docs first (D2). | 🔄 Code written and validated; plans and applies pending | [`infra/`](../infra/README.md): bootstrap (state bucket, Route 53 zone), `envs/dev`, 7 modules. `make infra-validate`, `make infra-plan`. |
+| 8 | **First end-to-end slice with ONE real agent.** Google sign-in, load the agent from the `agents` table, send a message, stream the reply from the real AgentCore runtime through the ALB, save the history, reload it in the real UI. Deployed to dev. Must prove SSE works through the ALB with keep-alives, and must record what the AgentCore runtime actually emits so the translator (D10) is written against real output. Also verify: Stop actually stops the run on AgentCore; Neon pooler vs. driver prepared statements. | ⬜ = milestone **M1** (30 Sep – 16 Oct) | [`DELIVERY_PLAN.md`](DELIVERY_PLAN.md) §3; GitHub issues #2–#10 |
+| 9 | **Remaining features, one small slice at a time:** agent catalog and sessions CRUD from the database, Stop generation, tool-call steps, artifacts and uploads, questions and approvals (spike the approval pause/resume first, P8), feedback, share links, invite flow for more users, optional AgentCore Memory, CI/CD, logging and monitoring. Later: mobile screens. | ⬜ = milestones **M2–M4** (to v1 on 18 Dec) | [`DELIVERY_PLAN.md`](DELIVERY_PLAN.md) §3; issues written at each milestone's start |
 
 ## Follow-ups (from the alignment review, for their feature slices)
 
@@ -44,7 +44,6 @@ The ordered steps for building Agent Hub, their status, and how we work. Start a
 Kept current in [`ARCHITECTURE.md` §4](ARCHITECTURE.md#4-open-questions-answers-pending). As of 2026-09-29 these are still open:
 
 - **Q8 Budget:** is $50/month AWS (excluding model tokens) still the ceiling?
-- **Q9 First agent:** is there an agent already deployed on AgentCore to use in step 8?
 - **Q10 AWS account:** the account exists; the owner will set up access and say when (step 7).
 
 ## Where things are
@@ -52,6 +51,7 @@ Kept current in [`ARCHITECTURE.md` §4](ARCHITECTURE.md#4-open-questions-answers
 | Need | Look at |
 |---|---|
 | Why a technical choice was made | [`ARCHITECTURE.md`](ARCHITECTURE.md) |
+| Milestones, dates, what's next, tracking | [`DELIVERY_PLAN.md`](DELIVERY_PLAN.md), GitHub milestones and the pinned Weekly status issue |
 | Product scope, acceptance criteria, screen list | [`PRODUCT_PLAN.md`](PRODUCT_PLAN.md) |
 | The send / stream flow, statuses, timers, error codes | [`SEND_MESSAGE.md`](SEND_MESSAGE.md) |
 | Tables, enforced rules, indexes | [`DATA_MODEL.md`](DATA_MODEL.md) |

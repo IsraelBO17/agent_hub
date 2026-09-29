@@ -311,6 +311,8 @@ No third-party analytics. The client sends a small set of events to `POST /telem
 
 ## 8. Roadmap
 
+> **Superseded (2026-09-29):** the current milestones, dates and tracking are in [`DELIVERY_PLAN.md`](DELIVERY_PLAN.md). The table below is the original plan, kept for reference; it predates the stack decisions (Next.js, Cognito and DynamoDB no longer apply).
+
 This assumes A3: about 20 hours a week, starting Tue 29 Sep 2026. Each milestone has pass/fail exit criteria and ends shippable.
 
 | Milestone | Dates | Deliverables | Exit criteria |

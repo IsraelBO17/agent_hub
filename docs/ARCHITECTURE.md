@@ -33,7 +33,8 @@ Each entry: the decision, why, and what would make us revisit it.
 ### D2. Compute: ECS Fargate behind an Application Load Balancer
 **Decision.** FastAPI runs as a container on ECS Fargate, behind an ALB, defined in Terraform. One task in v1.
 **Why.** Replies can stream for minutes. Lambda has a 15-minute cap and awkward streaming from Python. App Runner is closed to new customers. A plain Fargate service gives full control of ALB settings (idle timeout, deregistration delay) that SSE depends on.
-**ECS Express Mode.** Not the default: one independent write-up reports no control over the load balancer settings SSE needs. A quick search on 2026-09-29 found nothing in AWS docs either way. Re-check the current Express Mode docs before step 7 and record the result here.
+**ECS Express Mode.** Not used. Re-checked 2026-09-29 (step 7): AWS's Express Mode best-practices page says the service creates and owns its ALB and target group, and the only documented way to tune them (health-check timeouts, security groups) is afterwards in the EC2 console or CLI, outside the Express configuration. Idle timeout and deregistration delay would then drift from anything in Terraform. A plain service keeps them in code.
+**Cheaper options weighed (2026-09-29, owner chose to keep the ALB).** The ALB plus its two public IPv4 addresses is ~$24 of the ~$37/month dev bill. Considered: one EC2 `t4g.micro`/`small` with Caddy for TLS (~$11–17/month; loses draining deploys and adds OS upkeep); Fargate with a public task IP and DNS (fragile: IP changes each deploy, TLS in the container, no draining); API Gateway REST response streaming (still needs a load balancer for a private Fargate backend, or a Lambda rewrite that breaks D11); Lightsail containers (no IAM roles). Kept the ALB, behind an `enable_api` switch so it is only billed from step 8.
 **Revisit if.** Express Mode exposes the ALB idle timeout and deregistration delay (it would remove most of the Terraform); or always-on cost matters more than streaming control.
 
 ### D3. Database: Neon Postgres, us-east-1
@@ -197,13 +198,12 @@ These refine D1–D15 and are binding for the steps that follow.
 
 ## 4. Open questions (answers pending)
 
-Answered 2026-09-29: Q2 → D25 (`fleet.programmeos.com`), Q3 → §2 (public subnets, no NAT), Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (let the agent finish), Q6 → D18 (API sends history; AgentCore Memory later), Q7 → §3 (P1–P8 accepted). Still open:
+Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 → D25 (`fleet.programmeos.com`), Q3 → §2 (public subnets, no NAT), Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (let the agent finish), Q6 → D18 (API sends history; AgentCore Memory later), Q7 → §3 (P1–P8 accepted). Still open:
 
 | # | Question | Blocks | My default |
 |---|---|---|---|
 | ~~Q2~~ | **Answered → D25.** ~~Domain.~~ Which parent domain, is it in Route 53, and who issues TLS (ACM in us-east-1)? | ALB listener, Amplify custom domain, cookie domain, Google OAuth origins | Subdomains of your portfolio domain, ACM certificates, Route 53 if already there |
 | Q8 | **Budget.** Is the $50/month AWS ceiling in the plan still right, excluding model tokens? | Task size, alarms | Yes |
-| Q9 | **First real agent for step 8.** Research Analyst (the plan's pick), or an agent you already have deployed on AgentCore? An existing one is faster. Is there one, and can the API's IAM role invoke it? | Step 8 | An existing deployed agent, if any |
 | Q10 | **AWS account.** Is there a dedicated account (or at least credentials profile) for Agent Hub, and may I run read-only AWS CLI and `terraform plan` against it? | Step 7 | Ask again at step 7 |
 
 ## 5. Open items (known, not yet decided)
@@ -243,3 +243,5 @@ Answered 2026-09-29: Q2 → D25 (`fleet.programmeos.com`), Q3 → §2 (public su
 | 2026-09-29 | Repo layout (step 6): D24. Root `README.md` maps the repo; root `Makefile` for common commands. |
 | 2026-09-29 | Q3 answered: public subnets, ALB-only inbound, no NAT gateway (§2 confirmed). Q10: account exists; the owner sets up access at step 7. |
 | 2026-09-29 | Q2 answered: D25, `fleet.programmeos.com` (app) and `api.fleet.programmeos.com` (API), subdomain delegated from GoDaddy to Route 53; refresh cookie made host-only. |
+| 2026-09-29 | Step 7: Terraform written (`infra/`); D2 Express Mode re-check recorded. Budget alarm at $50 (Q8 default) when an alert email is set. |
+| 2026-09-29 | D2: cheaper alternatives to the ALB weighed; ALB kept behind `enable_api` (off until step 8). |
