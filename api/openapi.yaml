@@ -1,0 +1,3280 @@
+openapi: 3.1.0
+info:
+  title: Agent Hub API
+  version: 0.1.0
+  summary: One chat interface for many AI agents. Browser ↔ API contract, plus the API → agent payload.
+  description: |
+    The contract between the Agent Hub web app and its FastAPI service (build plan step 5).
+    Decisions behind it: `docs/ARCHITECTURE.md` (D1–D23). Send/stream rules and timers: `docs/SEND_MESSAGE.md`.
+    Tables: `docs/DATA_MODEL.md`.
+
+    ## Conventions (D23)
+    - All routes are under `/v1`. JSON is camelCase. IDs are UUID strings. Timestamps are RFC 3339 in UTC.
+    - Agents are addressed by `slug`; slugs never change.
+    - Every response carries `X-Request-Id`. Send it back in bug reports; errors include it as `requestId`.
+    - Operations are marked `x-scope: v1` (P0, needed for launch) or `x-scope: P1` (designed, built after v1).
+
+    ## Auth (D8)
+    1. The browser gets a Google ID token and calls `POST /v1/auth/google` once.
+    2. The API returns a short-lived access token (~15 min, keep it in memory, send it as `Authorization: Bearer`)
+       and sets a rotating refresh cookie `ah_refresh` (`HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`).
+    3. On app load, and whenever a call returns `401 token_expired`, call `POST /v1/auth/refresh`, then repeat the call
+       (resends are safe: see Idempotency). `401 session_expired` means signing in again.
+    `/v1/auth/*` also checks the `Origin` header. Every other route needs the bearer token, except `/v1/health` and
+    `/v1/public/*`.
+
+    ## Errors
+    Every error is `application/problem+json` (RFC 9457) with a machine-readable `code` (see `ErrorCode`).
+    The same object appears in the `run.failed` stream event and in `Message.error`.
+
+    ## Pagination
+    Lists take `cursor` (opaque) and `limit` (default 50, max 100) and return `{ items, nextCursor }`; `nextCursor` is
+    null on the last page. Messages page backwards instead: `before=<seq>` returns the newest messages older than `seq`,
+    oldest first, with `nextBefore` for the next page.
+
+    ## Idempotency
+    - Sends carry `clientMessageId` (UUID from the browser), unique per user. A resend with the same id and the same
+      content returns `200 application/json` with the existing messages instead of a stream; the client then polls
+      `GET /v1/messages/{messageId}`. A different content reuses the id: `409 idempotency_conflict`.
+    - A repeated identical approval decision returns `200 application/json` with the approval; a different one returns
+      `409 approval_not_pending`.
+    - Stop, delete, restore, file completion and share creation are idempotent.
+
+    ## Streaming (D5, D10, D11)
+    Sending, retrying and deciding an approval return `200 text/event-stream`, read with `fetch` (not `EventSource`).
+    Refusals (auth, validation, 409, 429, 503) come back as a normal problem response **before** any event, and
+    nothing is saved.
+
+    Framing: each event is
+    ```
+    id: <assistantMessageId>:<n>
+    event: <type>
+    data: <one-line JSON, a StreamEvent>
+    ```
+    `n` starts at 1 and increases by 1 per event within a run. Every `data` object repeats `type`, `messageId` and `n`.
+    The API writes a `: ping` comment every 15 s. After 45 s with no bytes, treat the connection as lost and poll
+    `GET /v1/messages/{messageId}` every 2 s while its status is `streaming`. A disconnect never cancels the agent; only
+    `POST /v1/messages/{messageId}/stop` does. There is no stream resume in v1. Every stream ends with exactly one of
+    `run.completed`, `run.awaiting_approval`, `run.stopped` or `run.failed`, then closes.
+
+    ## Blocks
+    `Message.blocks` is the ordered transcript of a message. On the wire, blocks are **hydrated**: tool, approval,
+    artifact, file and question blocks carry the current state of their rows, so the client never joins anything.
+    Unknown block types must be rendered as a neutral "This content can't be shown" row, never as an error, so new
+    types can ship without breaking older clients.
+
+    ## Polling for activity elsewhere (D22)
+    There is no push channel in v1. While the tab is visible, refresh `GET /v1/sessions` every 20 s (`isRunning` and
+    `pendingApprovals` drive the sidebar dot, badge and toasts) and `GET /v1/approvals?status=pending` when the badge
+    count rises. While the open agent is offline, poll `GET /v1/agents/{slug}` every 30 s.
+
+    ## Limits
+    Message text: 32,000 characters. Attachments: 10 per message, 20 MB each, types `application/pdf`, `image/png`,
+    `image/jpeg`, `image/webp`, `image/gif`, `text/csv`, `text/plain`, narrowed per agent by
+    `Agent.capabilities.attachments`. At most 3 replies running at once per user, and one open reply per session.
+  contact:
+    name: Israel B.
+servers:
+  - url: https://api.agenthub.dev
+    description: Placeholder until the domain is chosen (ARCHITECTURE Q2).
+  - url: http://localhost:8000
+    description: Local development
+tags:
+  - name: Auth
+    description: Google sign-in and the API's own session (D8).
+  - name: Me
+    description: The signed-in user and their preferences.
+  - name: Agents
+    description: The registry (D6). Read-only through the API; agents are added with the CLI.
+  - name: Sessions
+    description: Conversations with one agent each.
+  - name: Messages
+    description: Sending, reading, stopping and retrying. Send, retry and decision responses are streams.
+  - name: Approvals
+    description: Human-in-the-loop decisions (D19).
+  - name: Files
+    description: Uploads and downloads through short-lived signed S3 URLs (D7).
+  - name: Artifacts
+    description: Documents, code, HTML and tables, with versions.
+  - name: Feedback
+    description: 👍 / 👎 on a reply.
+  - name: Search
+    description: ⌘K search (P1).
+  - name: Sharing
+    description: Read-only public links to a session snapshot (P1).
+  - name: Health
+    description: Load balancer health check.
+
+security:
+  - bearerAuth: []
+
+paths:
+  /v1/health:
+    get:
+      tags: [Health]
+      operationId: getHealth
+      summary: Health check for the load balancer
+      x-scope: v1
+      security: []
+      responses:
+        '200':
+          description: The API is up. Doesn't check the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    const: ok
+
+  # ---------------------------------------------------------------- Auth
+  /v1/auth/google:
+    post:
+      tags: [Auth]
+      operationId: signInWithGoogle
+      summary: Exchange a Google ID token for an Agent Hub session
+      x-scope: v1
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [idToken]
+              additionalProperties: false
+              properties:
+                idToken:
+                  type: string
+                  description: Google Identity Services ID token (JWT). Verified against Google's JWKS, our client ID, issuer, expiry and `email_verified`.
+      responses:
+        '200':
+          description: Signed in. Sets the refresh cookie.
+          headers:
+            Set-Cookie:
+              $ref: '#/components/headers/SetRefreshCookie'
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: '`not_invited` (the problem carries the Google `email` for the "not allowed" screen), `account_disabled` or `origin_not_allowed`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                notInvited:
+                  value:
+                    type: https://agenthub.dev/errors/not_invited
+                    title: This Google account doesn't have access to Agent Hub
+                    status: 403
+                    code: not_invited
+                    requestId: req_4c1d2e
+                    retryable: false
+                    email: ada.okafor@example.com
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  /v1/auth/refresh:
+    post:
+      tags: [Auth]
+      operationId: refreshSession
+      summary: Rotate the refresh cookie and get a new access token
+      description: Reusing an already-rotated refresh token revokes the whole sign-in (every token in its family) and returns `401 session_expired`.
+      x-scope: v1
+      security:
+        - refreshCookie: []
+      responses:
+        '200':
+          description: New access token; the cookie is rotated.
+          headers:
+            Set-Cookie:
+              $ref: '#/components/headers/SetRefreshCookie'
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/auth/logout:
+    post:
+      tags: [Auth]
+      operationId: signOut
+      summary: Sign out on this device
+      description: Revokes this sign-in's refresh tokens and clears the cookie. Succeeds even without a valid cookie.
+      x-scope: v1
+      security:
+        - refreshCookie: []
+      responses:
+        '204':
+          description: Signed out.
+          headers:
+            Set-Cookie:
+              description: Clears `ah_refresh`.
+              schema:
+                type: string
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+
+  # ---------------------------------------------------------------- Me
+  /v1/me:
+    get:
+      tags: [Me]
+      operationId: getMe
+      summary: The signed-in user
+      x-scope: v1
+      responses:
+        '200':
+          description: The user.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Me'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      tags: [Me]
+      operationId: updateMe
+      summary: Update preferences (Settings)
+      x-scope: P1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [preferences]
+              properties:
+                preferences:
+                  $ref: '#/components/schemas/PreferencesPatch'
+      responses:
+        '200':
+          description: Updated user.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Me'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  # ---------------------------------------------------------------- Agents
+  /v1/agents:
+    get:
+      tags: [Agents]
+      operationId: listAgents
+      summary: The catalog
+      description: Listed, not retired agents, in catalog order. Not paginated; the registry is small. Hidden agents (the Scenario Agent) are included only in dev builds.
+      x-scope: v1
+      responses:
+        '200':
+          description: Agents.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Agent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/agents/{slug}:
+    get:
+      tags: [Agents]
+      operationId: getAgent
+      summary: One agent, including retired and hidden ones
+      description: Retired agents are returned (with `retiredAt`) so their old sessions stay readable.
+      x-scope: v1
+      parameters:
+        - $ref: '#/components/parameters/AgentSlug'
+      responses:
+        '200':
+          description: The agent.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/agents/{slug}/sessions:
+    post:
+      tags: [Sessions, Messages]
+      operationId: createSessionAndSend
+      summary: Start a session with its first message (streams the reply)
+      description: |
+        Lazy creation (F03): the session exists only once the first message is sent. The API creates the session,
+        titles it from the text (D21), saves the user message and an empty `streaming` assistant message in one
+        transaction, then streams. `run.started` carries the new session, so the client can switch its URL to
+        `/agents/:slug/:sessionId`. If the call is refused, nothing is created and the draft stays in the browser.
+        A resend with the same `clientMessageId` returns the existing session and messages (see Idempotency).
+      x-scope: v1
+      parameters:
+        - $ref: '#/components/parameters/AgentSlug'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/RunStream'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/AgentUnavailable'
+
+  # ---------------------------------------------------------------- Sessions
+  /v1/sessions:
+    get:
+      tags: [Sessions]
+      operationId: listSessions
+      summary: Sessions, newest activity first (sidebar, catalog "continue", archived)
+      description: |
+        Deleted sessions never appear. Also the 20 s activity poll (D22): each row says whether a reply is running
+        and how many approvals are pending.
+      x-scope: v1
+      parameters:
+        - name: agent
+          in: query
+          description: Only this agent's sessions (sidebar). Omit for all agents (catalog "continue where you left off").
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: '`false` (default) lists live sessions; `true` lists archived ones, newest archived first (P1).'
+          schema:
+            type: boolean
+            default: false
+        - name: pinned
+          in: query
+          description: '`true` lists only pinned sessions (P1 sidebar section); omit for all.'
+          schema:
+            type: boolean
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A page of sessions.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  /v1/sessions/delete-all:
+    post:
+      tags: [Sessions]
+      operationId: deleteAllSessions
+      summary: Delete every session, artifact and upload (Settings → Delete all)
+      description: Permanent, no undo. Running replies are stopped first. S3 objects are removed by the purge job.
+      x-scope: P1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [confirm]
+              properties:
+                confirm:
+                  const: DELETE
+                  description: The text the user typed.
+      responses:
+        '200':
+          description: Deleted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [deletedSessions]
+                properties:
+                  deletedSessions:
+                    type: integer
+                    minimum: 0
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  /v1/sessions/{sessionId}:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Sessions]
+      operationId: getSession
+      summary: One session with its stats (header, session info drawer)
+      description: Another user's session, a deleted one and a missing one all return `404 session_not_found`.
+      x-scope: v1
+      responses:
+        '200':
+          description: The session.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Sessions]
+      operationId: updateSession
+      summary: Rename, pin, archive or restore from the archive
+      x-scope: v1
+      description: Rename is v1; `pinned` and `archived` are P1.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionPatch'
+      responses:
+        '200':
+          description: The updated session.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
+    delete:
+      tags: [Sessions]
+      operationId: deleteSession
+      summary: Delete a session, with a 10-second undo
+      description: |
+        Hides the session at once and returns when the undo window closes. A running reply is stopped and pending
+        approvals are cancelled first. After the window a background job purges rows and S3 objects. Deleting an
+        already-deleted session returns the same response.
+      x-scope: v1
+      responses:
+        '200':
+          description: Deleted; restorable until `restorableUntil`.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [restorableUntil]
+                properties:
+                  restorableUntil:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/sessions/{sessionId}/restore:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    post:
+      tags: [Sessions]
+      operationId: restoreSession
+      summary: Undo a delete
+      description: Works until the session is purged; after that `404 session_not_found`. Restoring a live session is a no-op.
+      x-scope: v1
+      responses:
+        '200':
+          description: The restored session.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/sessions/{sessionId}/messages:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Messages]
+      operationId: listMessages
+      summary: Load a session's transcript, newest page first
+      x-scope: v1
+      parameters:
+        - name: before
+          in: query
+          description: Return messages with `seq` lower than this. Omit for the newest page.
+          schema:
+            type: integer
+            minimum: 1
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A page of messages, oldest first within the page.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags: [Messages]
+      operationId: sendMessage
+      summary: Send a message (streams the reply)
+      description: |
+        Saves the user message and an empty `streaming` assistant message, then streams the agent's reply
+        (SEND_MESSAGE rule 1). If a reply in this session is `awaiting_approval`, that approval is cancelled and the
+        paused reply completed in the same transaction (D19). Refused with `409 run_in_progress` while a reply is
+        `streaming`, `409 agent_retired` for a retired agent, and `503 agent_unavailable` while the agent is offline.
+      x-scope: v1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/RunStream'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/AgentUnavailable'
+
+  /v1/sessions/{sessionId}/artifacts:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Artifacts]
+      operationId: listSessionArtifacts
+      summary: Artifacts made in a session (session info drawer)
+      x-scope: v1
+      responses:
+        '200':
+          description: Artifacts, newest first. Not paginated (a session has few).
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtifactSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/sessions/{sessionId}/files:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Files]
+      operationId: listSessionFiles
+      summary: Files in a session, uploads and tool outputs (session info drawer)
+      x-scope: v1
+      responses:
+        '200':
+          description: Files, newest first. Not paginated.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/File'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/sessions/{sessionId}/export:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Sessions]
+      operationId: exportSession
+      summary: Export a session as Markdown (F27)
+      x-scope: P1
+      parameters:
+        - name: includeToolCalls
+          in: query
+          schema:
+            type: boolean
+            default: false
+        - name: includeThinking
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: The transcript as a Markdown download.
+          headers:
+            Content-Disposition:
+              description: '`attachment; filename="<title>.md"`'
+              schema:
+                type: string
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            text/markdown:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/sessions/{sessionId}/share:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Sharing]
+      operationId: getShareLink
+      summary: The session's active share link
+      x-scope: P1
+      responses:
+        '200':
+          description: The active link.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareLink'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: '`session_not_found`, or `share_not_found` when the session isn''t shared.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    put:
+      tags: [Sharing]
+      operationId: shareSession
+      summary: Create or update the share link
+      description: |
+        One active link per session. Creating freezes the snapshot at the latest message; calling again keeps the same
+        URL, moves the snapshot to the latest message and applies the options. Thinking is never shared.
+        Needs `share_links.options` (a column added with F18).
+      x-scope: P1
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                options:
+                  $ref: '#/components/schemas/ShareOptions'
+      responses:
+        '200':
+          description: The link.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareLink'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Sharing]
+      operationId: stopSharing
+      summary: Revoke the link (it returns 404 afterwards)
+      x-scope: P1
+      responses:
+        '204':
+          description: Revoked, or wasn't shared.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ---------------------------------------------------------------- Messages
+  /v1/messages/{messageId}:
+    parameters:
+      - $ref: '#/components/parameters/MessageId'
+    get:
+      tags: [Messages]
+      operationId: getMessage
+      summary: One message (poll while it is streaming)
+      description: Poll every 2 s after a lost connection while `status` is `streaming` (P3).
+      x-scope: v1
+      responses:
+        '200':
+          description: The message.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/messages/{messageId}/stop:
+    parameters:
+      - $ref: '#/components/parameters/MessageId'
+    post:
+      tags: [Messages]
+      operationId: stopReply
+      summary: Stop a streaming reply
+      description: |
+        Sets a cancel flag; the task running the reply stops it within about 2 s, keeps the partial blocks and marks it
+        `stopped`, and the open stream ends with `run.stopped` (SEND_MESSAGE rule 7). Stopping a reply that already
+        ended returns 202 with its current status.
+      x-scope: v1
+      responses:
+        '202':
+          description: Stop requested (or the reply had already ended).
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [messageId, status]
+                properties:
+                  messageId:
+                    $ref: '#/components/schemas/Uuid'
+                  status:
+                    $ref: '#/components/schemas/MessageStatus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/messages/{messageId}/retry:
+    parameters:
+      - $ref: '#/components/parameters/MessageId'
+    post:
+      tags: [Messages]
+      operationId: retryReply
+      summary: Rerun a stopped, failed or interrupted reply (streams)
+      description: |
+        Same assistant message id and `seq`; blocks and error are cleared, the attempt's tool calls are deleted, its
+        unfinished artifact versions become `incomplete`, and the agent is called again with the same user message
+        (SEND_MESSAGE rule 8). `run.started` has no `userMessage`.
+        `409 not_retryable` unless the message is `stopped`, `failed` or `interrupted`.
+      x-scope: v1
+      responses:
+        '200':
+          $ref: '#/components/responses/RunStream'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/AgentUnavailable'
+
+  /v1/messages/{messageId}/feedback:
+    parameters:
+      - $ref: '#/components/parameters/MessageId'
+    put:
+      tags: [Feedback]
+      operationId: setFeedback
+      summary: Rate a finished reply 👍 / 👎
+      description: One rating per reply; setting it again replaces it. Only assistant messages that aren't streaming.
+      x-scope: v1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackInput'
+      responses:
+        '200':
+          description: The stored feedback.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feedback'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
+    delete:
+      tags: [Feedback]
+      operationId: clearFeedback
+      summary: Remove the rating
+      x-scope: v1
+      responses:
+        '204':
+          description: Removed (or there was none).
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ---------------------------------------------------------------- Approvals
+  /v1/approvals:
+    get:
+      tags: [Approvals]
+      operationId: listApprovals
+      summary: Approvals across sessions (the "approval needed in another session" toast)
+      x-scope: v1
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ApprovalStatus'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Approvals, soonest expiry first for `pending`, newest first otherwise.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  /v1/approvals/{approvalId}/decision:
+    parameters:
+      - $ref: '#/components/parameters/ApprovalId'
+    post:
+      tags: [Approvals]
+      operationId: decideApproval
+      summary: Approve or deny, and stream the agent's continuation
+      description: |
+        Records the decision only if the approval is still `pending` (double-submit is impossible), then re-invokes
+        the agent with the history and the decision and streams into the **same** assistant message (D19). Deny also
+        streams, so the agent can acknowledge. Repeating the same decision returns `200 application/json` with the
+        approval; a different decision, or one on an expired or cancelled approval, returns
+        `409 approval_not_pending` with the current `approval` in the problem.
+      x-scope: v1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecision'
+      responses:
+        '200':
+          description: |
+            `text/event-stream`: the continuation (see the `RunStream` response for the framing).
+            `application/json`: the same decision was already recorded; poll the message.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/StreamEvent'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Approval'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/AgentUnavailable'
+
+  # ---------------------------------------------------------------- Files
+  /v1/files:
+    post:
+      tags: [Files]
+      operationId: createUpload
+      summary: Start an upload and get a signed S3 POST
+      description: |
+        Checks the file against the global limits and the agent's `capabilities.attachments`, creates a `pending` file
+        row and returns a presigned POST whose policy enforces the size and type. The browser posts the bytes to S3,
+        then calls `complete`. Files can be uploaded before their session exists; they attach to it when sent.
+        Uploads never sent are deleted after 24 h.
+      x-scope: v1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUploadRequest'
+      responses:
+        '201':
+          description: Upload ready.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUploadResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  /v1/files/{fileId}:
+    parameters:
+      - $ref: '#/components/parameters/FileId'
+    get:
+      tags: [Files]
+      operationId: getFile
+      summary: File details with a fresh download URL
+      description: Use this when a `File.url` in an earlier response has expired.
+      x-scope: v1
+      responses:
+        '200':
+          description: The file; `url` is set when it is `uploaded`.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Files]
+      operationId: deleteUpload
+      summary: Remove an upload from the composer
+      description: Only files not yet sent; `409 file_attached` otherwise.
+      x-scope: v1
+      responses:
+        '204':
+          description: Deleted (or already gone).
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /v1/files/{fileId}/complete:
+    parameters:
+      - $ref: '#/components/parameters/FileId'
+    post:
+      tags: [Files]
+      operationId: completeUpload
+      summary: Confirm the bytes reached S3
+      description: The API checks the object's size and type against the file row. Calling it again returns the same file.
+      x-scope: v1
+      responses:
+        '200':
+          description: The file, now `uploaded`.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  # ---------------------------------------------------------------- Artifacts
+  /v1/artifacts:
+    get:
+      tags: [Artifacts]
+      operationId: listArtifacts
+      summary: Artifacts library, across sessions (F25)
+      x-scope: P1
+      parameters:
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/ArtifactType'
+        - name: agent
+          in: query
+          description: Agent slug.
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [updated, created, title]
+            default: updated
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A page of artifacts.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  /v1/artifacts/{artifactId}:
+    parameters:
+      - $ref: '#/components/parameters/ArtifactId'
+    get:
+      tags: [Artifacts]
+      operationId: getArtifact
+      summary: An artifact and its version list (panel header, version menu)
+      x-scope: v1
+      responses:
+        '200':
+          description: The artifact.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artifact'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/artifacts/{artifactId}/versions/{version}:
+    parameters:
+      - $ref: '#/components/parameters/ArtifactId'
+      - $ref: '#/components/parameters/Version'
+    get:
+      tags: [Artifacts]
+      operationId: getArtifactVersion
+      summary: One version's body (panel, copy, download)
+      x-scope: v1
+      responses:
+        '200':
+          description: The version, with its body inline or behind a signed URL.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactVersion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ---------------------------------------------------------------- Search
+  /v1/search:
+    get:
+      tags: [Search]
+      operationId: search
+      summary: ⌘K search across sessions, agents and artifacts (F16)
+      x-scope: P1
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 200
+        - name: agent
+          in: query
+          description: Limit to one agent (slug).
+          schema:
+            type: string
+        - name: includeArchived
+          in: query
+          schema:
+            type: boolean
+            default: false
+        - name: limit
+          in: query
+          description: Maximum results per group.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+      responses:
+        '200':
+          description: Grouped results, best match first.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/Invalid'
+
+  # ---------------------------------------------------------------- Public
+  /v1/public/shares/{slug}:
+    parameters:
+      - $ref: '#/components/parameters/ShareSlug'
+    get:
+      tags: [Sharing]
+      operationId: getSharedSession
+      summary: A shared session, read-only (no sign-in)
+      description: Messages up to the snapshot, without thinking; tool inputs and outputs only if the owner included them. Counts a view. Revoked or unknown links return `404 share_not_found`.
+      x-scope: P1
+      security: []
+      responses:
+        '200':
+          description: The snapshot.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedSession'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/public/shares/{slug}/artifacts/{artifactId}/versions/{version}:
+    parameters:
+      - $ref: '#/components/parameters/ShareSlug'
+      - $ref: '#/components/parameters/ArtifactId'
+      - $ref: '#/components/parameters/Version'
+    get:
+      tags: [Sharing]
+      operationId: getSharedArtifactVersion
+      summary: An artifact version referenced by a shared message
+      description: Only versions referenced by blocks inside the snapshot; anything else is `404`.
+      x-scope: P1
+      security: []
+      responses:
+        '200':
+          description: The version.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactVersion'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token from `/v1/auth/google` or `/v1/auth/refresh`, valid about 15 minutes.
+    refreshCookie:
+      type: apiKey
+      in: cookie
+      name: ah_refresh
+      description: Rotating refresh token, `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, 30 days.
+
+  headers:
+    XRequestId:
+      description: Unique id of this request; also `requestId` in errors.
+      schema:
+        type: string
+    SetRefreshCookie:
+      description: '`ah_refresh=<token>; HttpOnly; Secure; SameSite=Strict; Domain=api.<domain>; Path=/v1/auth; Max-Age=2592000`'
+      schema:
+        type: string
+    RetryAfter:
+      description: Seconds to wait before trying again.
+      schema:
+        type: integer
+
+  parameters:
+    AgentSlug:
+      name: slug
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+      example: research-analyst
+    SessionId:
+      name: sessionId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    MessageId:
+      name: messageId
+      in: path
+      required: true
+      description: Also the run id of an assistant message.
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    ApprovalId:
+      name: approvalId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    FileId:
+      name: fileId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    ArtifactId:
+      name: artifactId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    Version:
+      name: version
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    ShareSlug:
+      name: slug
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 22
+    Cursor:
+      name: cursor
+      in: query
+      description: Opaque cursor from a previous page's `nextCursor`.
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+
+  responses:
+    RunStream:
+      description: |
+        The reply as a server-sent event stream (see "Streaming" above). Each `data:` line is one `StreamEvent`.
+        When the request repeats an earlier `clientMessageId`, the response is instead `application/json` with the
+        existing rows; poll the assistant message.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        text/event-stream:
+          schema:
+            $ref: '#/components/schemas/StreamEvent'
+          example: |
+            id: 5b1e0c7e-3f7a-4d4b-9a51-2f7c2d9e8a10:1
+            event: run.started
+            data: {"type":"run.started","messageId":"5b1e0c7e-3f7a-4d4b-9a51-2f7c2d9e8a10","n":1, ...}
+
+            : ping
+
+            id: 5b1e0c7e-3f7a-4d4b-9a51-2f7c2d9e8a10:2
+            event: block.started
+            data: {"type":"block.started","messageId":"5b1e0c7e-3f7a-4d4b-9a51-2f7c2d9e8a10","n":2,"index":0,"block":{"id":"b1","type":"text","text":""}}
+
+            id: 5b1e0c7e-3f7a-4d4b-9a51-2f7c2d9e8a10:3
+            event: block.delta
+            data: {"type":"block.delta","messageId":"5b1e0c7e-3f7a-4d4b-9a51-2f7c2d9e8a10","n":3,"blockId":"b1","text":"The failure is a timing race"}
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SendReplay'
+    Unauthorized:
+      description: '`token_invalid`, `token_expired` (refresh, then repeat), `session_expired` (sign in again) or `invalid_google_token`.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://agenthub.dev/errors/token_expired
+            title: Access token expired
+            status: 401
+            code: token_expired
+            requestId: req_7a1f0b
+            retryable: true
+    Forbidden:
+      description: '`origin_not_allowed`, `account_disabled` or `not_invited`.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: The resource doesn't exist, was deleted, or belongs to someone else (`agent_not_found`, `session_not_found`, `message_not_found`, `approval_not_found`, `file_not_found`, `artifact_not_found`, `share_not_found`).
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://agenthub.dev/errors/session_not_found
+            title: Session not found
+            status: 404
+            code: session_not_found
+            requestId: req_19be02
+            retryable: false
+    Conflict:
+      description: '`run_in_progress` (with `messageId`), `agent_retired`, `not_retryable`, `approval_not_pending` (with `approval`), `question_not_open`, `idempotency_conflict`, `file_not_ready`, `file_attached`.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://agenthub.dev/errors/run_in_progress
+            title: A reply is already running in this session
+            status: 409
+            code: run_in_progress
+            requestId: req_0c33aa
+            retryable: true
+            messageId: 5b1e0c7e-3f7a-4d4b-9a51-2f7c2d9e8a10
+    Invalid:
+      description: 'Validation failed: `invalid_request` (with `errors`), `empty_message`, `message_too_long`, `too_many_files`, `file_too_large`, `file_type_not_allowed`, `attachments_not_supported`, `upload_mismatch`, `confirmation_required`.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://agenthub.dev/errors/file_too_large
+            title: File is too large
+            status: 422
+            detail: ct-scan-full.tiff is 86 MB; the limit is 20 MB.
+            code: file_too_large
+            requestId: req_5d0e71
+            retryable: false
+    TooManyRequests:
+      description: '`too_many_runs`: three replies are already running for this user.'
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    AgentUnavailable:
+      description: '`agent_unavailable`: the agent is marked offline. Keep the draft and poll the agent (D22). Nothing was saved.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+  schemas:
+    # ------------------------------------------------------------ Primitives
+    Uuid:
+      type: string
+      format: uuid
+    Timestamp:
+      type: string
+      format: date-time
+    NullableTimestamp:
+      type: [string, 'null']
+      format: date-time
+
+    # ------------------------------------------------------------ Errors
+    ErrorCode:
+      type: string
+      description: |
+        Stable machine-readable codes. HTTP status in brackets; "event" means it appears in `run.failed` or `Message.error`.
+        - `invalid_request` [422] body or query failed validation (`errors` lists the fields)
+        - `empty_message` [422] no text, files or answer
+        - `message_too_long` [422] text over 32,000 characters
+        - `too_many_files` [422] more than 10 attachments, or more than the agent allows
+        - `file_too_large` [422], `file_type_not_allowed` [422], `attachments_not_supported` [422] the agent takes no files
+        - `upload_mismatch` [422] the object in S3 doesn't match the declared size or type
+        - `confirmation_required` [422] "Delete all" without the typed confirmation
+        - `token_invalid` [401] missing or bad access token
+        - `token_expired` [401] refresh, then repeat the request
+        - `invalid_google_token` [401] the Google ID token failed verification
+        - `session_expired` [401] refresh token expired, revoked or reused; sign in again
+        - `origin_not_allowed` [403], `not_invited` [403], `account_disabled` [403]
+        - `agent_not_found`, `session_not_found`, `message_not_found`, `approval_not_found`, `file_not_found`,
+          `artifact_not_found`, `share_not_found` [404]
+        - `run_in_progress` [409] a reply is streaming in this session
+        - `agent_retired` [409] the agent was removed; its sessions are read-only
+        - `not_retryable` [409] retry on a message that isn't stopped, failed or interrupted
+        - `approval_not_pending` [409] the approval was already decided, expired or cancelled
+        - `question_not_open` [409] the answered question was already answered or skipped
+        - `idempotency_conflict` [409] a `clientMessageId` reused with different content
+        - `file_not_ready` [409] sending a file that isn't `uploaded`, or completing one before the bytes arrived
+        - `file_attached` [409] deleting a file that was already sent
+        - `too_many_runs` [429] three replies already running for this user
+        - `agent_unavailable` [503, event] agent offline, or AgentCore unreachable
+        - `agent_error` [event] the agent failed mid-run
+        - `rate_limited` [event] AgentCore or the model throttled the call (`retryAfter`)
+        - `run_time_limit` [event] the 15-minute run cap was hit; status `interrupted`
+        - `run_interrupted` [event] the task running the reply died (deploy or crash); status `interrupted`
+        - `internal_error` [500, event]
+      enum:
+        - invalid_request
+        - empty_message
+        - message_too_long
+        - too_many_files
+        - file_too_large
+        - file_type_not_allowed
+        - attachments_not_supported
+        - upload_mismatch
+        - confirmation_required
+        - token_invalid
+        - token_expired
+        - invalid_google_token
+        - session_expired
+        - origin_not_allowed
+        - not_invited
+        - account_disabled
+        - agent_not_found
+        - session_not_found
+        - message_not_found
+        - approval_not_found
+        - file_not_found
+        - artifact_not_found
+        - share_not_found
+        - run_in_progress
+        - agent_retired
+        - not_retryable
+        - approval_not_pending
+        - question_not_open
+        - idempotency_conflict
+        - file_not_ready
+        - file_attached
+        - too_many_runs
+        - agent_unavailable
+        - agent_error
+        - rate_limited
+        - run_time_limit
+        - run_interrupted
+        - internal_error
+    Problem:
+      type: object
+      description: RFC 9457 problem details with Agent Hub extensions.
+      required: [type, title, status, code, requestId, retryable]
+      properties:
+        type:
+          type: string
+          format: uri
+          description: '`https://agenthub.dev/errors/<code>`'
+        title:
+          type: string
+          description: Short, human-readable, safe to show.
+        status:
+          type: integer
+          description: HTTP status. In stream events and stored errors, the status the error would have had (500 for agent errors).
+        detail:
+          type: string
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+        requestId:
+          type: string
+          description: Shown in the UI as "req_8f2a" for bug reports.
+        retryable:
+          type: boolean
+          description: Whether repeating the same action can succeed.
+        retryAfter:
+          type: integer
+          minimum: 0
+          description: Seconds to wait before retrying, when known.
+        errors:
+          type: array
+          description: Field errors, for `invalid_request`.
+          items:
+            type: object
+            required: [path, message]
+            properties:
+              path:
+                type: string
+                description: JSON pointer into the request, e.g. `/fileIds/3`.
+              message:
+                type: string
+        email:
+          type: string
+          format: email
+          description: For `not_invited`.
+        messageId:
+          $ref: '#/components/schemas/Uuid'
+        approval:
+          $ref: '#/components/schemas/Approval'
+        limits:
+          $ref: '#/components/schemas/AttachmentLimits'
+
+    # ------------------------------------------------------------ Auth and users
+    AccessToken:
+      type: object
+      required: [accessToken, expiresAt]
+      properties:
+        accessToken:
+          type: string
+        expiresAt:
+          $ref: '#/components/schemas/Timestamp'
+    SignInResponse:
+      allOf:
+        - $ref: '#/components/schemas/AccessToken'
+        - type: object
+          required: [user]
+          properties:
+            user:
+              $ref: '#/components/schemas/Me'
+    Me:
+      type: object
+      required: [id, email, name, avatarUrl, preferences]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        email:
+          type: string
+          format: email
+        name:
+          type: [string, 'null']
+        avatarUrl:
+          type: [string, 'null']
+          format: uri
+        preferences:
+          $ref: '#/components/schemas/Preferences'
+    Preferences:
+      type: object
+      required: [defaultAgentSlug, reopenLastSession]
+      properties:
+        defaultAgentSlug:
+          type: [string, 'null']
+          description: Used by "New session" and ⌘⇧O when no agent is selected.
+        reopenLastSession:
+          type: boolean
+          description: Open the agent's last session instead of a fresh one.
+    PreferencesPatch:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        defaultAgentSlug:
+          type: [string, 'null']
+        reopenLastSession:
+          type: boolean
+
+    # ------------------------------------------------------------ Agents
+    AgentColor:
+      type: string
+      enum: [red, blue, green, purple, amber, grey]
+      description: Maps to the `$agent-<color>-bg/fg` tokens. Identity only.
+    AgentStatus:
+      type: string
+      enum: [online, degraded, offline]
+      description: Health. Set by hand in v1 (D23); computed in P1 (F23).
+    AgentStage:
+      type: string
+      enum: [beta, stable]
+      description: Maturity, shown as a separate Beta tag.
+    AgentRef:
+      type: object
+      description: The agent fields shown next to sessions, artifacts and search results.
+      required: [id, slug, name, icon, color, status, stage, retired]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        slug:
+          type: string
+        name:
+          type: string
+        icon:
+          type: string
+          description: lucide icon name.
+        color:
+          $ref: '#/components/schemas/AgentColor'
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+        stage:
+          $ref: '#/components/schemas/AgentStage'
+        retired:
+          type: boolean
+    Agent:
+      type: object
+      required:
+        - id
+        - slug
+        - name
+        - description
+        - tagline
+        - greeting
+        - icon
+        - color
+        - stage
+        - status
+        - statusChangedAt
+        - framework
+        - runtimeType
+        - version
+        - deployedAt
+        - details
+        - disclaimer
+        - capabilities
+        - tools
+        - starters
+        - retiredAt
+        - myStats
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        slug:
+          type: string
+          example: coding-agent
+        name:
+          type: string
+          example: Coding Agent
+        description:
+          type: string
+        tagline:
+          type: [string, 'null']
+          description: Short line for the mobile catalog. Falls back to `description`.
+        greeting:
+          type: [string, 'null']
+          description: New-session heading, e.g. "What are we building today?".
+        icon:
+          type: string
+          description: lucide icon name.
+        color:
+          $ref: '#/components/schemas/AgentColor'
+        stage:
+          $ref: '#/components/schemas/AgentStage'
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+        statusChangedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+        framework:
+          type: [string, 'null']
+          description: Display only, e.g. `strands`, `langgraph`.
+        runtimeType:
+          type: string
+          enum: [agentcore, http]
+        version:
+          type: [string, 'null']
+          description: Deployed version; a change between two replies shows the "Agent updated" divider.
+        deployedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+        details:
+          $ref: '#/components/schemas/AgentDetails'
+        disclaimer:
+          type: [string, 'null']
+          description: Shown under the composer after "{name} can make mistakes."
+        capabilities:
+          $ref: '#/components/schemas/AgentCapabilities'
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgentTool'
+        starters:
+          type: array
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/Starter'
+        retiredAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+        myStats:
+          type: object
+          description: For the signed-in user.
+          required: [sessionCount, lastActiveAt]
+          properties:
+            sessionCount:
+              type: integer
+              minimum: 0
+            lastActiveAt:
+              $ref: '#/components/schemas/NullableTimestamp'
+    AgentDetails:
+      type: object
+      description: Display-only facts for the agent detail page.
+      properties:
+        model:
+          type: string
+          example: Claude Sonnet 5
+        region:
+          type: string
+          example: us-east-1
+        frameworkVersion:
+          type: string
+          example: Strands 1.8
+        runtimeLabel:
+          type: string
+          description: Shortened runtime ARN or endpoint for display.
+          example: arn:…:runtime/coding-7Hq2
+    AgentCapabilities:
+      type: object
+      description: What the UI shows for this agent. The UI hides what isn't supported (no "+" without attachments).
+      required: [attachments, artifacts, approvals, questions]
+      properties:
+        attachments:
+          $ref: '#/components/schemas/AttachmentLimits'
+        artifacts:
+          type: boolean
+        approvals:
+          type: boolean
+        questions:
+          type: boolean
+    AttachmentLimits:
+      type: object
+      required: [enabled, contentTypes, maxFileBytes, maxFiles]
+      properties:
+        enabled:
+          type: boolean
+        contentTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/UploadContentType'
+        maxFileBytes:
+          type: integer
+          maximum: 20971520
+        maxFiles:
+          type: integer
+          maximum: 10
+    UploadContentType:
+      type: string
+      enum: [application/pdf, image/png, image/jpeg, image/webp, image/gif, text/csv, text/plain]
+    AgentTool:
+      type: object
+      required: [name, description, requiresApproval]
+      properties:
+        name:
+          type: string
+          example: run_command
+        description:
+          type: string
+        requiresApproval:
+          type: boolean
+          description: Shown as "Asks first"; the API enforces it (D19).
+    Starter:
+      type: object
+      required: [title, prompt]
+      properties:
+        title:
+          type: string
+          example: Find why a test is flaky
+        description:
+          type: string
+          example: Runs it 20× and reads the failures
+        prompt:
+          type: string
+          description: Text placed in the composer when the starter is picked.
+
+    # ------------------------------------------------------------ Sessions
+    SessionSummary:
+      type: object
+      required: [id, agent, title, titleSource, createdAt, lastMessageAt, pinnedAt, archivedAt, isRunning, pendingApprovals, messageCount]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        agent:
+          $ref: '#/components/schemas/AgentRef'
+        title:
+          type: string
+          description: The first message, trimmed (D21), until renamed.
+        titleSource:
+          type: string
+          enum: [auto, user]
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        lastMessageAt:
+          $ref: '#/components/schemas/Timestamp'
+        pinnedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+        archivedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+        isRunning:
+          type: boolean
+          description: A reply is streaming (sidebar working dot; "Task complete" toast when it turns false).
+        pendingApprovals:
+          type: integer
+          minimum: 0
+          description: Sidebar badge.
+        messageCount:
+          type: integer
+          minimum: 0
+    Session:
+      allOf:
+        - $ref: '#/components/schemas/SessionSummary'
+        - type: object
+          required: [stats]
+          properties:
+            stats:
+              type: object
+              description: Session info drawer.
+              required: [toolCallCount, tokenCount, artifactCount, fileCount]
+              properties:
+                toolCallCount:
+                  type: integer
+                  minimum: 0
+                tokenCount:
+                  type: integer
+                  minimum: 0
+                  description: Sum of input and output tokens over the session's replies.
+                artifactCount:
+                  type: integer
+                  minimum: 0
+                fileCount:
+                  type: integer
+                  minimum: 0
+    SessionPatch:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Sets `titleSource` to `user`.
+        pinned:
+          type: boolean
+          description: P1.
+        archived:
+          type: boolean
+          description: P1. `false` restores from the archive.
+    SessionPage:
+      type: object
+      required: [items, nextCursor]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSummary'
+        nextCursor:
+          type: [string, 'null']
+
+    # ------------------------------------------------------------ Messages
+    MessageStatus:
+      type: string
+      description: |
+        User messages are always `complete`. Assistant messages move
+        `streaming → complete | awaiting_approval | stopped | failed | interrupted`;
+        `awaiting_approval → streaming` (decided) or `complete` (expired or cancelled);
+        `stopped | failed | interrupted → streaming` (Retry). See SEND_MESSAGE.md.
+      enum: [streaming, awaiting_approval, complete, stopped, failed, interrupted]
+    Message:
+      type: object
+      required: [id, sessionId, seq, role, status, blocks, createdAt]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        sessionId:
+          $ref: '#/components/schemas/Uuid'
+        seq:
+          type: integer
+          minimum: 1
+          description: The only order within a session.
+        role:
+          type: string
+          enum: [user, assistant]
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Block'
+        clientMessageId:
+          type: [string, 'null']
+          format: uuid
+          description: User messages only.
+        replyToId:
+          type: [string, 'null']
+          format: uuid
+          description: Assistant messages only; the user message this answers.
+        agentVersion:
+          type: [string, 'null']
+          description: Assistant messages only. Show "Agent updated to vN" where it changes between replies.
+        error:
+          oneOf:
+            - $ref: '#/components/schemas/Problem'
+            - type: 'null'
+          description: Set when `failed` or `interrupted`.
+        usage:
+          oneOf:
+            - $ref: '#/components/schemas/Usage'
+            - type: 'null'
+        feedback:
+          oneOf:
+            - $ref: '#/components/schemas/Feedback'
+            - type: 'null'
+          description: Assistant messages only.
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        startedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+        completedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+    Usage:
+      type: object
+      properties:
+        inputTokens:
+          type: integer
+          minimum: 0
+        outputTokens:
+          type: integer
+          minimum: 0
+    MessagePage:
+      type: object
+      required: [items, nextBefore]
+      properties:
+        items:
+          type: array
+          description: Oldest first within the page.
+          items:
+            $ref: '#/components/schemas/Message'
+        nextBefore:
+          type: [integer, 'null']
+          description: Pass as `before` to load older messages; null when this is the start of the session.
+    SendMessageRequest:
+      type: object
+      additionalProperties: false
+      required: [clientMessageId]
+      description: At least one of `text`, `fileIds` or `answer` (`422 empty_message`).
+      properties:
+        clientMessageId:
+          $ref: '#/components/schemas/Uuid'
+        text:
+          type: string
+          maxLength: 32000
+        fileIds:
+          type: array
+          maxItems: 10
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Uuid'
+          description: Files in status `uploaded` (`409 file_not_ready` otherwise), not yet attached to a message.
+        answer:
+          $ref: '#/components/schemas/AnswerInput'
+    SendReplay:
+      type: object
+      description: Returned instead of a stream when `clientMessageId` was already used for the same content. Poll the assistant message.
+      required: [session, userMessage, assistantMessage]
+      properties:
+        session:
+          $ref: '#/components/schemas/SessionSummary'
+        userMessage:
+          $ref: '#/components/schemas/Message'
+        assistantMessage:
+          $ref: '#/components/schemas/Message'
+
+    # ------------------------------------------------------------ Blocks
+    Block:
+      description: |
+        One piece of a message, in display order. Discriminated by `type`. v1 types: `text`, `thinking`, `tool`,
+        `plan`, `artifact`, `file`, `question`, `answer`, `approval`. P1 types: `citations`, `chart`, `image`, `form`
+        (schemas fixed now; the translator rejects them until their feature ships). Render unknown types as a neutral
+        placeholder.
+      oneOf:
+        - $ref: '#/components/schemas/TextBlock'
+        - $ref: '#/components/schemas/ThinkingBlock'
+        - $ref: '#/components/schemas/ToolBlock'
+        - $ref: '#/components/schemas/PlanBlock'
+        - $ref: '#/components/schemas/ArtifactBlock'
+        - $ref: '#/components/schemas/FileBlock'
+        - $ref: '#/components/schemas/QuestionBlock'
+        - $ref: '#/components/schemas/AnswerBlock'
+        - $ref: '#/components/schemas/ApprovalBlock'
+        - $ref: '#/components/schemas/CitationsBlock'
+        - $ref: '#/components/schemas/ChartBlock'
+        - $ref: '#/components/schemas/ImageBlock'
+        - $ref: '#/components/schemas/FormBlock'
+      discriminator:
+        propertyName: type
+        mapping:
+          text: '#/components/schemas/TextBlock'
+          thinking: '#/components/schemas/ThinkingBlock'
+          tool: '#/components/schemas/ToolBlock'
+          plan: '#/components/schemas/PlanBlock'
+          artifact: '#/components/schemas/ArtifactBlock'
+          file: '#/components/schemas/FileBlock'
+          question: '#/components/schemas/QuestionBlock'
+          answer: '#/components/schemas/AnswerBlock'
+          approval: '#/components/schemas/ApprovalBlock'
+          citations: '#/components/schemas/CitationsBlock'
+          chart: '#/components/schemas/ChartBlock'
+          image: '#/components/schemas/ImageBlock'
+          form: '#/components/schemas/FormBlock'
+    BlockId:
+      type: string
+      minLength: 1
+      maxLength: 64
+      description: Stable id, unique within its message (questions and forms are answered by reference).
+    TextBlock:
+      type: object
+      required: [id, type, text]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: text
+        text:
+          type: string
+          description: |
+            GitHub-flavoured Markdown, sanitised when rendered. Callouts use GitHub alert syntax
+            (`> [!NOTE]`, `> [!WARNING]`, `> [!CAUTION]`, `> [!TIP]`), e.g. the Health Assistant's care note.
+            Citations (P1) are `[^n]` markers that point into a `citations` block.
+    ThinkingBlock:
+      type: object
+      required: [id, type, text, startedAt, endedAt]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: thinking
+        text:
+          type: string
+          description: Reasoning summary, shown collapsed as "Thought for Ns". Never shared or sent back to agents.
+        startedAt:
+          $ref: '#/components/schemas/Timestamp'
+        endedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+    ToolBlock:
+      type: object
+      required: [id, type, toolCall]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: tool
+        toolCall:
+          $ref: '#/components/schemas/ToolCall'
+    ToolCall:
+      type: object
+      required: [id, toolUseId, name, status, summary, startedAt, completedAt]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        toolUseId:
+          type: string
+          description: The agent's own id for the call.
+        name:
+          type: string
+          example: run_tests
+        status:
+          type: string
+          enum: [running, awaiting_approval, succeeded, failed, denied, cancelled]
+        summary:
+          type: [string, 'null']
+          description: One line for the chip ("4 of 20 failed"); from the agent's result, else a truncated output.
+        input:
+          description: Tool input (truncated to 16 KB). Omitted on shared pages unless tool calls are included.
+        output:
+          description: Tool output (truncated to 16 KB); the full output is `outputFile` when larger.
+        outputFile:
+          oneOf:
+            - $ref: '#/components/schemas/File'
+            - type: 'null'
+        error:
+          type: [string, 'null']
+          description: Error text for a failed call (stored as `error` inside `tool_calls.output`).
+        startedAt:
+          $ref: '#/components/schemas/Timestamp'
+        completedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+    PlanBlock:
+      type: object
+      description: The plan card and the "Working · 2 of 4 steps" timeline. Elapsed time comes from `Message.startedAt`; there is no ETA.
+      required: [id, type, title, steps]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: plan
+        title:
+          type: [string, 'null']
+          description: Plan card title; null for the inline timeline.
+        steps:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/PlanStep'
+    PlanStep:
+      type: object
+      required: [id, label, status]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+          example: Match transactions to receipts
+        status:
+          type: string
+          enum: [queued, running, done, failed, skipped]
+        toolCallIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Uuid'
+        startedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+        completedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+    ArtifactBlock:
+      type: object
+      description: The artifact card. `artifact.version` is the version this message wrote; the body streams with `artifact.delta` and is fetched with `getArtifactVersion`.
+      required: [id, type, artifact]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: artifact
+        artifact:
+          $ref: '#/components/schemas/ArtifactRef'
+        progressLabel:
+          type: [string, 'null']
+          description: While streaming, e.g. "Writing 'Key results'…". No percentages.
+    FileBlock:
+      type: object
+      description: An attachment in a user message, or a file the agent generated (a PDF report, a ZIP).
+      required: [id, type, file]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: file
+        file:
+          $ref: '#/components/schemas/File'
+    QuestionBlock:
+      type: object
+      description: A quick-reply or choice question. Answered by a later user message holding an `answer` block; `state` and `answer` are derived when read.
+      required: [id, type, prompt, options, multiple, allowOther, state, answer]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: question
+        prompt:
+          type: string
+        title:
+          type: [string, 'null']
+          description: Card title for choice questions ("Choose an audience").
+        options:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: object
+            required: [id, label]
+            properties:
+              id:
+                type: string
+              label:
+                type: string
+              description:
+                type: string
+        multiple:
+          type: boolean
+        allowOther:
+          type: boolean
+          description: Shows "Other…" with a free-text answer.
+        state:
+          type: string
+          enum: [open, answered, skipped]
+          description: '`skipped` when a later user message didn''t answer it.'
+        answer:
+          oneOf:
+            - $ref: '#/components/schemas/AnswerSummary'
+            - type: 'null'
+    AnswerSummary:
+      type: object
+      required: [messageId, optionIds, answeredAt]
+      properties:
+        messageId:
+          $ref: '#/components/schemas/Uuid'
+        optionIds:
+          type: array
+          items:
+            type: string
+        text:
+          type: [string, 'null']
+        values:
+          type: object
+          description: Form answers (P1).
+        answeredAt:
+          $ref: '#/components/schemas/Timestamp'
+    BlockRef:
+      type: object
+      required: [messageId, blockId]
+      properties:
+        messageId:
+          $ref: '#/components/schemas/Uuid'
+        blockId:
+          $ref: '#/components/schemas/BlockId'
+    AnswerInput:
+      type: object
+      additionalProperties: false
+      required: [questionRef]
+      description: Answer to a `question` block (`optionIds` and/or `text`) or a `form` block (`values`, P1).
+      properties:
+        questionRef:
+          $ref: '#/components/schemas/BlockRef'
+        optionIds:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+        text:
+          type: string
+          maxLength: 2000
+          description: The "Other…" answer.
+        values:
+          type: object
+          description: Form field values keyed by field id (P1).
+    AnswerBlock:
+      type: object
+      description: In a user message; created from `SendMessageRequest.answer`.
+      required: [id, type, questionRef, optionIds]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: answer
+        questionRef:
+          $ref: '#/components/schemas/BlockRef'
+        optionIds:
+          type: array
+          items:
+            type: string
+        text:
+          type: [string, 'null']
+        values:
+          type: object
+    ApprovalBlock:
+      type: object
+      required: [id, type, approval]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: approval
+        approval:
+          $ref: '#/components/schemas/Approval'
+    CitationsBlock:
+      type: object
+      x-scope: P1
+      description: The Sources list; `[^n]` markers in text blocks point at `n`.
+      required: [id, type, sources]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: citations
+        sources:
+          type: array
+          items:
+            type: object
+            required: [n, title, url]
+            properties:
+              n:
+                type: integer
+                minimum: 1
+              title:
+                type: string
+              url:
+                type: string
+                format: uri
+              domain:
+                type: string
+              snippet:
+                type: string
+    ChartBlock:
+      type: object
+      x-scope: P1
+      required: [id, type, chart]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: chart
+        chart:
+          $ref: '#/components/schemas/ChartSpec'
+    ChartSpec:
+      type: object
+      description: Exactly `docs/CHART_SPEC.md`. Validated by the API; an invalid spec never reaches the UI.
+      required: [type, title, x, y, series, data]
+      properties:
+        type:
+          type: string
+          enum: [line, bar]
+        title:
+          type: string
+        subtitle:
+          type: string
+        x:
+          type: object
+          required: [key, kind]
+          properties:
+            key:
+              type: string
+            kind:
+              type: string
+              enum: [category, time]
+            label:
+              type: string
+        y:
+          type: object
+          properties:
+            label:
+              type: string
+            format:
+              $ref: '#/components/schemas/ValueFormat'
+            min:
+              type: number
+            max:
+              type: number
+        series:
+          type: array
+          minItems: 1
+          maxItems: 6
+          items:
+            type: object
+            required: [key, label]
+            properties:
+              key:
+                type: string
+              label:
+                type: string
+              color:
+                type: string
+                enum: [chart-1, chart-2, chart-3, chart-4, chart-5, chart-6]
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: [string, number, 'null']
+        reference:
+          type: array
+          items:
+            type: object
+            required: [y, label]
+            properties:
+              y:
+                type: number
+              label:
+                type: string
+        stacked:
+          type: boolean
+        area:
+          type: boolean
+        caption:
+          type: string
+    ValueFormat:
+      oneOf:
+        - type: object
+          required: [style]
+          properties:
+            style:
+              const: number
+            compact:
+              type: boolean
+            decimals:
+              type: integer
+        - type: object
+          required: [style, currency]
+          properties:
+            style:
+              const: currency
+            currency:
+              type: string
+              pattern: '^[A-Z]{3}$'
+            compact:
+              type: boolean
+        - type: object
+          required: [style]
+          properties:
+            style:
+              const: percent
+            decimals:
+              type: integer
+    ImageBlock:
+      type: object
+      x-scope: P1
+      required: [id, type, file]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: image
+        file:
+          $ref: '#/components/schemas/File'
+        alt:
+          type: string
+        caption:
+          type: string
+    FormBlock:
+      type: object
+      x-scope: P1
+      description: Answered like a question, with `AnswerInput.values`.
+      required: [id, type, title, fields, submitLabel, state, answer]
+      properties:
+        id:
+          $ref: '#/components/schemas/BlockId'
+        type:
+          const: form
+        title:
+          type: string
+        description:
+          type: string
+        fields:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: object
+            required: [id, label, kind, required]
+            properties:
+              id:
+                type: string
+              label:
+                type: string
+              kind:
+                type: string
+                enum: [text, textarea, number, date, time, select, toggle]
+              required:
+                type: boolean
+              placeholder:
+                type: string
+              help:
+                type: string
+              options:
+                type: array
+                description: For `select`.
+                items:
+                  type: object
+                  required: [value, label]
+                  properties:
+                    value:
+                      type: string
+                    label:
+                      type: string
+              min:
+                type: number
+              max:
+                type: number
+        submitLabel:
+          type: string
+        state:
+          type: string
+          enum: [open, answered, skipped]
+        answer:
+          oneOf:
+            - $ref: '#/components/schemas/AnswerSummary'
+            - type: 'null'
+
+    # ------------------------------------------------------------ Approvals
+    ApprovalStatus:
+      type: string
+      enum: [pending, approved, denied, expired, cancelled]
+    Approval:
+      type: object
+      required: [id, sessionId, messageId, toolCallId, toolName, status, display, arguments, requestedAt, expiresAt, decidedAt, decisionReason, decidedOn, executedAt]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        sessionId:
+          $ref: '#/components/schemas/Uuid'
+        messageId:
+          $ref: '#/components/schemas/Uuid'
+        toolCallId:
+          $ref: '#/components/schemas/Uuid'
+        agent:
+          $ref: '#/components/schemas/AgentRef'
+        toolName:
+          type: string
+          example: execute_transfer
+        status:
+          $ref: '#/components/schemas/ApprovalStatus'
+        display:
+          $ref: '#/components/schemas/ApprovalDisplay'
+        arguments:
+          type: object
+          description: The tool arguments the API validated. The card shows `display`, which is derived from these, never model prose.
+        requestedAt:
+          $ref: '#/components/schemas/Timestamp'
+        expiresAt:
+          $ref: '#/components/schemas/Timestamp'
+        decidedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+        decisionReason:
+          type: [string, 'null']
+        decidedOn:
+          type: [string, 'null']
+          description: Short device label from the deciding request ("your phone") for "Approved on your phone".
+        executedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+    ApprovalDisplay:
+      type: object
+      required: [title, fields]
+      properties:
+        title:
+          type: string
+          example: Transfer NGN 50,000 to Ada O.
+        fields:
+          type: array
+          items:
+            type: object
+            required: [label, value]
+            properties:
+              label:
+                type: string
+                example: Amount
+              value:
+                type: string
+                example: NGN 50,000.00
+        note:
+          type: string
+          example: Transfers can't be reversed once sent. Nothing moves until you approve.
+        approveLabel:
+          type: string
+          example: Approve transfer
+    ApprovalDecision:
+      type: object
+      additionalProperties: false
+      required: [decision]
+      properties:
+        decision:
+          type: string
+          enum: [approve, deny]
+        reason:
+          type: string
+          maxLength: 500
+          description: Optional, deny only; sent to the agent.
+    ApprovalPage:
+      type: object
+      required: [items, nextCursor]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Approval'
+        nextCursor:
+          type: [string, 'null']
+
+    # ------------------------------------------------------------ Files
+    File:
+      type: object
+      required: [id, filename, contentType, sizeBytes, purpose, status, sessionId, messageId, createdAt, url, urlExpiresAt]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        filename:
+          type: string
+        contentType:
+          type: string
+        sizeBytes:
+          type: [integer, 'null']
+        purpose:
+          type: string
+          enum: [upload, artifact, thumbnail, export, tool_output]
+          description: '`upload` is "Uploaded by you"; `tool_output` is "From <tool>".'
+        status:
+          type: string
+          enum: [pending, uploaded, failed]
+        sessionId:
+          type: [string, 'null']
+          format: uuid
+        messageId:
+          type: [string, 'null']
+          format: uuid
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        url:
+          type: [string, 'null']
+          format: uri
+          description: Signed S3 GET, valid 15 minutes; null unless `uploaded`. Refresh with `getFile`.
+        urlExpiresAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+    CreateUploadRequest:
+      type: object
+      additionalProperties: false
+      required: [agentSlug, filename, contentType, sizeBytes]
+      properties:
+        agentSlug:
+          type: string
+          description: Whose attachment limits apply.
+        sessionId:
+          type: [string, 'null']
+          format: uuid
+          description: Omit before the session exists.
+        filename:
+          type: string
+          minLength: 1
+          maxLength: 255
+        contentType:
+          $ref: '#/components/schemas/UploadContentType'
+        sizeBytes:
+          type: integer
+          minimum: 1
+          maximum: 20971520
+    CreateUploadResponse:
+      type: object
+      required: [file, upload]
+      properties:
+        file:
+          $ref: '#/components/schemas/File'
+        upload:
+          type: object
+          description: A presigned S3 POST. Send `fields` plus the file as `multipart/form-data` to `url`.
+          required: [method, url, fields, expiresAt]
+          properties:
+            method:
+              const: POST
+            url:
+              type: string
+              format: uri
+            fields:
+              type: object
+              additionalProperties:
+                type: string
+            expiresAt:
+              $ref: '#/components/schemas/Timestamp'
+
+    # ------------------------------------------------------------ Artifacts
+    ArtifactType:
+      type: string
+      enum: [document, code, html, table]
+      description: v1 types. Generated PDFs, images and archives are `file` blocks, not artifacts.
+    ArtifactVersionStatus:
+      type: string
+      enum: [streaming, complete, incomplete]
+      description: '`incomplete` shows as "Interrupted" or "Generation failed", with the last complete version kept.'
+    ArtifactRef:
+      type: object
+      required: [id, type, title, version, status]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        type:
+          $ref: '#/components/schemas/ArtifactType'
+        title:
+          type: string
+        language:
+          type: [string, 'null']
+          description: For `code`, e.g. `python`.
+        version:
+          type: integer
+          minimum: 1
+        status:
+          $ref: '#/components/schemas/ArtifactVersionStatus'
+        changeNote:
+          type: [string, 'null']
+    ArtifactSummary:
+      type: object
+      required: [id, sessionId, agent, type, title, currentVersion, createdAt, updatedAt]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        sessionId:
+          $ref: '#/components/schemas/Uuid'
+        sessionTitle:
+          type: string
+        agent:
+          $ref: '#/components/schemas/AgentRef'
+        type:
+          $ref: '#/components/schemas/ArtifactType'
+        title:
+          type: string
+        language:
+          type: [string, 'null']
+        currentVersion:
+          type: integer
+          minimum: 1
+        thumbnailUrl:
+          type: [string, 'null']
+          format: uri
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/Timestamp'
+    Artifact:
+      allOf:
+        - $ref: '#/components/schemas/ArtifactSummary'
+        - type: object
+          required: [versions]
+          properties:
+            versions:
+              type: array
+              description: Newest first. v1 versions are all written by the agent.
+              items:
+                type: object
+                required: [version, status, createdAt, messageId]
+                properties:
+                  version:
+                    type: integer
+                    minimum: 1
+                  status:
+                    $ref: '#/components/schemas/ArtifactVersionStatus'
+                  changeNote:
+                    type: [string, 'null']
+                  sizeBytes:
+                    type: [integer, 'null']
+                  messageId:
+                    type: [string, 'null']
+                    format: uuid
+                  createdAt:
+                    $ref: '#/components/schemas/Timestamp'
+    ArtifactVersion:
+      type: object
+      description: |
+        Bodies up to 256 KB come inline in `content`; larger ones behind `url`. HTML is rendered in a sandboxed iframe
+        without `allow-same-origin` (the separate preview origin is still open, D7). Download is the native format
+        (`.md`, source file, `.html`, `.csv`).
+      required: [artifactId, version, status, contentType, content, url, filename]
+      properties:
+        artifactId:
+          $ref: '#/components/schemas/Uuid'
+        version:
+          type: integer
+          minimum: 1
+        status:
+          $ref: '#/components/schemas/ArtifactVersionStatus'
+        contentType:
+          type: string
+          example: text/markdown
+        content:
+          type: [string, 'null']
+        url:
+          type: [string, 'null']
+          format: uri
+          description: Signed GET, valid 15 minutes.
+        filename:
+          type: string
+          description: Download name, e.g. `distillation-for-small-agents.md`.
+        changeNote:
+          type: [string, 'null']
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+    ArtifactPage:
+      type: object
+      required: [items, nextCursor]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArtifactSummary'
+        nextCursor:
+          type: [string, 'null']
+
+    # ------------------------------------------------------------ Feedback
+    FeedbackInput:
+      type: object
+      additionalProperties: false
+      required: [rating]
+      properties:
+        rating:
+          type: string
+          enum: [up, down]
+        reasons:
+          type: array
+          uniqueItems: true
+          description: Down only.
+          items:
+            type: string
+            enum: [inaccurate, not_helpful, unsafe, other]
+        comment:
+          type: string
+          maxLength: 2000
+    Feedback:
+      type: object
+      required: [rating, reasons, comment, updatedAt]
+      properties:
+        rating:
+          type: string
+          enum: [up, down]
+        reasons:
+          type: array
+          items:
+            type: string
+            enum: [inaccurate, not_helpful, unsafe, other]
+        comment:
+          type: [string, 'null']
+        updatedAt:
+          $ref: '#/components/schemas/Timestamp'
+
+    # ------------------------------------------------------------ Search and sharing
+    SearchResults:
+      type: object
+      required: [sessions, agents, artifacts]
+      properties:
+        sessions:
+          type: array
+          items:
+            type: object
+            required: [session, snippet]
+            properties:
+              session:
+                $ref: '#/components/schemas/SessionSummary'
+              snippet:
+                type: [string, 'null']
+                description: Matching text with matches wrapped in `<mark>`…`</mark>` (the only markup).
+        agents:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgentRef'
+        artifacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArtifactSummary'
+    ShareOptions:
+      type: object
+      additionalProperties: false
+      properties:
+        includeToolCalls:
+          type: boolean
+          default: false
+          description: Show tool inputs and outputs. Without it, tool chips show name and summary only.
+    ShareLink:
+      type: object
+      required: [id, sessionId, url, slug, options, upToSeq, viewCount, createdAt, lastViewedAt]
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        sessionId:
+          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
+          example: https://app.agenthub.dev/s/Kq2x9TmV4pLr7Wn3Yb8sHd
+        slug:
+          type: string
+          minLength: 22
+        options:
+          $ref: '#/components/schemas/ShareOptions'
+        upToSeq:
+          type: integer
+          description: Messages with `seq` up to this are shared.
+        viewCount:
+          type: integer
+          minimum: 0
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        lastViewedAt:
+          $ref: '#/components/schemas/NullableTimestamp'
+    SharedSession:
+      type: object
+      required: [title, agent, sharedBy, sharedAt, messages]
+      properties:
+        title:
+          type: string
+        agent:
+          type: object
+          required: [name, icon, color]
+          properties:
+            name:
+              type: string
+            icon:
+              type: string
+            color:
+              $ref: '#/components/schemas/AgentColor'
+        sharedBy:
+          type: object
+          required: [name]
+          properties:
+            name:
+              type: string
+        sharedAt:
+          $ref: '#/components/schemas/Timestamp'
+        messages:
+          type: array
+          description: Up to the snapshot; `thinking` blocks removed; file URLs signed; tool input and output only with `includeToolCalls`.
+          items:
+            $ref: '#/components/schemas/Message'
+
+    # ------------------------------------------------------------ Stream events
+    StreamEvent:
+      description: One SSE `data:` payload. Discriminated by `type`, which also appears as the SSE `event:` name.
+      oneOf:
+        - $ref: '#/components/schemas/RunStartedEvent'
+        - $ref: '#/components/schemas/BlockStartedEvent'
+        - $ref: '#/components/schemas/BlockDeltaEvent'
+        - $ref: '#/components/schemas/BlockUpdatedEvent'
+        - $ref: '#/components/schemas/BlockCompletedEvent'
+        - $ref: '#/components/schemas/ArtifactDeltaEvent'
+        - $ref: '#/components/schemas/RunCompletedEvent'
+        - $ref: '#/components/schemas/RunAwaitingApprovalEvent'
+        - $ref: '#/components/schemas/RunStoppedEvent'
+        - $ref: '#/components/schemas/RunFailedEvent'
+      discriminator:
+        propertyName: type
+        mapping:
+          run.started: '#/components/schemas/RunStartedEvent'
+          block.started: '#/components/schemas/BlockStartedEvent'
+          block.delta: '#/components/schemas/BlockDeltaEvent'
+          block.updated: '#/components/schemas/BlockUpdatedEvent'
+          block.completed: '#/components/schemas/BlockCompletedEvent'
+          artifact.delta: '#/components/schemas/ArtifactDeltaEvent'
+          run.completed: '#/components/schemas/RunCompletedEvent'
+          run.awaiting_approval: '#/components/schemas/RunAwaitingApprovalEvent'
+          run.stopped: '#/components/schemas/RunStoppedEvent'
+          run.failed: '#/components/schemas/RunFailedEvent'
+    EventBase:
+      type: object
+      required: [type, messageId, n]
+      properties:
+        type:
+          type: string
+        messageId:
+          $ref: '#/components/schemas/Uuid'
+          description: The assistant message (the run).
+        n:
+          type: integer
+          minimum: 1
+          description: Event number within the run; also the suffix of the SSE `id`.
+    RunStartedEvent:
+      description: |
+        First event. Replace any optimistic rows with these. `session` is present when this call created it;
+        `userMessage` is absent on retry and approval continuations. On a continuation, `assistantMessage.blocks`
+        already holds the blocks written before the pause; new blocks are appended.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, assistantMessage]
+          properties:
+            type:
+              const: run.started
+            session:
+              $ref: '#/components/schemas/SessionSummary'
+            userMessage:
+              $ref: '#/components/schemas/Message'
+            assistantMessage:
+              $ref: '#/components/schemas/Message'
+    BlockStartedEvent:
+      description: |
+        A new block at `index` (always the next position). Its first state: an empty `text` or `thinking`, a `tool` with
+        status `running` and its input, a `plan` with its steps, an `artifact` with status `streaming`, a `question`,
+        a `file`, or an `approval` with status `pending`.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, index, block]
+          properties:
+            type:
+              const: block.started
+            index:
+              type: integer
+              minimum: 0
+            block:
+              $ref: '#/components/schemas/Block'
+    BlockDeltaEvent:
+      description: Append `text` to a `text` or `thinking` block.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, blockId, text]
+          properties:
+            type:
+              const: block.delta
+            blockId:
+              $ref: '#/components/schemas/BlockId'
+            text:
+              type: string
+    BlockUpdatedEvent:
+      description: Replace a block with its new state while it is still open (a plan step moves on, an artifact's `progressLabel` changes).
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, block]
+          properties:
+            type:
+              const: block.updated
+            block:
+              $ref: '#/components/schemas/Block'
+    BlockCompletedEvent:
+      description: The block's final state (thinking `endedAt`, tool output and duration, artifact version `complete`). The API checkpoints the message at this point.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, block]
+          properties:
+            type:
+              const: block.completed
+            block:
+              $ref: '#/components/schemas/Block'
+    ArtifactDeltaEvent:
+      description: |
+        Append `text` to the body of an artifact version that is streaming, for the live panel. Every update to an
+        artifact streams a full new version (no diffs). The card's block completes with the version.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, blockId, artifactId, version, text]
+          properties:
+            type:
+              const: artifact.delta
+            blockId:
+              $ref: '#/components/schemas/BlockId'
+            artifactId:
+              $ref: '#/components/schemas/Uuid'
+            version:
+              type: integer
+              minimum: 1
+            text:
+              type: string
+    RunCompletedEvent:
+      description: The reply finished (`complete`). Last event.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, message]
+          properties:
+            type:
+              const: run.completed
+            message:
+              $ref: '#/components/schemas/Message'
+    RunAwaitingApprovalEvent:
+      description: The agent asked for approval; the reply is `awaiting_approval` and the run has ended (D19). Last event. Decide with `decideApproval`.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, approvalId, message]
+          properties:
+            type:
+              const: run.awaiting_approval
+            approvalId:
+              $ref: '#/components/schemas/Uuid'
+            message:
+              $ref: '#/components/schemas/Message'
+    RunStoppedEvent:
+      description: Stopped by the user (`stopped`, partial kept). Last event.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, message]
+          properties:
+            type:
+              const: run.stopped
+            message:
+              $ref: '#/components/schemas/Message'
+    RunFailedEvent:
+      description: The reply ended with `failed` or `interrupted` (partial kept). Last event. Retry with `retryReply`.
+      allOf:
+        - $ref: '#/components/schemas/EventBase'
+        - type: object
+          required: [type, error, message]
+          properties:
+            type:
+              const: run.failed
+            error:
+              $ref: '#/components/schemas/Problem'
+            message:
+              $ref: '#/components/schemas/Message'
+
+    # ------------------------------------------------------------ Agent contract (API → agent)
+    AgentInvocation:
+      x-contract: agent
+      description: |
+        The payload the API sends to every agent (`InvokeAgentRuntime` for `agentcore`, a POST for `http`), D18 and D20.
+        Not a browser API. Agents are stateless between calls: history comes in every time. `runtimeSessionId` is our
+        session id, but agents must not depend on it. The agent's **output** format is recorded from the real runtime in
+        build step 8 before the translator is written (D10).
+      type: object
+      required: [messages, input, attachments, context]
+      properties:
+        messages:
+          type: array
+          description: |
+            Earlier turns, oldest first, trimmed to the agent's budget (default 20 turns or ~32k characters).
+            Blocks are flattened to text: thinking dropped; tools, artifacts, files and approvals summarised in one line
+            each (e.g. `[tool run_tests: 4 of 20 failed]`, `[attached lab-results-aug.pdf]`).
+          items:
+            type: object
+            required: [role, text]
+            properties:
+              role:
+                type: string
+                enum: [user, assistant]
+              text:
+                type: string
+        input:
+          type: string
+          description: |
+            The new user message's text. For an answer, a line such as
+            `[answer to "Who is the brief for?": Engineering team]` followed by any text.
+        attachments:
+          type: array
+          description: Files on the new message only.
+          items:
+            $ref: '#/components/schemas/AgentAttachment'
+        decision:
+          $ref: '#/components/schemas/AgentDecision'
+        context:
+          type: object
+          required: [sessionId, messageId, agentVersion]
+          properties:
+            sessionId:
+              $ref: '#/components/schemas/Uuid'
+            messageId:
+              $ref: '#/components/schemas/Uuid'
+              description: The assistant message being written.
+            agentVersion:
+              type: [string, 'null']
+    AgentAttachment:
+      x-contract: agent
+      type: object
+      required: [fileId, name, contentType, sizeBytes, url]
+      properties:
+        fileId:
+          $ref: '#/components/schemas/Uuid'
+        name:
+          type: string
+        contentType:
+          type: string
+        sizeBytes:
+          type: integer
+        url:
+          type: string
+          format: uri
+          description: Signed S3 GET, valid 15 minutes (D20).
+    AgentDecision:
+      x-contract: agent
+      type: object
+      description: Present only on the continuation after an approval (D19). `input` is empty then.
+      required: [approvalId, toolUseId, toolName, decision]
+      properties:
+        approvalId:
+          $ref: '#/components/schemas/Uuid'
+        toolUseId:
+          type: string
+        toolName:
+          type: string
+        decision:
+          type: string
+          enum: [approve, deny]
+        reason:
+          type: string

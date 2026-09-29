@@ -1,0 +1,8 @@
+# Lint config for openapi.yaml: npx @redocly/cli lint openapi.yaml
+extends:
+  - recommended
+rules:
+  info-license: off                # private project
+  no-server-example.com: off       # localhost is the dev server on purpose
+  operation-4xx-response: off      # /v1/health and /v1/auth/logout have no client errors by design
+  no-unused-components: off        # AgentInvocation* are the API → agent contract, not browser routes

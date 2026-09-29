@@ -1,11 +1,11 @@
 # Sending a message: flow, states and timers
 
-Step 3 of the build plan, updated by the alignment review ([`ALIGNMENT_REVIEW.md`](ALIGNMENT_REVIEW.md)). Diagrams:
+Step 3 of the build plan, updated by the alignment review (step 4b). Exact request, response and event shapes: [`api/openapi.yaml`](../api/openapi.yaml). Diagrams:
 - Normal path, including sign-in and the session check: [`diagrams/send-message.mmd`](diagrams/send-message.mmd) ([PNG](diagrams/send-message.png))
 - Failure paths: [`diagrams/send-message-failures.mmd`](diagrams/send-message-failures.mmd) ([PNG](diagrams/send-message-failures.png))
 - Attachments and approvals: [`diagrams/approval-and-upload.mmd`](diagrams/approval-and-upload.mmd) ([PNG](diagrams/approval-and-upload.png))
 
-Decisions behind this are in [`ARCHITECTURE.md`](ARCHITECTURE.md) (D5, D8, D10, D11, D18–D23, P1–P4). Endpoint paths and event names here are **provisional**; step 5 (OpenAPI) fixes them. All routes are under `/v1` (D23).
+Decisions behind this are in [`ARCHITECTURE.md`](ARCHITECTURE.md) (D5, D8, D10, D11, D18–D23, P1–P4). Endpoint paths and event names match the OpenAPI spec (step 5). All routes are under `/v1` (D23).
 
 ## Rules
 
@@ -20,7 +20,7 @@ Decisions behind this are in [`ARCHITECTURE.md`](ARCHITECTURE.md) (D5, D8, D10, 
 9. **No stream resume in v1.** Events carry ids, but after a drop the client reads the message from the API and polls while it is `streaming` (P3). There is no "agent silent" error: after 60 s without events the reply shows a soft "Still working" note with no Retry.
 10. **History goes in the payload.** The API sends recent turns from Postgres with every call, plus the new message's attachments as 15-minute signed URLs (D18, D20). `runtimeSessionId` is our session id, but agents may not depend on it.
 11. **Title at creation.** The first send creates the session and titles it from the first message (D21). There is no title event.
-12. **Approvals end the run.** An approval request saves the approval, sets the message to `awaiting_approval` and closes the stream with `run.awaiting_approval`. `POST /v1/approvals/{id}/decision` re-invokes the agent and streams the continuation into the same message; deny re-invokes too, expiry doesn't (D19).
+12. **Approvals end the run.** An approval request saves the approval, sets the message to `awaiting_approval`, sends the `approval` block (`block.started`) and closes the stream with `run.awaiting_approval`. `POST /v1/approvals/{id}/decision` re-invokes the agent and streams the continuation into the same message; deny re-invokes too, expiry doesn't (D19).
 13. **Dead runs are found by heartbeat.** On startup and every minute, `streaming` rows whose heartbeat is older than 60 s become `interrupted`. A reply still running on the old task during a deploy keeps its heartbeat fresh and is left alone.
 14. **Deleting a session** stops its running reply and cancels its pending approvals first; the purge job skips rows still `streaming`.
 

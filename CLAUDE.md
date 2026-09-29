@@ -9,7 +9,7 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 - `docs/ARCHITECTURE.md`: technical decision log (single source of truth; wins over the stack notes in PRODUCT_PLAN).
 - `docs/SEND_MESSAGE.md`: the send/stream flow, message statuses, timers and error codes (diagrams in `docs/diagrams/`).
 - `docs/DATA_MODEL.md`: Postgres tables, enforced rules and indexes (models in `api/app/db/models.py`, migrations with Alembic in `api/migrations/`).
-- `docs/ALIGNMENT_REVIEW.md`: screens ↔ data ↔ API traceability, used as the checklist for the OpenAPI spec (step 5); remove it once the spec covers it.
+- `api/openapi.yaml`: the API contract (OpenAPI 3.1): every endpoint, error code, SSE event and message block, plus the API → agent payload. Lint with `npx @redocly/cli lint api/openapi.yaml`.
 - `docs/PRODUCT_PLAN.md`: scope (P0/P1/P2), acceptance criteria, screen inventory, roadmap, design critique (§9).
 - `design/README.md`: how the design file is organised.
 - `design/INDEX.md`: generated map of every component, screen and flow, with node IDs.

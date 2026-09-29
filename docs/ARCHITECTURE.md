@@ -131,7 +131,7 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 ### D19. An approval ends the run; the decision continues it
 **Decision (owner, 2026-09-29).** When an agent asks for approval, the API saves the `approval_requests` row, marks the assistant message `awaiting_approval` and ends the run (the stream closes with `run.awaiting_approval`). `POST /v1/approvals/{id}/decision` records approve or deny, then re-invokes the agent with the history plus the decision and streams the continuation into the **same** assistant message (status back to `streaming`). Deny also re-invokes, so the agent can acknowledge; expiry does not (the message becomes `complete`, the card shows Expired). Sending a new message while an approval is pending cancels it (`cancelled`) and completes the paused message in the same transaction.
 **Why.** Agents are stateless between calls anyway (D18). Waiting costs nothing: no open stream, no run-cap time, no session lock, and a deploy can't kill it. The database enforces one open reply per session (`streaming` or `awaiting_approval`).
-**Revisit if.** The P8 spike shows a Strands agent can't resume from a re-invocation; then fall back to holding the run open (alignment review D1, option B).
+**Revisit if.** The P8 spike shows a Strands agent can't resume from a re-invocation; then fall back to holding the run open (the alternative considered in step 4b).
 
 ### D20. Agents get attachments as short-lived signed URLs
 **Decision (owner, 2026-09-29).** The agent payload carries `attachments: [{fileId, name, contentType, sizeBytes, url}]` for the files on the new message, where `url` is a presigned S3 GET valid for 15 minutes. Earlier attachments appear in history by name only. Agent roles get no S3 permissions.
@@ -149,7 +149,7 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Revisit if.** There are many users or the 20 s delay feels slow; then add a per-user SSE channel.
 
 ### D23. API conventions
-**Decision (picked defaults, 2026-09-29; details in `ALIGNMENT_REVIEW.md` §6).** All routes under `/v1`. Errors are RFC 9457 `application/problem+json` with `code`, `requestId`, `retryable` and optional `retryAfter`; the SSE `run.failed` event and `messages.error` use the same object, and every response carries `X-Request-Id`. Cursor pagination (`cursor`, `limit` ≤ 100); messages page backwards by `seq`. Uploads: 20 MB per file, 10 per message, `pdf png jpeg webp gif csv txt`, narrowed per agent by `capabilities.attachments`. At most 3 concurrent runs per user (`429 too_many_runs`). Agents are addressed by slug. UUIDs, RFC 3339 UTC timestamps, camelCase JSON.
+**Decision (picked defaults, 2026-09-29; the contract is [`api/openapi.yaml`](../api/openapi.yaml)).** All routes under `/v1`. Errors are RFC 9457 `application/problem+json` with `code`, `requestId`, `retryable` and optional `retryAfter`; the SSE `run.failed` event and `messages.error` use the same object, and every response carries `X-Request-Id`. Cursor pagination (`cursor`, `limit` ≤ 100); messages page backwards by `seq`. Uploads: 20 MB per file, 10 per message, `pdf png jpeg webp gif csv txt`, narrowed per agent by `capabilities.attachments`. At most 3 concurrent runs per user (`429 too_many_runs`). Agents are addressed by slug. UUIDs, RFC 3339 UTC timestamps, camelCase JSON.
 **Revisit if.** A second client needs different shapes.
 
 ---
@@ -224,4 +224,5 @@ Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (l
 | 2026-09-29 | v0.3: D18, the API sends history on every call; AgentCore Memory recorded as a later, per-agent option. |
 | 2026-09-29 | Send-message sequence diagrams and `SEND_MESSAGE.md` (step 3). Picked defaults: run id = assistant message id, idempotent sends via `clientMessageId`, refresh token 30 days. |
 | 2026-09-29 | Data model, Postgres schema and first Alembic migration (step 4): `DATA_MODEL.md`, `api/app/db/models.py`, `api/migrations/`. |
-| 2026-09-29 | v0.4, alignment review (`ALIGNMENT_REVIEW.md`): D19 approval pause, D20 attachments to agents, D21 session titles, D22 polling for cross-session activity, D23 API conventions; D7 key prefix; D8 cookie path `/v1/auth`; D11, P1, P3, P4 amended for two tasks during deploys and Retry after Stop; D18 payload gains `attachments`. Migration `0002`. |
+| 2026-09-29 | v0.4, alignment review (build step 4b): D19 approval pause, D20 attachments to agents, D21 session titles, D22 polling for cross-session activity, D23 API conventions; D7 key prefix; D8 cookie path `/v1/auth`; D11, P1, P3, P4 amended for two tasks during deploys and Retry after Stop; D18 payload gains `attachments`. Migration `0002`. |
+| 2026-09-29 | OpenAPI 3.1 spec (step 5): `api/openapi.yaml`. Stream events fixed as `run.started`, `block.started/delta/updated/completed`, `artifact.delta`, and the terminal `run.completed`, `run.awaiting_approval`, `run.stopped`, `run.failed`. |

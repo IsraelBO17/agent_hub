@@ -108,7 +108,7 @@ class User(Base):
     name: Mapped[str | None] = mapped_column(Text)
     avatar_url: Mapped[str | None] = mapped_column(Text)
     status: Mapped[str] = mapped_column(Text, server_default="invited")
-    preferences: Mapped[dict[str, Any]] = mapped_column(server_default=text("'{}'::jsonb"))  # e.g. defaultAgentId
+    preferences: Mapped[dict[str, Any]] = mapped_column(server_default=text("'{}'::jsonb"))  # defaultAgentSlug, reopenLastSession
     invited_at: Mapped[datetime | None]
     last_login_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = created_at()
@@ -276,7 +276,7 @@ class Message(Base):
         UniqueConstraint("session_id", "seq"),
         # Per user, not per session: the first send creates the session, so a resend must find it (F03).
         UniqueConstraint("user_id", "client_message_id"),
-        # One open reply per session: running or waiting for an approval (run_in_progress, ALIGNMENT_REVIEW D1).
+        # One open reply per session: running or waiting for an approval (run_in_progress, ARCHITECTURE D19).
         Index("uq_messages_open_reply_per_session", "session_id", unique=True, postgresql_where=text(OPEN_REPLY)),
         Index("ix_messages_search", "search_vector", postgresql_using="gin"),
         Index(None, "reply_to_id"),
@@ -400,7 +400,7 @@ class Artifact(Base):
     session_id: Mapped[uuid.UUID]
     user_id: Mapped[uuid.UUID] = user_fk()
     created_message_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("messages.id", ondelete="SET NULL"))
-    artifact_key: Mapped[str] = mapped_column(Text)  # the agent's id, used by artifact.update events
+    artifact_key: Mapped[str] = mapped_column(Text)  # the agent's id, so its later updates find the artifact
     type: Mapped[str] = mapped_column(Text)
     title: Mapped[str] = mapped_column(Text)
     language: Mapped[str | None] = mapped_column(Text)  # for code

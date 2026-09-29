@@ -1,6 +1,6 @@
 # Data model
 
-Step 4 of the build plan, amended by the alignment review ([`ALIGNMENT_REVIEW.md`](ALIGNMENT_REVIEW.md), migration `0002`). Postgres (Neon), 12 tables.
+Step 4 of the build plan, amended by the alignment review (build step 4b, migration `0002`). The API shapes built on these tables are in [`api/openapi.yaml`](../api/openapi.yaml). Postgres (Neon), 12 tables.
 
 - ER diagram: [`diagrams/er.mmd`](diagrams/er.mmd) ([PNG](diagrams/er.png)), key columns only.
 - Source of truth: [`api/app/db/models.py`](../api/app/db/models.py) (SQLAlchemy 2). Migrations: [`api/migrations/`](../api/migrations) (Alembic), generated from the models and reviewed by hand.
@@ -28,10 +28,10 @@ Step 4 of the build plan, amended by the alignment review ([`ALIGNMENT_REVIEW.md
 | `files` | Every S3 object (D7) | Uploads can exist before their session (lazy session creation, F03), so `session_id` and `message_id` are nullable until send |
 | `tool_calls` | Tools the agent ran | Keyed by the agent's `tool_use_id`; big outputs go to a file |
 | `approval_requests` | Human-in-the-loop decisions (F10) | One per tool call; the card renders `arguments` validated by the API; the row is the audit record |
-| `artifacts` | Documents, code, HTML, tables | `artifact_key` is the agent's own id, so `artifact.update` finds the artifact |
+| `artifacts` | Documents, code, HTML, tables | `artifact_key` is the agent's own id, so the agent's later update finds the artifact |
 | `artifact_versions` | Every version | Small bodies inline in `content`, large ones in S3 via `file_id`; `status = incomplete` for a stream that dropped mid-artifact |
 | `feedback` | 👍 / 👎 with reason chips (F20) | One per message per user |
-| `share_links` | Public read-only links (F18) | `slug` is random (≥ 22 chars); `up_to_seq` freezes the snapshot at the moment of sharing without copying data; revoke = 404 |
+| `share_links` | Public read-only links (F18); `options` column added with F18 (BUILD_PLAN follow-ups) | `slug` is random (≥ 22 chars); `up_to_seq` freezes the snapshot at the moment of sharing without copying data; revoke = 404 |
 
 ## Blocks vs. side tables (P6)
 
@@ -72,7 +72,7 @@ Step 4 of the build plan, amended by the alignment review ([`ALIGNMENT_REVIEW.md
 
 ## Checked against the screens
 
-Checked against `design/INDEX.md`, the screen inventory and acceptance criteria in `PRODUCT_PLAN.md`, and `SEND_MESSAGE.md`. Pencil wasn't open during this step, so individual screen fields weren't read from the file. The alignment review then read every screen's text and checked each field (`ALIGNMENT_REVIEW.md` §2).
+Checked against `design/INDEX.md`, the screen inventory and acceptance criteria in `PRODUCT_PLAN.md`, and `SEND_MESSAGE.md`. Pencil wasn't open during this step, so individual screen fields weren't read from the file. The alignment review (step 4b) then read every screen's text and traced each field to a column or computed value.
 
 **The step 4 entity list lacked these, so they were added:**
 

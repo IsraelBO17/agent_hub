@@ -1,4 +1,4 @@
-%% Sequence: attach a file, then an approval pause and continuation (ALIGNMENT_REVIEW B1, B4).
+%% Sequence: attach a file, then an approval pause and continuation (alignment review, step 4b). Shapes: api/openapi.yaml.
 %% Decisions: docs/ARCHITECTURE.md D7, D19, D20, D22. Rules and timers: docs/SEND_MESSAGE.md.
 sequenceDiagram
   autonumber
@@ -13,7 +13,7 @@ sequenceDiagram
     Note over U,S3: Attach a file (before or after the session exists)
     U->>B: drop / pick / paste a file
     B->>B: check type and size against agent capabilities.attachments
-    B->>A: POST /v1/files {agentSlug, name, contentType, sizeBytes}
+    B->>A: POST /v1/files {agentSlug, sessionId?, filename, contentType, sizeBytes}
     A->>A: check limits (20 MB, 10 per message, allowed types, agent may narrow)
     A->>DB: files row (purpose upload, status pending, key u/{userId}/...)
     A-->>B: 201 {fileId, presigned POST with content-length-range}
@@ -36,7 +36,7 @@ sequenceDiagram
     R-->>A: chunks, then a tool call that requires approval
     A->>DB: tool_calls (awaiting_approval) + approval_requests (pending, expires_at)
     A->>DB: assistant message: blocks checkpointed, status awaiting_approval
-    A-->>B: event approval.requested, then run.awaiting_approval · stream closes
+    A-->>B: event block.started (approval block), then run.awaiting_approval · stream closes
     B->>U: approval card with countdown, composer stays enabled
   end
 
