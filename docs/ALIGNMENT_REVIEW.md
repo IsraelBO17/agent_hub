@@ -362,7 +362,7 @@ My recommendation: take the first two, leave the last two in P1.
 
 ## 8. What changed
 
-Applied 2026-09-29 after the owner's answers. "Design session" items came from [`design/ALIGNMENT_FIXES.md`](../design/ALIGNMENT_FIXES.md), run in a separate design session (`BUILD_PLAN.md`) and committed as `3d81fbe` (design) and `b7baa0f` (screen inventory in `PRODUCT_PLAN.md`).
+Applied 2026-09-29 after the owner's answers. "Design session" items came from a design-session prompt (`design/ALIGNMENT_FIXES.md`, removed after use; see commit `63b0ca7`), run in a separate design session (`BUILD_PLAN.md`) and committed as `3d81fbe` (design) and `b7baa0f` (screen inventory in `PRODUCT_PLAN.md`).
 
 | # | Finding | Outcome | Where |
 |---|---|---|---|
