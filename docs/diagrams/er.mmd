@@ -1,0 +1,146 @@
+%% Agent Hub data model (step 4). Key columns only; source of truth: api/app/db/models.py.
+%% Notes and index rationale: docs/DATA_MODEL.md.
+erDiagram
+  users ||--o{ refresh_tokens : "signs in with"
+  users ||--o{ sessions : owns
+  agents ||--o{ sessions : "talked to in"
+  sessions ||--o{ messages : contains
+  messages |o--o{ messages : "reply_to"
+  sessions ||--o{ files : "has uploads"
+  messages |o--o{ files : attaches
+  messages ||--o{ tool_calls : runs
+  tool_calls ||--o| approval_requests : "may need"
+  agents ||--o{ approval_requests : "asked by"
+  sessions ||--o{ artifacts : produces
+  artifacts ||--|{ artifact_versions : "has versions"
+  files |o--o| artifact_versions : "large body / thumbnail"
+  messages ||--o{ feedback : "rated by"
+  sessions ||--o{ share_links : "shared as"
+
+  users {
+    uuid id PK
+    text google_sub UK "null until invite accepted"
+    text email UK "case-insensitive"
+    text status "invited | active | disabled"
+    jsonb preferences "defaultAgentId, ..."
+  }
+  refresh_tokens {
+    uuid id PK
+    uuid user_id FK
+    uuid family_id "reuse revokes family"
+    bytea token_hash UK "sha256"
+    timestamptz expires_at
+    timestamptz rotated_at
+    timestamptz revoked_at
+  }
+  agents {
+    uuid id PK
+    text slug UK
+    text name
+    text icon "lucide"
+    text color "red | blue | green | purple | amber | grey"
+    text stage "beta | stable"
+    text status "online | degraded | offline"
+    text runtime_type "agentcore | http"
+    text runtime_arn
+    text version
+    jsonb capabilities
+    jsonb tools "incl. requiresApproval"
+    jsonb starters
+    jsonb settings "history budget, run cap, memory"
+    timestamptz retired_at
+  }
+  sessions {
+    uuid id PK
+    uuid user_id FK
+    uuid agent_id FK
+    text title
+    timestamptz last_message_at
+    timestamptz pinned_at
+    timestamptz archived_at
+    timestamptz deleted_at "undo window"
+  }
+  messages {
+    uuid id PK
+    uuid session_id FK
+    uuid user_id FK
+    int seq "order in session"
+    text role "user | assistant"
+    text status "streaming | complete | stopped | failed | interrupted"
+    jsonb blocks "ordered typed blocks"
+    uuid client_message_id "idempotent send"
+    uuid reply_to_id FK
+    text agent_version
+    jsonb error
+    tsvector search_vector "generated"
+  }
+  files {
+    uuid id PK
+    uuid user_id FK
+    uuid session_id FK "nullable"
+    uuid message_id FK "nullable"
+    text purpose "upload | artifact | thumbnail | export | tool_output"
+    text status "pending | uploaded | failed"
+    text s3_key UK
+    text content_type
+    bigint size_bytes
+  }
+  tool_calls {
+    uuid id PK
+    uuid message_id FK
+    uuid session_id FK
+    uuid user_id FK
+    text tool_use_id "agent's id"
+    text name
+    text status
+    jsonb input
+    jsonb output
+  }
+  approval_requests {
+    uuid id PK
+    uuid tool_call_id FK,UK
+    uuid session_id FK
+    uuid user_id FK
+    uuid agent_id FK
+    jsonb arguments "validated"
+    text status "pending | approved | denied | expired | cancelled"
+    timestamptz expires_at
+    timestamptz decided_at
+    text decision_reason
+    timestamptz executed_at "only if approved"
+  }
+  artifacts {
+    uuid id PK
+    uuid session_id FK
+    uuid user_id FK
+    text artifact_key "agent's id"
+    text type "document | code | html | table"
+    text title
+    int current_version
+  }
+  artifact_versions {
+    uuid id PK
+    uuid artifact_id FK
+    uuid user_id FK
+    int version
+    text status "streaming | complete | incomplete"
+    text content "small bodies inline"
+    uuid file_id FK "large bodies in S3"
+    uuid thumbnail_file_id FK
+  }
+  feedback {
+    uuid id PK
+    uuid message_id FK
+    uuid user_id FK
+    smallint rating "-1 | 1"
+    text_array reasons
+    text comment
+  }
+  share_links {
+    uuid id PK
+    uuid session_id FK
+    uuid user_id FK
+    text slug UK "unguessable"
+    int up_to_seq "snapshot boundary"
+    timestamptz revoked_at
+  }

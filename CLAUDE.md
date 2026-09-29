@@ -2,11 +2,12 @@
 
 One web app that is a single chat interface for many AI agents (AWS Strands Agents on Amazon Bedrock AgentCore Runtime, LangGraph later). Agents are data from `GET /agents`; adding one must never need UI changes.
 
-**Current stage: design and planning. No application code yet.** Do not scaffold the app unless asked.
+**Current stage: planning and foundations.** The only code is the database schema and migrations in `api/` (step 4). Do not scaffold the rest of the app unless asked.
 
 ## Read first
 - `docs/ARCHITECTURE.md`: technical decision log (single source of truth; wins over the stack notes in PRODUCT_PLAN).
 - `docs/SEND_MESSAGE.md`: the send/stream flow, message statuses, timers and error codes (diagrams in `docs/diagrams/`).
+- `docs/DATA_MODEL.md`: Postgres tables, enforced rules and indexes (models in `api/app/db/models.py`, migrations with Alembic in `api/migrations/`).
 - `docs/PRODUCT_PLAN.md`: scope (P0/P1/P2), acceptance criteria, screen inventory, roadmap, design critique (§9).
 - `design/README.md`: how the design file is organised.
 - `design/INDEX.md`: generated map of every component, screen and flow, with node IDs.

@@ -197,3 +197,4 @@ Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (l
 | 2026-09-29 | Architecture diagram added (`docs/diagrams/`, step 2). |
 | 2026-09-29 | v0.3: D18, the API sends history on every call; AgentCore Memory recorded as a later, per-agent option. |
 | 2026-09-29 | Send-message sequence diagrams and `SEND_MESSAGE.md` (step 3). Picked defaults: run id = assistant message id, idempotent sends via `clientMessageId`, refresh token 30 days. |
+| 2026-09-29 | Data model, Postgres schema and first Alembic migration (step 4): `DATA_MODEL.md`, `api/app/db/models.py`, `api/migrations/`. |
