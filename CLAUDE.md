@@ -5,6 +5,7 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 **Current stage: design and planning. No application code yet.** Do not scaffold the app unless asked.
 
 ## Read first
+- `docs/ARCHITECTURE.md`: technical decision log (single source of truth; wins over the stack notes in PRODUCT_PLAN).
 - `docs/PRODUCT_PLAN.md`: scope (P0/P1/P2), acceptance criteria, screen inventory, roadmap, design critique (§9).
 - `design/README.md`: how the design file is organised.
 - `design/INDEX.md`: generated map of every component, screen and flow, with node IDs.
