@@ -4,6 +4,8 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 
 **Current stage: planning and foundations.** The only code is the database schema and migrations in `api/` (step 4). Do not scaffold the rest of the app unless asked.
 
+**Layout (D24):** `api/` (FastAPI, uv; `api/openapi.yaml` is the contract), `web/` (Vite SPA, npm), `infra/` (Terraform), `agents/` (one descriptor YAML per agent), `design/`, `docs/`. Create a folder only in the step that fills it. `make` lists the common commands.
+
 ## Read first
 - `docs/BUILD_PLAN.md`: the ordered build steps, their status, how we work, and open questions. Start here.
 - `docs/ARCHITECTURE.md`: technical decision log (single source of truth; wins over the stack notes in PRODUCT_PLAN).

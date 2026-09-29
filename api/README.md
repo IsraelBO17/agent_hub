@@ -1,6 +1,6 @@
 # Agent Hub API
 
-FastAPI service (not written yet). Today this folder holds the **database schema and migrations** only (build plan step 4). Layout may change in step 6.
+FastAPI service (not written yet). Today this folder holds the **database schema and migrations** (build plan step 4) and the **API contract**, [`openapi.yaml`](openapi.yaml) (step 5). Repo layout: root [`README.md`](../README.md).
 
 - Models: `app/db/models.py` (source of truth for the schema). Notes: `docs/DATA_MODEL.md`.
 - Migrations: `migrations/` (Alembic). They connect with `DATABASE_URL_DIRECT`, Neon's **direct** (unpooled) connection string, not the pooled one (ARCHITECTURE D3).

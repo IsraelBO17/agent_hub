@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.4, D1–D23 and P1–P8 locked; §2 default and §4 questions still open |
+| Status | v0.4, D1–D24 and P1–P8 locked; §2 default and §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -152,6 +152,11 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Decision (picked defaults, 2026-09-29; the contract is [`api/openapi.yaml`](../api/openapi.yaml)).** All routes under `/v1`. Errors are RFC 9457 `application/problem+json` with `code`, `requestId`, `retryable` and optional `retryAfter`; the SSE `run.failed` event and `messages.error` use the same object, and every response carries `X-Request-Id`. Cursor pagination (`cursor`, `limit` ≤ 100); messages page backwards by `seq`. Uploads: 20 MB per file, 10 per message, `pdf png jpeg webp gif csv txt`, narrowed per agent by `capabilities.attachments`. At most 3 concurrent runs per user (`429 too_many_runs`). Agents are addressed by slug. UUIDs, RFC 3339 UTC timestamps, camelCase JSON.
 **Revisit if.** A second client needs different shapes.
 
+### D24. One repository, one folder per deployable part
+**Decision (2026-09-29, step 6).** `api/` (FastAPI, uv), `web/` (Vite SPA, npm), `infra/` (Terraform: `bootstrap/`, `modules/`, `envs/dev/`), `agents/` (one descriptor YAML per agent, inserted by the registry CLI), plus `design/` and `docs/`. No monorepo tooling (no workspaces, Nx or Turborepo): the three parts use three languages and share only the OpenAPI contract, which stays at `api/openapi.yaml` and is read by `web/` for its types. A root `Makefile` holds shortcuts only. Folders are created by the step that first fills them. Agent code lives in each agent's own repository; this repo holds only descriptors (and the Scenario Agent, if it is built here). Amplify builds `web/` as a monorepo app root.
+**Why.** The simplest layout that keeps "adding an agent touches only `agents/`" checkable in a pull request, and keeps each part deployable on its own.
+**Revisit if.** A second TypeScript package appears (then npm workspaces), or the contract gains another consumer (then move it to a top-level `contract/`).
+
 ---
 
 ## 2. Unconfirmed defaults (do not build on these until confirmed; see Q3)
@@ -226,3 +231,4 @@ Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (l
 | 2026-09-29 | Data model, Postgres schema and first Alembic migration (step 4): `DATA_MODEL.md`, `api/app/db/models.py`, `api/migrations/`. |
 | 2026-09-29 | v0.4, alignment review (build step 4b): D19 approval pause, D20 attachments to agents, D21 session titles, D22 polling for cross-session activity, D23 API conventions; D7 key prefix; D8 cookie path `/v1/auth`; D11, P1, P3, P4 amended for two tasks during deploys and Retry after Stop; D18 payload gains `attachments`. Migration `0002`. |
 | 2026-09-29 | OpenAPI 3.1 spec (step 5): `api/openapi.yaml`. Stream events fixed as `run.started`, `block.started/delta/updated/completed`, `artifact.delta`, and the terminal `run.completed`, `run.awaiting_approval`, `run.stopped`, `run.failed`. |
+| 2026-09-29 | Repo layout (step 6): D24. Root `README.md` maps the repo; root `Makefile` for common commands. |

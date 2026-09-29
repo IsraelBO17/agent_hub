@@ -1,13 +1,27 @@
-# Python
+# Python (api/)
 __pycache__/
 *.pyc
 .venv/
 .pytest_cache/
 
+# Node (web/)
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Terraform (infra/); .terraform.lock.hcl is committed
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
 # Local env and secrets
 .env
 .env.*
 !.env.example
+*.tfvars
+!*.tfvars.example
 
 # OS
 .DS_Store
