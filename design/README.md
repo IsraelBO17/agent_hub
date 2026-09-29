@@ -31,7 +31,7 @@ Find a node by searching for its ID from `INDEX.md`, for example `"id": "PBQLh"`
 | Sessions screens and board | 13,400 |
 | Agent management screens and board | 16,700 |
 | User flows (index at x −1,500) | 21,700 to ~37,850 |
-| P0 state screens: desktop row, mobile row, Edge States board | 38,400 to ~42,300 |
+| P0 and P1 state screens (desktop row, mobile row) and the Edge States board | 38,400 to ~42,300 |
 
 ## After editing the design
 

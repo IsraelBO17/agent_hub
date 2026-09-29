@@ -216,17 +216,17 @@ Status key:
 | Questions (quick reply / choice) | ✅ Agent-Initiated board | ✅ choice F11.7 `wiL50` | P0 |
 | Attachments: upload, fail, too large, wrong type | ✅ Chat Interaction Details board, "Too large or wrong type" `jSKjM` | ✅ attach sheet F11.4 `BXfKu`; unsupported type F11.3 | P0 |
 | 404 session | ✅ `H7ZqtC` | ✅ F11.19 `HfWCC` | P0 |
-| ⌘K palette | ✅ `B5LZKO` | ➕ search screen | P1 |
-| Share dialog + public shared view | ✅ dialog | ➕ public read-only page (desktop and mobile) | P1 |
-| Agent detail | ✅ `x05s4W` | ➕ | P1 |
-| Settings | 🔧 `Za8Qd`: move shortcuts out (Dark and System already hidden) | ➕ | P1 |
-| Artifacts library / Archived | ✅ | ➕ | P1 |
-| Forms | ✅ | ➕ | P1 |
+| ⌘K palette | ✅ `B5LZKO` | ✅ search screen `P7n48` | P1 |
+| Share dialog + public shared view | ✅ dialog; public page `q1bvDq` | ✅ public page `W2aSQ` | P1 |
+| Agent detail | ✅ `x05s4W` | ✅ `mN9zj` | P1 |
+| Settings | ✅ `Ue3Jc`: Light only; shortcuts moved to the ⌘/ overlay | ✅ `peFJG` (no shortcuts on mobile) | P1 |
+| Artifacts library / Archived | ✅ | ✅ `mz8oI` / `grrlx` | P1 |
+| Forms | ✅ | ✅ `m4Kt4` | P1 |
 | Add / Edit agent, Face ID, voice, doc edit, compare, onboarding, shortcuts overlay | ✅ (parked) | n/a | P2 |
 
 **Mobile screens for v1: done.** The 13 missing items (new session, streaming with tool chips, plan card, error and reconnect, keyboard-open composer with attachments, agent switcher sheet, approval approved / denied / expired, question card, agent offline, 404, catalog loading, sessions loading, row menu) are designed as Flow 11, 19 screens in all (F11.1–F11.19). Variants got their own step so every screen has a trigger note. Delete on mobile supports both long-press and swipe.
 
-The remaining P0 mobile states (catalog error and empty, auth expired, artifact streaming, approval waiting elsewhere, agent not found) are reference screens named `Mobile — …` at y 39,600. All P0 rows above are now ✅.
+The remaining P0 mobile states (catalog error and empty, auth expired, artifact streaming, approval waiting elsewhere, agent not found) are reference screens named `Mobile — …` at y 39,600. All P0 and P1 rows above are now ✅; P1 mobile screens are also named `Mobile — …`, at y 39,600 from x 3,120.
 
 P1 adds the public shared session, search and agent detail.
 

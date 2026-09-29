@@ -2,9 +2,9 @@
 
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
-- Top-level frames: 255
-- Reusable components: 88 (2721 references, nested ones included)
-- Reference screens and boards: 43
+- Top-level frames: 263
+- Reusable components: 88 (2800 references, nested ones included)
+- Reference screens and boards: 51
 - Flow screens: 93
 
 Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID>"`).
@@ -104,32 +104,32 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Button / Primary | `H0OSN` | auto×auto |  | 32 |
-| Button / Secondary | `XBZK2` | auto×auto |  | 80 |
+| Button / Primary | `H0OSN` | auto×auto |  | 34 |
+| Button / Secondary | `XBZK2` | auto×auto |  | 90 |
 | Button / Danger | `HsXdL` | auto×auto |  | 5 |
 | Icon Button | `btfe4` | 32×32 |  | 97 |
 | Kbd | `rjWo1` | auto×20 |  | 124 |
 | Tooltip | `fkIAs` | auto×auto |  | 3 |
 | Checkbox | `llhcq` | 16×16 |  | 18 |
-| Status Badge | `JQ0rx` | auto×auto |  | 17 |
-| Agent Avatar | `vCJQN` | 26×26 |  | 85 |
+| Status Badge | `JQ0rx` | auto×auto |  | 18 |
+| Agent Avatar | `vCJQN` | 26×26 |  | 94 |
 | Inline Code | `Uzd9M` | auto×auto |  | 2 |
 | Citation Chip | `q3C9LM` | auto×18 |  | 4 |
 | Resize Handle | `accqR` | 1×400 |  | 9 |
-| Stage Tag | `nC6tf` | auto×auto |  | 2 |
+| Stage Tag | `nC6tf` | auto×auto |  | 4 |
 
 ### 2 Inputs & Selection
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Search Field | `Wjnvx` | 240×auto |  | 16 |
+| Search Field | `Wjnvx` | 240×auto |  | 17 |
 | Select Button | `ZWD7y` | auto×auto |  | 16 |
 | Segmented Item | `K1CWuA` | auto×auto |  | 14 |
-| Filter Chip | `W0HHV` | auto×auto |  | 14 |
+| Filter Chip | `W0HHV` | auto×auto |  | 19 |
 | Reason Chip | `c3s8Su` | auto×auto |  | 33 |
-| Suggestion Pill | `wULfL` | auto×auto |  | 12 |
-| Form Field | `s2kV7R` | 300×auto |  | 28 |
-| Toggle Row | `sQir5` | 300×auto |  | 20 |
+| Suggestion Pill | `wULfL` | auto×auto |  | 15 |
+| Form Field | `s2kV7R` | 300×auto |  | 32 |
+| Toggle Row | `sQir5` | 300×auto |  | 21 |
 | Choice Option | `CxmKK` | 420×auto |  | 29 |
 | Stepper | `sV1X6` | 516×auto |  | 9 |
 
@@ -140,7 +140,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Menu Item | `koWWb` | 180×auto |  | 73 |
 | Menu Panel | `QRlRa` | 220×auto | `Items` (p97XhG): Menu Item | 17 |
 | Agent Menu Item | `UauTJ` | 288×auto |  | 21 |
-| Palette Row | `QrHIB` | 600×auto |  | 33 |
+| Palette Row | `QrHIB` | 600×auto |  | 39 |
 | Command Palette | `ZHC9i` | 640×auto | `Results` (NF5Vl): Palette Row | 5 |
 | Dialog | `dQMxZ` | 480×auto | `Body` (sYTH9) | 22 |
 | Confirm Dialog (Delete all only) | `i3B1e` | 400×auto |  | 0 |
@@ -152,7 +152,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| App Header | `fqLch` | 1440×64 |  | 17 |
+| App Header | `fqLch` | 1440×64 |  | 18 |
 | Chat Header | `H0YWK` | 1156×60 |  | 64 |
 | Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 67 |
 | Sidebar Brand | `T8TdZq` | 256×auto |  | 1 |
@@ -161,8 +161,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Sidebar Footer | `CpCSr` | 284×auto |  | 1 |
 | Session Item | `SEJaD` | 248×auto |  | 329 |
 | Session Group Label | `rQVuA` | auto×auto |  | 161 |
-| Mobile Status Bar | `CLJUJ` | 390×44 |  | 34 |
-| Home Indicator | `mSdhx` | 390×28 |  | 9 |
+| Mobile Status Bar | `CLJUJ` | 390×44 |  | 41 |
+| Home Indicator | `mSdhx` | 390×28 |  | 14 |
 | Section Heading | `o1lqG` | auto×auto |  | 31 |
 | Tile Label | `Vu7nt` | auto×auto |  | 106 |
 
@@ -171,8 +171,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
 | Composer | `K6k66O` | 760×auto | `Attachments` (I5xpa): Attachment Chip / Image Attachment | 80 |
-| User Message | `EfHME` | 760×auto |  | 118 |
-| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 124 |
+| User Message | `EfHME` | 760×auto |  | 121 |
+| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 125 |
 | Message Actions | `SnIqS` | auto×auto |  | 15 |
 | Message Editor | `x0laEo` | 520×auto |  | 1 |
 | Version Pager | `FVkS9` | auto×auto |  | 2 |
@@ -188,7 +188,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Tool Call Chip | `Hbhy0` | auto×auto |  | 99 |
+| Tool Call Chip | `Hbhy0` | auto×auto |  | 102 |
 | Tool Call Detail | `pkhri` | 640×auto |  | 16 |
 | Timeline Step | `JGoho` | 640×auto |  | 15 |
 | Plan Step | `aKwZB` | 480×auto |  | 38 |
@@ -203,15 +203,15 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Code Block | `wW1XY` | 640×auto |  | 21 |
+| Code Block | `wW1XY` | 640×auto |  | 22 |
 | Content Card | `l5WJH` | 640×auto | `Actions` (LibZM): Button / Secondary / Icon Button, `Body` (ZnzO6) | 5 |
 | Source Row | `q7ISXo` | 320×auto |  | 4 |
 | Download File | `s5qDxc` | 420×auto |  | 7 |
-| Artifact Card | `SMBup` | 440×auto |  | 39 |
+| Artifact Card | `SMBup` | 440×auto |  | 40 |
 | Artifact Toolbar | `AwpSJ` | 720×52 | `Extra` (nkW3V) | 15 |
 | Panel Tab | `HXUoW` | auto×auto |  | 6 |
 | Version Row | `Z4Hd3` | 260×auto |  | 16 |
-| Library Tile | `JCduD` | 260×auto |  | 24 |
+| Library Tile | `JCduD` | 260×auto |  | 30 |
 
 ### 8 Agent Interactions & Management
 
@@ -219,9 +219,9 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 |---|---|---|---|---|
 | Approval Card | `m1FtM` | 520×auto |  | 14 |
 | Permission Prompt | `YwhPJ` | 560×auto |  | 3 |
-| Detail Row | `wGPRe` | 400×auto |  | 35 |
+| Detail Row | `wGPRe` | 400×auto |  | 38 |
 | Agent Card | `VZuIf` | 392×auto |  | 35 |
-| Capability Row | `V6Dax` | 560×auto |  | 24 |
+| Capability Row | `V6Dax` | 560×auto |  | 27 |
 | Recent Session Row | `V8961f` | 800×auto |  | 27 |
 | Info Row | `NEFiE` | 320×auto |  | 12 |
 | Tip Card | `HFzDp` | 300×auto | `Extra` (IepYs): Kbd | 6 |
@@ -263,7 +263,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Sessions — Dialogs & states | `vBr4V` | 2280×auto |
 | Catalog — empty | `j8NhJ` | 1440×1024 |
 | Agent detail — /agents/coding-agent/about | `x05s4W` | 1440×1024 |
-| Settings — /settings | `Za8Qd` | 1440×1024 |
+| Settings — /settings | `Ue3Jc` | 1440×1024 |
 | Keyboard shortcuts overlay (⌘/) | `x8PmN9` | 1440×1024 |
 | Onboarding — first run | `RPCu8` | 1440×1024 |
 | Agent management — flows & states | `yzVIz` | 2280×auto |
@@ -271,12 +271,20 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Chat — auth expired | `jlDzd` | 1440×1024 |
 | Session not found | `H7ZqtC` | 1440×1024 |
 | Approval waiting in another session | `r5Gru` | 1440×1024 |
+| Shared session — /s/:shareId | `q1bvDq` | 1440×1024 |
 | Mobile — Catalog error | `sMh7q` | 390×844 |
 | Mobile — Catalog empty | `iX1f6` | 390×844 |
 | Mobile — Auth expired | `xBrZk` | 390×844 |
 | Mobile — Approval waiting elsewhere | `B6G93s` | 390×844 |
 | Mobile — Artifact streaming | `ZQvzZ` | 390×844 |
 | Mobile — Agent not found | `V97EP` | 390×844 |
+| Mobile — Search | `P7n48` | 390×844 |
+| Mobile — Agent detail | `mN9zj` | 390×844 |
+| Mobile — Settings | `peFJG` | 390×844 |
+| Mobile — Artifacts library | `mz8oI` | 390×844 |
+| Mobile — Archived | `grrlx` | 390×844 |
+| Mobile — Form | `m4Kt4` | 390×844 |
+| Mobile — Shared session | `W2aSQ` | 390×844 |
 | Edge States (P0) | `OFj2k` | 1440×auto |
 
 ## User flows
@@ -403,9 +411,9 @@ Change preferences, wipe data safely, learn shortcuts, and manage an agent's det
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
-| F9.1 Settings | `jvbtl` | 1440×1024 | Clicks “Delete all…” |
-| F9.2 Confirm delete all | `L6KfE` | 1440×1024 | Types DELETE, confirms |
-| F9.3 Data deleted | `wbzk3` | 1440×1024 | Presses ⌘/ |
+| F9.1 Settings | `OSWol` | 1440×1024 | Clicks “Delete all…” |
+| F9.2 Confirm delete all | `X4w0ZU` | 1440×1024 | Types DELETE, confirms |
+| F9.3 Data deleted | `Ui15F` | 1440×1024 | Presses ⌘/ |
 | F9.4 Keyboard shortcuts | `Iicud` | 1440×1024 | Opens an agent's page |
 | F9.5 Agent detail | `yz8Mr` | 1440×1024 | Clicks “Edit agent” |
 | F9.6 Edit agent | `gpyEo` | 1440×1024 | Saves changes |
