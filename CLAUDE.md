@@ -5,6 +5,7 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 **Current stage: planning and foundations.** The only code is the database schema and migrations in `api/` (step 4). Do not scaffold the rest of the app unless asked.
 
 ## Read first
+- `docs/BUILD_PLAN.md`: the ordered build steps, their status, how we work, and open questions. Start here.
 - `docs/ARCHITECTURE.md`: technical decision log (single source of truth; wins over the stack notes in PRODUCT_PLAN).
 - `docs/SEND_MESSAGE.md`: the send/stream flow, message statuses, timers and error codes (diagrams in `docs/diagrams/`).
 - `docs/DATA_MODEL.md`: Postgres tables, enforced rules and indexes (models in `api/app/db/models.py`, migrations with Alembic in `api/migrations/`).
