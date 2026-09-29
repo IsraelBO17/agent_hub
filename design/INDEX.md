@@ -2,9 +2,9 @@
 
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
-- Top-level frames: 244
-- Reusable components: 87 (2660 references, nested ones included)
-- Reference screens and boards: 33
+- Top-level frames: 255
+- Reusable components: 87 (2766 references, nested ones included)
+- Reference screens and boards: 44
 - Flow screens: 93
 
 Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID>"`).
@@ -32,6 +32,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | `code` | color | `#1E1D1A` |
 | `font-ui` | string | `Inter` |
 | `font-mono` | string | `JetBrains Mono` |
+| `warning` | color | `#8A5A12` |
+| `warning-soft` | color | `#F5ECDD` |
 
 ## Components
 
@@ -40,14 +42,14 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
 | Button / Primary | `H0OSN` | auto×auto |  | 37 |
-| Button / Secondary | `XBZK2` | auto×auto |  | 72 |
+| Button / Secondary | `XBZK2` | auto×auto |  | 76 |
 | Button / Danger | `HsXdL` | auto×auto |  | 5 |
 | Icon Button | `btfe4` | 32×32 |  | 97 |
 | Kbd | `rjWo1` | auto×20 |  | 124 |
 | Tooltip | `fkIAs` | auto×auto |  | 3 |
 | Checkbox | `llhcq` | 16×16 |  | 18 |
 | Status Badge | `JQ0rx` | auto×auto |  | 17 |
-| Agent Avatar | `vCJQN` | 26×26 |  | 81 |
+| Agent Avatar | `vCJQN` | 26×26 |  | 85 |
 | Inline Code | `Uzd9M` | auto×auto |  | 2 |
 | Citation Chip | `q3C9LM` | auto×18 |  | 4 |
 | Resize Handle | `accqR` | 1×400 |  | 9 |
@@ -56,8 +58,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Search Field | `Wjnvx` | 240×auto |  | 20 |
-| Select Button | `ZWD7y` | auto×auto |  | 20 |
+| Search Field | `Wjnvx` | 240×auto |  | 21 |
+| Select Button | `ZWD7y` | auto×auto |  | 21 |
 | Segmented Item | `K1CWuA` | auto×auto |  | 14 |
 | Filter Chip | `W0HHV` | auto×auto |  | 34 |
 | Reason Chip | `c3s8Su` | auto×auto |  | 33 |
@@ -73,12 +75,12 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 |---|---|---|---|---|
 | Menu Item | `koWWb` | 180×auto |  | 78 |
 | Menu Panel | `QRlRa` | 220×auto | `Items` (p97XhG): Menu Item | 18 |
-| Agent Menu Item | `UauTJ` | 288×auto |  | 18 |
+| Agent Menu Item | `UauTJ` | 288×auto |  | 21 |
 | Palette Row | `QrHIB` | 600×auto |  | 33 |
 | Command Palette | `ZHC9i` | 640×auto | `Results` (NF5Vl): Palette Row | 5 |
-| Dialog | `dQMxZ` | 480×auto | `Body` (sYTH9) | 21 |
+| Dialog | `dQMxZ` | 480×auto | `Body` (sYTH9) | 22 |
 | Confirm Dialog (Delete all only) | `i3B1e` | 400×auto |  | 0 |
-| Toast | `IjtkQ` | 380×auto |  | 14 |
+| Toast | `IjtkQ` | 380×auto |  | 16 |
 | Feedback Popover | `meKbs` | 380×auto |  | 1 |
 | Source Preview | `Ypu1g` | 340×auto |  | 1 |
 
@@ -86,28 +88,28 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| App Header | `fqLch` | 1440×64 |  | 17 |
-| Chat Header | `H0YWK` | 1156×60 |  | 61 |
-| Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 64 |
+| App Header | `fqLch` | 1440×64 |  | 18 |
+| Chat Header | `H0YWK` | 1156×60 |  | 64 |
+| Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 67 |
 | Sidebar Brand | `T8TdZq` | 256×auto |  | 1 |
 | Agent Switcher | `RZF5q` | 256×auto |  | 1 |
 | Sidebar Nav Item | `MoK3u` | 256×auto |  | 29 |
 | Sidebar Footer | `CpCSr` | 284×auto |  | 1 |
-| Session Item | `SEJaD` | 248×auto |  | 323 |
-| Session Group Label | `rQVuA` | auto×auto |  | 158 |
-| Mobile Status Bar | `CLJUJ` | 390×44 |  | 28 |
-| Home Indicator | `mSdhx` | 390×28 |  | 7 |
+| Session Item | `SEJaD` | 248×auto |  | 329 |
+| Session Group Label | `rQVuA` | auto×auto |  | 161 |
+| Mobile Status Bar | `CLJUJ` | 390×44 |  | 34 |
+| Home Indicator | `mSdhx` | 390×28 |  | 9 |
 | Section Heading | `o1lqG` | auto×auto |  | 31 |
-| Tile Label | `Vu7nt` | auto×auto |  | 97 |
+| Tile Label | `Vu7nt` | auto×auto |  | 106 |
 
 ### 5 Composer & Messages
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Composer | `K6k66O` | 760×auto | `Attachments` (I5xpa): Attachment Chip / Image Attachment | 75 |
-| User Message | `EfHME` | 760×auto |  | 109 |
-| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 119 |
-| Message Actions | `SnIqS` | auto×auto |  | 12 |
+| Composer | `K6k66O` | 760×auto | `Attachments` (I5xpa): Attachment Chip / Image Attachment | 80 |
+| User Message | `EfHME` | 760×auto |  | 118 |
+| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 124 |
+| Message Actions | `SnIqS` | auto×auto |  | 15 |
 | Message Editor | `x0laEo` | 520×auto |  | 1 |
 | Version Pager | `FVkS9` | auto×auto |  | 2 |
 | Attachment Chip | `xdoWs` | auto×auto |  | 14 |
@@ -122,26 +124,26 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Tool Call Chip | `Hbhy0` | auto×auto |  | 91 |
-| Tool Call Detail | `pkhri` | 640×auto |  | 14 |
+| Tool Call Chip | `Hbhy0` | auto×auto |  | 99 |
+| Tool Call Detail | `pkhri` | 640×auto |  | 16 |
 | Timeline Step | `JGoho` | 640×auto |  | 15 |
 | Plan Step | `aKwZB` | 480×auto |  | 38 |
-| Plan Card | `I05g84` | 520×auto | `Steps` (LlLdq): Plan Step | 6 |
+| Plan Card | `I05g84` | 520×auto | `Steps` (LlLdq): Plan Step | 7 |
 | Status Banner | `dcn54` | 720×34 |  | 7 |
 | Inline Error | `Sl1FL` | 560×auto |  | 7 |
-| Notice Banner | `D9HsR` | 560×auto |  | 10 |
+| Notice Banner | `D9HsR` | 560×auto |  | 13 |
 | Callout | `TqvAv` | 560×auto |  | 9 |
-| Empty State | `HUrKd` | 560×auto |  | 13 |
+| Empty State | `HUrKd` | 560×auto |  | 18 |
 
 ### 7 Rich Content & Artifacts
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Code Block | `wW1XY` | 640×auto |  | 18 |
+| Code Block | `wW1XY` | 640×auto |  | 21 |
 | Content Card | `l5WJH` | 640×auto | `Actions` (LibZM): Button / Secondary / Icon Button, `Body` (ZnzO6) | 5 |
 | Source Row | `q7ISXo` | 320×auto |  | 4 |
 | Download File | `s5qDxc` | 420×auto |  | 7 |
-| Artifact Card | `SMBup` | 440×auto |  | 35 |
+| Artifact Card | `SMBup` | 440×auto |  | 39 |
 | Artifact Toolbar | `AwpSJ` | 720×52 | `Extra` (nkW3V) | 15 |
 | Panel Tab | `HXUoW` | auto×auto |  | 6 |
 | Version Row | `Z4Hd3` | 260×auto |  | 16 |
@@ -151,7 +153,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Approval Card | `m1FtM` | 520×auto |  | 12 |
+| Approval Card | `m1FtM` | 520×auto |  | 14 |
 | Permission Prompt | `YwhPJ` | 560×auto |  | 3 |
 | Detail Row | `wGPRe` | 400×auto |  | 35 |
 | Agent Card | `VZuIf` | 392×auto |  | 41 |
@@ -202,6 +204,17 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Keyboard shortcuts overlay (⌘/) | `x8PmN9` | 1440×1024 |
 | Onboarding — first run | `RPCu8` | 1440×1024 |
 | Agent management — flows & states | `yzVIz` | 2280×auto |
+| Catalog — error | `Jchi9` | 1440×1024 |
+| Chat — auth expired | `jlDzd` | 1440×1024 |
+| Session not found | `H7ZqtC` | 1440×1024 |
+| Approval waiting in another session | `r5Gru` | 1440×1024 |
+| Mobile — Catalog error | `sMh7q` | 390×844 |
+| Mobile — Catalog empty | `iX1f6` | 390×844 |
+| Mobile — Auth expired | `xBrZk` | 390×844 |
+| Mobile — Approval waiting elsewhere | `B6G93s` | 390×844 |
+| Mobile — Artifact streaming | `ZQvzZ` | 390×844 |
+| Mobile — Agent not found | `V97EP` | 390×844 |
+| Edge States (P0) | `OFj2k` | 1440×auto |
 
 ## User flows
 

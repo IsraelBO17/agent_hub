@@ -197,25 +197,25 @@ Status key:
 | Surface | Desktop | Mobile (390) | Priority |
 |---|---|---|---|
 | Catalog | ✅ `PBQLh` | ✅ F10.1 `UK1JP` (filter chips removed, §9 item 7) | P0 |
-| Catalog: loading / error | ➕ | ✅ loading F11.1 `EP1MN`; ➕ error | P0 |
-| Catalog: empty (no agents) | 🔧 `j8NhJ`: CTA should be "How to register an agent" | ➕ | P0 |
+| Catalog: loading / error | ✅ error `Jchi9` (loading: skeleton on the States board) | ✅ loading F11.1 `EP1MN`, error `sMh7q` | P0 |
+| Catalog: empty (no agents) | ✅ `j8NhJ`: "How to register an agent", search and sort hidden | ✅ `iX1f6` | P0 |
 | New session (starters) | ✅ `uBRCZ` | ✅ F11.2 `HgtnP` | P0 |
 | Chat: streaming, tools, plan, thinking | ✅ `wtDYF`, F2.5–F2.8 | ✅ F11.5 `DNypg`, plan F11.6 `DuSPU` | P0 |
 | Chat: all failure states | ✅ "Agent Working & Failure States" board | ✅ reconnecting F11.8 `e6XAO`, reply failed F11.9 `vBCdH` | P0 |
-| Chat: auth expired, draft kept | ➕ | ➕ | P0 |
+| Chat: auth expired, draft kept | ✅ `jlDzd` | ✅ `xBrZk` | P0 |
 | Composer states (attachments, disabled, drag-drop) | ✅ | ✅ `Composer / Mobile` `OUcXN`; keyboard open F11.3 `w1IZ2`; disabled F11.11 | P0 |
 | Sessions sidebar / drawer | ✅ | ✅ F10.5 `i46aRN` | P0 |
 | Sessions: loading skeleton | ✅ States board | ✅ F11.15 `JgaZ9` | P0 |
 | Delete + undo | ✅ no dialog: F7.6 `Ba2LD`, F7.7 `ZX9nG` | ✅ long-press F11.16 `G6iHV`, swipe F11.17 `mepQO`, undo F11.18 `XRu2z` | P0 |
 | Agent switcher | ✅ F8.2 | ✅ bottom sheet F11.10 `wE4kz` | P0 |
-| Agent offline / not found | ✅ States board | ✅ offline F11.11 `t4QWfb`; ➕ agent not found (reuse F11.19) | P0 |
+| Agent offline / not found | ✅ States board | ✅ offline F11.11 `t4QWfb`, agent not found `V97EP` | P0 |
 | Artifact panel: document / code / html / table | ✅ `oQYrz`, `fUZV4`, `j2uc1W`, `LrhPn` (trim to v1 scope) | ✅ sheet `KXQcB`, chat `JLUHx` | P0 |
-| Artifact: streaming while generating | ✅ F3.2 | ➕ | P0 |
+| Artifact: streaming while generating | ✅ F3.2 | ✅ `ZQvzZ` | P0 |
 | Approval card (all 4 states) | ✅ | ✅ pending F10.6 `GCuQ2`; approved F11.12 `c16G99`, denied F11.13 `s9qGv`, expired F11.14 `AKLDi` | P0 |
-| Approval waiting in another session (sidebar dot) | ➕ | ➕ | P0 |
+| Approval waiting in another session (sidebar dot) | ✅ `r5Gru` (session badge + toast); other agent: Edge States board | ✅ `B6G93s` (menu dot + toast) | P0 |
 | Questions (quick reply / choice) | ✅ Agent-Initiated board | ✅ choice F11.7 `wiL50` | P0 |
-| Attachments: upload, fail, too large, wrong type | 🔧 exists but add "too large" / "unsupported" copy | ✅ attach sheet F11.4 `BXfKu`; unsupported type F11.3 | P0 |
-| 404 session | ➕ (reuse agent-not-found pattern) | ✅ F11.19 `HfWCC` | P0 |
+| Attachments: upload, fail, too large, wrong type | ✅ Chat Interaction Details board, "Too large or wrong type" `jSKjM` | ✅ attach sheet F11.4 `BXfKu`; unsupported type F11.3 | P0 |
+| 404 session | ✅ `H7ZqtC` | ✅ F11.19 `HfWCC` | P0 |
 | ⌘K palette | ✅ `B5LZKO` | ➕ search screen | P1 |
 | Share dialog + public shared view | ✅ dialog | ➕ public read-only page (desktop and mobile) | P1 |
 | Agent detail | ✅ `x05s4W` | ➕ | P1 |
@@ -226,11 +226,11 @@ Status key:
 
 **Mobile screens for v1: done.** The 13 missing items (new session, streaming with tool chips, plan card, error and reconnect, keyboard-open composer with attachments, agent switcher sheet, approval approved / denied / expired, question card, agent offline, 404, catalog loading, sessions loading, row menu) are designed as Flow 11, 19 screens in all (F11.1–F11.19). Variants got their own step so every screen has a trigger note. Delete on mobile supports both long-press and swipe.
 
-Still missing on mobile for P0: catalog error, catalog empty, auth expired, artifact streaming, approval waiting in another session, agent not found.
+The remaining P0 mobile states (catalog error and empty, auth expired, artifact streaming, approval waiting elsewhere, agent not found) are reference screens named `Mobile — …` at y 39,600. All P0 rows above are now ✅.
 
 P1 adds the public shared session, search and agent detail.
 
-**Edge states that no design covers yet (P0):**
+**Edge states (P0), designed on the "Edge States (P0)" board `OFj2k`:**
 - **Orphaned sessions.** An agent is removed from the registry but its sessions still exist. They stay readable, with the note "This agent is no longer available".
 - **Mid-session version change.** The agent was redeployed during a session; show an inline "Agent updated to v15" divider.
 - **Same session in two tabs.** The second tab becomes read-only until focused.
@@ -334,11 +334,11 @@ This is a good base. The changes below are ordered by importance.
 
 **Structural changes:**
 6. **"Beta" is mixed up with health status.** Online / Degraded / Offline is *health* (computed); Beta is *maturity* (declared). A beta agent can be offline. **Fix:** a status dot plus a separate `Beta` tag. The filter chips become: All · Available · Unavailable, or just go away (next item).
-7. **The catalog is over-built for 6 agents.** *(Mobile filter chips removed from F10.1 and F11.1; desktop still open.)* Filter chips with counts, a sort menu and search are furniture for 50 agents. **Fix:** in v1 show the grid, the "Continue where you left off" list and search only above 8 agents. Drop the sort menu. Replace "Add agent" (a flow we're not building) with a quiet "Register an agent" doc link.
+7. **The catalog is over-built for 6 agents.** *(Mobile filter chips removed from F10.1 and F11.1; the empty catalog uses "Register an agent"; the populated desktop catalog is still open.)* Filter chips with counts, a sort menu and search are furniture for 50 agents. **Fix:** in v1 show the grid, the "Continue where you left off" list and search only above 8 agents. Drop the sort menu. Replace "Add agent" (a flow we're not building) with a quiet "Register an agent" doc link.
 8. **The sidebar nav is heavy.** Seven items sit above the session list (switcher, New, Search, All agents, Artifacts, Archived, plus settings), which pushes the list, the thing you actually come back for, down. **Fix:** keep the switcher, New session and Search; move All agents, Artifacts and Archived to the footer and ⌘K. **Done** in the `Sidebar` and `Sidebar Footer` components.
 9. **Trash icon in the chat header.** A destructive action sits one click away in primary chrome, next to the session title. **Fix:** move it into the ⋯ menu. Also move the session id and message count (`ses_7f3a91 · 6 messages`) into the Session info drawer.
 10. **Face ID step (F4.2) implies a real bank integration** ("Your approval is sent to your bank"). **Fix:** park it for P2. The v1 approval is an in-app decision with an audit record; its copy should say "Nothing is sent until you approve".
-11. **Approvals need a presence outside their own session.** If you're in another session, a pending approval is invisible and quietly expires. **Fix:** a sidebar badge on the session plus a toast. Design it.
+11. **Approvals need a presence outside their own session.** If you're in another session, a pending approval is invisible and quietly expires. **Fix:** a sidebar badge on the session plus a toast. Design it. **Done:** `r5Gru`, `B6G93s`, and the switcher badge on the Edge States board.
 12. **Dark mode is offered but not designed.** **Fix:** remove the option from Settings for v1. **Done:** Dark and System are hidden; only Light remains.
 13. **"Mock API" chip in the app header.** It's dev chrome in a portfolio product. **Fix:** show it only in dev builds.
 

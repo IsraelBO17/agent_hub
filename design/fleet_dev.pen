@@ -14317,10 +14317,10 @@
                       "name": "Label",
                       "descendants": {
                         "AfOZN": {
-                          "content": "Not allowed"
+                          "content": "Too large or wrong type"
                         },
                         "iaryW": {
-                          "content": "Rejected before upload, reason inline"
+                          "content": "Rejected before upload; the chip says the limit or the allowed types"
                         }
                       }
                     },
@@ -14360,7 +14360,7 @@
                               "fill": "$text-secondary"
                             },
                             "C1rYU": {
-                              "content": "ZIP files aren't supported",
+                              "content": "ZIP isn't supported · use PDF, images or CSV",
                               "fill": "$danger"
                             }
                           }
@@ -56260,6 +56260,7 @@
                         11
                       ],
                       "cornerRadius": 9,
+                      "enabled": false,
                       "descendants": {
                         "JXAWM": {
                           "enabled": true,
@@ -56271,16 +56272,17 @@
                       }
                     },
                     {
-                      "id": "iCaoX",
+                      "id": "kfgW4",
                       "type": "ref",
-                      "ref": "H0OSN",
-                      "name": "Add agent",
+                      "ref": "XBZK2",
+                      "name": "Register an agent",
                       "descendants": {
-                        "W8udYR": {
-                          "enabled": true
+                        "mfSA0": {
+                          "enabled": true,
+                          "icon": "book-open"
                         },
-                        "aMS2a": {
-                          "content": "Add agent"
+                        "BsWQ6": {
+                          "content": "Register an agent"
                         }
                       }
                     }
@@ -56318,20 +56320,20 @@
                       "icon": "bot"
                     },
                     "VwSSW": {
-                      "content": "Add your first agent"
+                      "content": "No agents yet"
                     },
                     "aYTTj": {
-                      "content": "Connect a Strands agent on AgentCore, a LangGraph app, or any endpoint that speaks the Agent Hub contract. It'll appear here right away."
+                      "content": "Agents appear here once they're in the registry. Register one with hub agents add agent.yaml, then reload this page."
                     },
                     "k940K9/W8udYR": {
                       "enabled": true,
-                      "icon": "plus"
+                      "icon": "book-open"
                     },
                     "k940K9/aMS2a": {
-                      "content": "Add agent"
+                      "content": "How to register an agent"
                     },
                     "eqfJB/BsWQ6": {
-                      "content": "Read the backend contract"
+                      "content": "Reload"
                     }
                   }
                 }
@@ -132716,6 +132718,4530 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "Jchi9",
+      "x": 0,
+      "y": 38400,
+      "name": "Catalog — error",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "EqPJZ",
+          "type": "ref",
+          "ref": "fqLch",
+          "name": "App Header",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "BRECC",
+          "name": "Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 32,
+          "padding": [
+            48,
+            120
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "zLoWq",
+              "name": "Page Heading",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "VAnFZ",
+                  "name": "Title Group",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "a7no5s",
+                      "name": "Title",
+                      "fill": "$text-primary",
+                      "content": "Your agents",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 30,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.6
+                    },
+                    {
+                      "type": "text",
+                      "id": "XDrTl",
+                      "name": "Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "Agents come from GET /agents.",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gXRT3",
+                  "name": "Controls",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "h6GllU",
+                      "type": "ref",
+                      "ref": "Wjnvx",
+                      "name": "Search",
+                      "width": 260,
+                      "enabled": false
+                    },
+                    {
+                      "id": "V0keo",
+                      "type": "ref",
+                      "ref": "ZWD7y",
+                      "name": "Sort",
+                      "fill": "$surface",
+                      "padding": [
+                        7,
+                        11
+                      ],
+                      "cornerRadius": 9,
+                      "enabled": false,
+                      "descendants": {
+                        "JXAWM": {
+                          "enabled": true,
+                          "icon": "arrow-down-wide-narrow"
+                        },
+                        "K0TCb": {
+                          "content": "Recently used"
+                        }
+                      }
+                    },
+                    {
+                      "id": "EGuA1",
+                      "type": "ref",
+                      "ref": "XBZK2",
+                      "name": "Register an agent",
+                      "descendants": {
+                        "mfSA0": {
+                          "enabled": true,
+                          "icon": "book-open"
+                        },
+                        "BsWQ6": {
+                          "content": "Register an agent"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Y5fRdh",
+              "name": "Empty Area",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 16,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "G9PzyR",
+                  "type": "ref",
+                  "ref": "HUrKd",
+                  "name": "Empty State",
+                  "width": 520,
+                  "fill": "#00000000",
+                  "descendants": {
+                    "eO9pP": {
+                      "fill": "$danger-soft",
+                      "width": 56,
+                      "height": 56
+                    },
+                    "nlq8x": {
+                      "icon": "cloud-off",
+                      "fill": "$danger"
+                    },
+                    "VwSSW": {
+                      "content": "Couldn't load your agents"
+                    },
+                    "aYTTj": {
+                      "content": "The registry didn't answer (GET /agents returned 503). Nothing is lost: your sessions are stored separately."
+                    },
+                    "k940K9/W8udYR": {
+                      "enabled": true,
+                      "icon": "rotate-ccw"
+                    },
+                    "k940K9/aMS2a": {
+                      "content": "Try again"
+                    },
+                    "eqfJB/BsWQ6": {
+                      "content": "Copy error details"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wHJyg",
+              "name": "Registry Note",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "vbiOt",
+                  "name": "Icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "info",
+                  "library": "lucide",
+                  "fill": "$text-tertiary"
+                },
+                {
+                  "type": "text",
+                  "id": "LoD1A",
+                  "name": "Text",
+                  "fill": "$text-tertiary",
+                  "content": "Agents are loaded from GET /agents. Register a new agent in the backend and it appears here, no UI changes needed.",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "jlDzd",
+      "x": 1560,
+      "y": 38400,
+      "name": "Chat — auth expired",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$bg",
+      "children": [
+        {
+          "id": "WYoQl",
+          "type": "ref",
+          "ref": "hj5RV",
+          "name": "Sidebar",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "lX8cV",
+          "name": "Chat Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "BQ6fA",
+              "type": "ref",
+              "ref": "H0YWK",
+              "name": "Chat Header",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "MEhWi",
+              "name": "Thread",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                0,
+                0,
+                24,
+                0
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Hz5Us",
+                  "name": "Column",
+                  "width": 760,
+                  "layout": "vertical",
+                  "gap": 28,
+                  "children": [
+                    {
+                      "id": "rLIJq",
+                      "type": "ref",
+                      "ref": "EfHME",
+                      "name": "User Message",
+                      "width": "fill_container"
+                    },
+                    {
+                      "id": "q3yZf4",
+                      "type": "ref",
+                      "ref": "BsXl7",
+                      "name": "Agent Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "BohzX": {
+                          "type": "frame",
+                          "id": "xdEmz",
+                          "name": "Content",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "s8cmB",
+                              "name": "Tool Calls",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "sY9ab",
+                                  "name": "Chip Row",
+                                  "gap": 8,
+                                  "children": [
+                                    {
+                                      "id": "rCUh7",
+                                      "type": "ref",
+                                      "ref": "Hbhy0",
+                                      "name": "read_file",
+                                      "descendants": {
+                                        "Lj8UD": {
+                                          "content": "read_file"
+                                        },
+                                        "FCBEG": {
+                                          "content": "auth.ts · 0.2s"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "id": "k3eBdn",
+                                      "type": "ref",
+                                      "ref": "Hbhy0",
+                                      "name": "search_code",
+                                      "descendants": {
+                                        "Lj8UD": {
+                                          "content": "search_code"
+                                        },
+                                        "FCBEG": {
+                                          "content": "3 matches · 0.4s"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "D25an",
+                                  "type": "ref",
+                                  "ref": "pkhri",
+                                  "name": "run_tests (expanded)",
+                                  "width": "fill_container"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "E3oSdi",
+                              "name": "Paragraph",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "The failure is a timing race. isExpired() compares the token's exp claim against Date.now(), but the test fixture mints a token that expires exactly 1 second after creation. On a slow CI runner the check can run before that second elapses, so the expired-token case passes as valid.",
+                              "lineHeight": 1.65,
+                              "fontFamily": "$font-ui",
+                              "fontSize": 15,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "L7veHC",
+                              "name": "Markdown Table",
+                              "clip": true,
+                              "width": "fill_container",
+                              "cornerRadius": 10,
+                              "stroke": "$border",
+                              "strokeWidth": 1,
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Ms8lI",
+                                  "name": "Header Row",
+                                  "width": "fill_container",
+                                  "fill": "$sidebar",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "E5yJ8",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Run",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "rAEoI",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Token age at check",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "eG9uX",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Result",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Iy1cu",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "K02Qjb",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#3",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "usac8",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "998 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "aLbP2",
+                                      "name": "Cell",
+                                      "fill": "$danger",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✕ 200 OK",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "vmJrj",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "JEV84",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#7",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "WN39G",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "1,004 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "k3ew1g",
+                                      "name": "Cell",
+                                      "fill": "$online",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✓ 401",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "SNhzi",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "JvLuz",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#11",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "Ttakd",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "991 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "iEvjt",
+                                      "name": "Cell",
+                                      "fill": "$danger",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✕ 200 OK",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "AR0mv",
+                              "name": "Paragraph",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Freeze time in the test instead of relying on wall-clock time:",
+                              "lineHeight": 1.65,
+                              "fontFamily": "$font-ui",
+                              "fontSize": 15,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "MmLDD",
+                              "type": "ref",
+                              "ref": "wW1XY",
+                              "name": "Code Block",
+                              "width": "fill_container"
+                            }
+                          ]
+                        },
+                        "jjY9k/T5u9VW": {
+                          "content": "10:43 · 3 tool calls"
+                        }
+                      }
+                    },
+                    {
+                      "id": "u0pLW",
+                      "type": "ref",
+                      "ref": "EfHME",
+                      "name": "User Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "FaJKO": {
+                          "content": "Looks right. Apply the patch and rerun the suite 50 times to confirm."
+                        },
+                        "s3ct8N": {
+                          "content": "10:45"
+                        }
+                      }
+                    },
+                    {
+                      "id": "n8UbR2",
+                      "type": "ref",
+                      "ref": "BsXl7",
+                      "name": "Agent Message — Streaming",
+                      "width": "fill_container",
+                      "descendants": {
+                        "BohzX": {
+                          "type": "frame",
+                          "id": "hUqZF",
+                          "name": "Content",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "dCczK",
+                              "name": "Chip Row",
+                              "gap": 8,
+                              "children": [
+                                {
+                                  "id": "kLoW7",
+                                  "type": "ref",
+                                  "ref": "Hbhy0",
+                                  "name": "apply_patch",
+                                  "descendants": {
+                                    "Lj8UD": {
+                                      "content": "apply_patch"
+                                    },
+                                    "FCBEG": {
+                                      "content": "+6 −2 · 0.3s"
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "ee0qI",
+                                  "type": "ref",
+                                  "ref": "Hbhy0",
+                                  "name": "run_tests (running)",
+                                  "fill": "$accent-soft",
+                                  "stroke": "#BFD8CC",
+                                  "descendants": {
+                                    "q8wsPE": {
+                                      "icon": "loader-circle",
+                                      "fill": "$accent"
+                                    },
+                                    "Lj8UD": {
+                                      "content": "run_tests",
+                                      "fill": "$accent"
+                                    },
+                                    "FCBEG": {
+                                      "content": "Running · 31/50",
+                                      "fill": "$accent"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ZvR3u",
+                              "name": "Streaming Text",
+                              "width": "fill_container",
+                              "gap": 2,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "A2AG4",
+                                  "name": "Paragraph",
+                                  "fill": "$text-primary",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Patch applied to tests/auth.spec.ts. The first 31 runs have all passed, including the expired-token case, which now consistently returns 401. I'll report the final ▍",
+                                  "lineHeight": 1.65,
+                                  "fontFamily": "$font-ui",
+                                  "fontSize": 15,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "jjY9k": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ghAD4",
+              "name": "Composer Area",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                4,
+                0,
+                20,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "XP4o5",
+                  "type": "ref",
+                  "ref": "K6k66O",
+                  "name": "Composer",
+                  "width": 760,
+                  "descendants": {
+                    "pd7xv": {
+                      "content": "Also check whether the retry decorator has the same clock issue, and add a test for it.",
+                      "fill": "$text-primary"
+                    },
+                    "l7U0l": {
+                      "enabled": true
+                    },
+                    "rKlXG": {
+                      "enabled": false
+                    },
+                    "yv5LZ": {
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "aACUi",
+                  "type": "ref",
+                  "ref": "QTWM6",
+                  "name": "Disclaimer",
+                  "content": "Coding Agent can make mistakes. Tool calls run in an isolated sandbox."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "pMsHg",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Scrim",
+          "width": 1440,
+          "height": 1024,
+          "fill": "#1B1A1766"
+        },
+        {
+          "id": "r7vsmN",
+          "type": "ref",
+          "ref": "dQMxZ",
+          "name": "Session expired dialog",
+          "layoutPosition": "absolute",
+          "x": 480,
+          "y": 420,
+          "width": 480,
+          "descendants": {
+            "iI82k": {
+              "content": "Your sign-in has expired"
+            },
+            "FLgeP": {
+              "content": "Sign in again to keep going. Nothing is lost."
+            },
+            "Ex6Ql": {
+              "enabled": false
+            },
+            "sYTH9": {
+              "type": "frame",
+              "id": "HOK6I",
+              "name": "Body",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                4,
+                24,
+                8,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BqPOd",
+                  "name": "Row",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "U29YfI",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "file-pen-line",
+                      "library": "lucide",
+                      "fill": "$accent"
+                    },
+                    {
+                      "type": "text",
+                      "id": "fvAfT",
+                      "name": "Text",
+                      "fill": "$text-primary",
+                      "content": "Your unsent message stays in the composer",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "N2lHxW",
+                  "name": "Row",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "w1sVUx",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "history",
+                      "library": "lucide",
+                      "fill": "$accent"
+                    },
+                    {
+                      "type": "text",
+                      "id": "wByt5",
+                      "name": "Text",
+                      "fill": "$text-primary",
+                      "content": "This session reopens where you left it",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            "nXLA8": {
+              "content": "Signed in as Israel B."
+            },
+            "l82ZCo": {
+              "enabled": false
+            },
+            "J1s4Xk/aMS2a": {
+              "content": "Sign in again"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "H7ZqtC",
+      "x": 3120,
+      "y": 38400,
+      "name": "Session not found",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$bg",
+      "children": [
+        {
+          "id": "Qd1e3",
+          "type": "ref",
+          "ref": "hj5RV",
+          "name": "Sidebar",
+          "height": "fill_container",
+          "descendants": {
+            "PVDiz": {
+              "fill": "#00000000"
+            },
+            "PVDiz/sY28p": {
+              "fill": "$text-secondary",
+              "fontWeight": "normal"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "t355j",
+          "name": "Chat Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "oWwvM",
+              "type": "ref",
+              "ref": "H0YWK",
+              "name": "Chat Header",
+              "width": "fill_container",
+              "descendants": {
+                "GSgdL": {
+                  "enabled": false
+                },
+                "LhLSN": {
+                  "enabled": false
+                },
+                "Z776zF": {
+                  "enabled": false
+                },
+                "LbIfx": {
+                  "enabled": false
+                },
+                "bzubh": {
+                  "enabled": false
+                },
+                "DSisD": {
+                  "enabled": false
+                },
+                "yLOjn": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "ulg0S",
+              "x": 0,
+              "y": 60,
+              "name": "Thread",
+              "enabled": false,
+              "clip": true,
+              "width": "fill_container(1156)",
+              "height": "fill_container(831)",
+              "layout": "vertical",
+              "padding": [
+                0,
+                0,
+                24,
+                0
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "pdq7S",
+                  "name": "Column",
+                  "width": 760,
+                  "layout": "vertical",
+                  "gap": 28,
+                  "children": [
+                    {
+                      "id": "iLcEQ",
+                      "type": "ref",
+                      "ref": "EfHME",
+                      "name": "User Message",
+                      "width": "fill_container"
+                    },
+                    {
+                      "id": "yjtzG",
+                      "type": "ref",
+                      "ref": "BsXl7",
+                      "name": "Agent Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "BohzX": {
+                          "type": "frame",
+                          "id": "b6sv6X",
+                          "name": "Content",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "vjhAU",
+                              "name": "Tool Calls",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "N9M0l",
+                                  "name": "Chip Row",
+                                  "gap": 8,
+                                  "children": [
+                                    {
+                                      "id": "BqJDd",
+                                      "type": "ref",
+                                      "ref": "Hbhy0",
+                                      "name": "read_file",
+                                      "descendants": {
+                                        "Lj8UD": {
+                                          "content": "read_file"
+                                        },
+                                        "FCBEG": {
+                                          "content": "auth.ts · 0.2s"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "id": "L8jUN",
+                                      "type": "ref",
+                                      "ref": "Hbhy0",
+                                      "name": "search_code",
+                                      "descendants": {
+                                        "Lj8UD": {
+                                          "content": "search_code"
+                                        },
+                                        "FCBEG": {
+                                          "content": "3 matches · 0.4s"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "V4Vtj",
+                                  "type": "ref",
+                                  "ref": "pkhri",
+                                  "name": "run_tests (expanded)",
+                                  "width": "fill_container"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "D3WEhM",
+                              "name": "Paragraph",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "The failure is a timing race. isExpired() compares the token's exp claim against Date.now(), but the test fixture mints a token that expires exactly 1 second after creation. On a slow CI runner the check can run before that second elapses, so the expired-token case passes as valid.",
+                              "lineHeight": 1.65,
+                              "fontFamily": "$font-ui",
+                              "fontSize": 15,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "aA89R",
+                              "name": "Markdown Table",
+                              "clip": true,
+                              "width": "fill_container",
+                              "cornerRadius": 10,
+                              "stroke": "$border",
+                              "strokeWidth": 1,
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "i5sXF",
+                                  "name": "Header Row",
+                                  "width": "fill_container",
+                                  "fill": "$sidebar",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "c8UiQ",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Run",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "uRqn3",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Token age at check",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "Es2jq",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Result",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "TFTEW",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "wQKbb",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#3",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "Zq6LL",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "998 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "Dh3pF",
+                                      "name": "Cell",
+                                      "fill": "$danger",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✕ 200 OK",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "UIOyL",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "oz2AZ",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#7",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "K0lfJ",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "1,004 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "Bu5KN",
+                                      "name": "Cell",
+                                      "fill": "$online",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✓ 401",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "W70B0s",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "xB28L",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#11",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "RURoj",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "991 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "wQNs3",
+                                      "name": "Cell",
+                                      "fill": "$danger",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✕ 200 OK",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "hgZMO",
+                              "name": "Paragraph",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Freeze time in the test instead of relying on wall-clock time:",
+                              "lineHeight": 1.65,
+                              "fontFamily": "$font-ui",
+                              "fontSize": 15,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "vHj82",
+                              "type": "ref",
+                              "ref": "wW1XY",
+                              "name": "Code Block",
+                              "width": "fill_container"
+                            }
+                          ]
+                        },
+                        "jjY9k/T5u9VW": {
+                          "content": "10:43 · 3 tool calls"
+                        }
+                      }
+                    },
+                    {
+                      "id": "E1GID7",
+                      "type": "ref",
+                      "ref": "EfHME",
+                      "name": "User Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "FaJKO": {
+                          "content": "Looks right. Apply the patch and rerun the suite 50 times to confirm."
+                        },
+                        "s3ct8N": {
+                          "content": "10:45"
+                        }
+                      }
+                    },
+                    {
+                      "id": "w1idjp",
+                      "type": "ref",
+                      "ref": "BsXl7",
+                      "name": "Agent Message — Streaming",
+                      "width": "fill_container",
+                      "descendants": {
+                        "BohzX": {
+                          "type": "frame",
+                          "id": "Ve0zH",
+                          "name": "Content",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "nhu4X",
+                              "name": "Chip Row",
+                              "gap": 8,
+                              "children": [
+                                {
+                                  "id": "l12ilF",
+                                  "type": "ref",
+                                  "ref": "Hbhy0",
+                                  "name": "apply_patch",
+                                  "descendants": {
+                                    "Lj8UD": {
+                                      "content": "apply_patch"
+                                    },
+                                    "FCBEG": {
+                                      "content": "+6 −2 · 0.3s"
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "h6TFi",
+                                  "type": "ref",
+                                  "ref": "Hbhy0",
+                                  "name": "run_tests (running)",
+                                  "fill": "$accent-soft",
+                                  "stroke": "#BFD8CC",
+                                  "descendants": {
+                                    "q8wsPE": {
+                                      "icon": "loader-circle",
+                                      "fill": "$accent"
+                                    },
+                                    "Lj8UD": {
+                                      "content": "run_tests",
+                                      "fill": "$accent"
+                                    },
+                                    "FCBEG": {
+                                      "content": "Running · 31/50",
+                                      "fill": "$accent"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "pPD8l",
+                              "name": "Streaming Text",
+                              "width": "fill_container",
+                              "gap": 2,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "j0Ole6",
+                                  "name": "Paragraph",
+                                  "fill": "$text-primary",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Patch applied to tests/auth.spec.ts. The first 31 runs have all passed, including the expired-token case, which now consistently returns 401. I'll report the final ▍",
+                                  "lineHeight": 1.65,
+                                  "fontFamily": "$font-ui",
+                                  "fontSize": 15,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "jjY9k": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FH56P",
+              "x": 0,
+              "y": 891,
+              "name": "Composer Area",
+              "enabled": false,
+              "width": "fill_container(1156)",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                4,
+                0,
+                20,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "u75Ni",
+                  "type": "ref",
+                  "ref": "K6k66O",
+                  "name": "Composer",
+                  "width": 760,
+                  "descendants": {
+                    "pd7xv": {
+                      "content": "Message Coding Agent…"
+                    },
+                    "l7U0l": {
+                      "enabled": false
+                    },
+                    "rKlXG": {
+                      "enabled": true
+                    },
+                    "yv5LZ": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "L0oE4",
+                  "type": "ref",
+                  "ref": "QTWM6",
+                  "name": "Disclaimer",
+                  "content": "Coding Agent can make mistakes. Tool calls run in an isolated sandbox."
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "W3XMl1",
+              "name": "Not Found",
+              "width": "fill_container",
+              "height": "fill_container",
+              "padding": [
+                0,
+                0,
+                80,
+                0
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "ETQjl",
+                  "type": "ref",
+                  "ref": "HUrKd",
+                  "name": "Empty State",
+                  "width": 480,
+                  "descendants": {
+                    "nlq8x": {
+                      "icon": "file-question"
+                    },
+                    "VwSSW": {
+                      "content": "Session not found"
+                    },
+                    "aYTTj": {
+                      "content": "It may have been deleted, or the link is wrong. Your other Coding Agent sessions are in the sidebar."
+                    },
+                    "k940K9/W8udYR": {
+                      "enabled": true,
+                      "icon": "square-pen"
+                    },
+                    "k940K9/aMS2a": {
+                      "content": "New session"
+                    },
+                    "eqfJB/BsWQ6": {
+                      "content": "Back to agents"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "r5Gru",
+      "x": 4680,
+      "y": 38400,
+      "name": "Approval waiting in another session",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$bg",
+      "children": [
+        {
+          "id": "NJnwt",
+          "type": "ref",
+          "ref": "hj5RV",
+          "name": "Sidebar",
+          "height": "fill_container",
+          "descendants": {
+            "GRHgJ/R8Iz13": {
+              "fill": "#E2EEE8"
+            },
+            "GRHgJ/R8Iz13/Jg8uM": {
+              "icon": "landmark",
+              "fill": "#1F5C4A"
+            },
+            "GRHgJ/ZFVRA": {
+              "content": "Bank Agent"
+            },
+            "GRHgJ/rUzbl": {
+              "content": "Online · Strands"
+            },
+            "uHSbn": {
+              "type": "frame",
+              "id": "PN7G2",
+              "name": "Session List",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "padding": [
+                10,
+                14
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "doGr1",
+                  "name": "Group Today",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "children": [
+                    {
+                      "id": "yAvoj",
+                      "type": "ref",
+                      "ref": "rQVuA",
+                      "name": "Group Label",
+                      "descendants": {
+                        "RSpTY": {
+                          "content": "Today"
+                        }
+                      }
+                    },
+                    {
+                      "id": "uvfZ3",
+                      "type": "ref",
+                      "ref": "SEJaD",
+                      "name": "Send Ada NGN 50,000",
+                      "width": "fill_container",
+                      "descendants": {
+                        "sY28p": {
+                          "content": "Send Ada NGN 50,000",
+                          "fill": "$text-primary",
+                          "fontWeight": "500"
+                        },
+                        "p4yaL": {
+                          "enabled": true,
+                          "icon": "shield-alert",
+                          "fill": "$warning"
+                        }
+                      }
+                    },
+                    {
+                      "id": "xLVkb",
+                      "type": "ref",
+                      "ref": "SEJaD",
+                      "name": "Reconcile September transactions",
+                      "width": "fill_container",
+                      "fill": "$surface-muted",
+                      "descendants": {
+                        "sY28p": {
+                          "content": "Reconcile September transactions",
+                          "fill": "$text-primary",
+                          "fontWeight": "500"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SW7SL",
+                  "name": "Group Yesterday",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "children": [
+                    {
+                      "id": "mfYe9",
+                      "type": "ref",
+                      "ref": "rQVuA",
+                      "name": "Group Label",
+                      "descendants": {
+                        "RSpTY": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "id": "x2lJz4",
+                      "type": "ref",
+                      "ref": "SEJaD",
+                      "name": "Cancel duplicate Netflix charge",
+                      "width": "fill_container",
+                      "descendants": {
+                        "sY28p": {
+                          "content": "Cancel duplicate Netflix charge"
+                        }
+                      }
+                    },
+                    {
+                      "id": "mZYNH",
+                      "type": "ref",
+                      "ref": "SEJaD",
+                      "name": "Budget for October",
+                      "width": "fill_container",
+                      "descendants": {
+                        "sY28p": {
+                          "content": "Budget for October"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "M3XTUK",
+                  "name": "Group Previous 7 Days",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "children": [
+                    {
+                      "id": "pFhcw",
+                      "type": "ref",
+                      "ref": "rQVuA",
+                      "name": "Group Label",
+                      "descendants": {
+                        "RSpTY": {
+                          "content": "Previous 7 Days"
+                        }
+                      }
+                    },
+                    {
+                      "id": "scehv",
+                      "type": "ref",
+                      "ref": "SEJaD",
+                      "name": "Dispute: Uber Eats refund",
+                      "width": "fill_container",
+                      "descendants": {
+                        "sY28p": {
+                          "content": "Dispute: Uber Eats refund"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Bw3WB",
+                      "type": "ref",
+                      "ref": "SEJaD",
+                      "name": "Q3 subscription audit",
+                      "width": "fill_container",
+                      "descendants": {
+                        "sY28p": {
+                          "content": "Q3 subscription audit"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "Uba6A",
+          "name": "Chat Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "z5zPIF",
+              "type": "ref",
+              "ref": "H0YWK",
+              "name": "Chat Header",
+              "width": "fill_container",
+              "descendants": {
+                "u5en6G": {
+                  "fill": "#E2EEE8"
+                },
+                "u5en6G/Jg8uM": {
+                  "icon": "landmark",
+                  "fill": "#1F5C4A"
+                },
+                "Cqh5k": {
+                  "content": "Bank Agent"
+                },
+                "LhLSN": {
+                  "content": "Reconcile September transactions",
+                  "fill": "$text-secondary"
+                },
+                "LbIfx": {
+                  "content": ""
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "RQRsC",
+              "name": "Thread",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                0,
+                0,
+                24,
+                0
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Qsieu",
+                  "name": "Column",
+                  "width": 760,
+                  "layout": "vertical",
+                  "gap": 28,
+                  "children": [
+                    {
+                      "id": "ZD8do",
+                      "type": "ref",
+                      "ref": "EfHME",
+                      "name": "User Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "FaJKO": {
+                          "content": "Reconcile my September transactions against receipts and flag anything odd."
+                        },
+                        "s3ct8N": {
+                          "content": "14:40"
+                        }
+                      }
+                    },
+                    {
+                      "id": "YgH5m",
+                      "type": "ref",
+                      "ref": "BsXl7",
+                      "name": "Agent Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "L7OmK": {
+                          "fill": "#E2EEE8"
+                        },
+                        "L7OmK/Jg8uM": {
+                          "icon": "landmark",
+                          "fill": "#1F5C4A"
+                        },
+                        "BohzX": {
+                          "type": "frame",
+                          "id": "galUk",
+                          "name": "Content",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "LKvC1",
+                              "name": "Paragraph",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "On it. This takes a few minutes, so here's the plan:",
+                              "lineHeight": 1.65,
+                              "fontFamily": "$font-ui",
+                              "fontSize": 15,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "MuB3E",
+                              "type": "ref",
+                              "ref": "I05g84",
+                              "name": "Plan Card"
+                            }
+                          ]
+                        },
+                        "jjY9k": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "OGM8Y",
+              "name": "Composer Area",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                4,
+                0,
+                20,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "S0ZSAt",
+                  "type": "ref",
+                  "ref": "D9HsR",
+                  "name": "Still Working Banner",
+                  "width": 760,
+                  "fill": "$accent-soft",
+                  "descendants": {
+                    "XbJX1": {
+                      "icon": "loader-circle",
+                      "fill": "$accent"
+                    },
+                    "y3psep": {
+                      "content": "Bank Agent is still working"
+                    },
+                    "rciEQ": {
+                      "content": "You can leave this page. We'll notify you when the task is done."
+                    },
+                    "KhpCK/BsWQ6": {
+                      "content": "Notify me"
+                    }
+                  }
+                },
+                {
+                  "id": "eyj6v",
+                  "type": "ref",
+                  "ref": "K6k66O",
+                  "name": "Composer",
+                  "width": 760,
+                  "descendants": {
+                    "pd7xv": {
+                      "content": "Message Bank Agent…",
+                      "fill": "$text-tertiary"
+                    },
+                    "l7U0l": {
+                      "enabled": false
+                    },
+                    "rKlXG": {
+                      "enabled": true
+                    },
+                    "yv5LZ": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "Xu5z8",
+                  "type": "ref",
+                  "ref": "QTWM6",
+                  "name": "Disclaimer",
+                  "content": "Bank Agent can make mistakes. Nothing is sent until you approve."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ubPsr",
+          "type": "ref",
+          "ref": "IjtkQ",
+          "name": "Approval Toast",
+          "layoutPosition": "absolute",
+          "x": 1036,
+          "y": 20,
+          "descendants": {
+            "Po3z7": {
+              "fill": "$warning-soft"
+            },
+            "Icijj": {
+              "icon": "shield-alert",
+              "fill": "$warning"
+            },
+            "fMiLW": {
+              "content": "Approval needed in another session"
+            },
+            "IYzyB": {
+              "content": "Send Ada NGN 50,000 · expires in 9:42"
+            },
+            "lUFHN/aMS2a": {
+              "content": "Review"
+            },
+            "l9FZy/BsWQ6": {
+              "content": "Later"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "V97EP",
+      "x": 2600,
+      "y": 39600,
+      "name": "Mobile — Agent not found",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "#D9D5CC",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "W4xSJ",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "gSyt4",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "height": 52,
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 10,
+          "padding": [
+            0,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "T7eg0",
+              "name": "Menu",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "id": "zTaOh",
+              "type": "ref",
+              "ref": "vCJQN",
+              "name": "Agent Avatar",
+              "fill": "#EFE8F5",
+              "enabled": false,
+              "descendants": {
+                "Jg8uM": {
+                  "icon": "book-open-text",
+                  "fill": "#6A4A94"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "dkJaq",
+              "name": "Title",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "N5Blz",
+                  "name": "Agent",
+                  "fill": "$text-primary",
+                  "content": "Agent Hub",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "eFq67",
+                  "x": 0,
+                  "y": 18,
+                  "name": "Session",
+                  "enabled": false,
+                  "fill": "$text-tertiary",
+                  "content": "Distillation brief",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "voNPd",
+              "name": "New",
+              "width": 19,
+              "height": 19,
+              "icon": "square-pen",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "RYwxc",
+          "name": "Thread",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            16,
+            24,
+            60,
+            24
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "id": "rIoXq",
+              "type": "ref",
+              "ref": "HUrKd",
+              "name": "Empty State",
+              "width": "fill_container",
+              "stroke": "#00000000",
+              "fill": "#00000000",
+              "padding": [
+                24,
+                8
+              ],
+              "descendants": {
+                "nlq8x": {
+                  "icon": "search-x"
+                },
+                "VwSSW": {
+                  "content": "Agent not found"
+                },
+                "aYTTj": {
+                  "content": "No agent with the id “fitness-coach” is registered. It may have been removed.",
+                  "width": "fill_container"
+                },
+                "k940K9/aMS2a": {
+                  "content": "Browse agents"
+                },
+                "eqfJB": {
+                  "enabled": false
+                },
+                "eqfJB/BsWQ6": {
+                  "content": "New session"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "j6NglK",
+          "x": 0,
+          "y": 762,
+          "name": "Composer",
+          "enabled": false,
+          "width": "fill_container(390)",
+          "padding": [
+            8,
+            12,
+            28,
+            12
+          ],
+          "children": [
+            {
+              "id": "MjmE9",
+              "type": "ref",
+              "ref": "OUcXN",
+              "name": "Composer",
+              "width": "fill_container",
+              "descendants": {
+                "IB1yY": {
+                  "content": "Message Research Analyst…"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "sMh7q",
+      "x": 0,
+      "y": 39600,
+      "name": "Mobile — Catalog error",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "#D9D5CC",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "EuRrv",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "Wxl7i",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            4,
+            16,
+            10,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "onf37",
+              "name": "Menu",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "text",
+              "id": "gcbKa",
+              "name": "Title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Your agents",
+              "fontFamily": "$font-ui",
+              "fontSize": 22,
+              "fontWeight": "600",
+              "letterSpacing": -0.4
+            },
+            {
+              "type": "icon",
+              "id": "itlsY",
+              "x": 354,
+              "y": 7.5,
+              "name": "Search",
+              "enabled": false,
+              "width": 20,
+              "height": 20,
+              "icon": "search",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YSMQr",
+          "name": "Agents",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            0,
+            16,
+            80,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "id": "fUprz",
+              "type": "ref",
+              "ref": "HUrKd",
+              "name": "Empty State",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "padding": [
+                24,
+                8
+              ],
+              "descendants": {
+                "eO9pP": {
+                  "fill": "$danger-soft"
+                },
+                "nlq8x": {
+                  "icon": "cloud-off",
+                  "fill": "$danger"
+                },
+                "VwSSW": {
+                  "content": "Couldn't load your agents"
+                },
+                "aYTTj": {
+                  "width": "fill_container",
+                  "content": "The registry didn't answer. Your sessions are safe."
+                },
+                "k940K9/W8udYR": {
+                  "enabled": true,
+                  "icon": "rotate-ccw"
+                },
+                "k940K9/aMS2a": {
+                  "content": "Try again"
+                },
+                "eqfJB": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "r9kWAZ",
+          "type": "ref",
+          "ref": "mSdhx",
+          "name": "Home Indicator",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "iX1f6",
+      "x": 520,
+      "y": 39600,
+      "name": "Mobile — Catalog empty",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "#D9D5CC",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "vGkd1",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "sSfaw",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            4,
+            16,
+            10,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "a6w2ly",
+              "name": "Menu",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "text",
+              "id": "K36N7",
+              "name": "Title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Your agents",
+              "fontFamily": "$font-ui",
+              "fontSize": 22,
+              "fontWeight": "600",
+              "letterSpacing": -0.4
+            },
+            {
+              "type": "icon",
+              "id": "dqmqv",
+              "x": 354,
+              "y": 7.5,
+              "name": "Search",
+              "enabled": false,
+              "width": 20,
+              "height": 20,
+              "icon": "search",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KZWTD",
+          "name": "Agents",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            0,
+            16,
+            80,
+            16
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "id": "cGijk",
+              "type": "ref",
+              "ref": "HUrKd",
+              "name": "Empty State",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "padding": [
+                24,
+                8
+              ],
+              "descendants": {
+                "eO9pP": {
+                  "fill": "$accent-soft"
+                },
+                "nlq8x": {
+                  "icon": "bot"
+                },
+                "VwSSW": {
+                  "content": "No agents yet"
+                },
+                "aYTTj": {
+                  "width": "fill_container",
+                  "content": "Agents appear here once they're registered. Register one from your terminal, then pull to refresh."
+                },
+                "k940K9/W8udYR": {
+                  "enabled": true,
+                  "icon": "book-open"
+                },
+                "k940K9/aMS2a": {
+                  "content": "How to register an agent"
+                },
+                "eqfJB": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "F57nQ",
+          "type": "ref",
+          "ref": "mSdhx",
+          "name": "Home Indicator",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "xBrZk",
+      "x": 1040,
+      "y": 39600,
+      "name": "Mobile — Auth expired",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "#D9D5CC",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "gjMU8",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "cb9iC",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "height": 52,
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 10,
+          "padding": [
+            0,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "A6s9IT",
+              "name": "Menu",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "id": "hZtDW",
+              "type": "ref",
+              "ref": "vCJQN",
+              "name": "Agent Avatar",
+              "fill": "#EFE8F5",
+              "descendants": {
+                "Jg8uM": {
+                  "icon": "book-open-text",
+                  "fill": "#6A4A94"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "U3pW9",
+              "name": "Title",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "jdyav",
+                  "name": "Agent",
+                  "fill": "$text-primary",
+                  "content": "Research Analyst",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 14.5,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "fORxb",
+                  "name": "Session",
+                  "fill": "$text-tertiary",
+                  "content": "Distillation brief",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "eUgtG",
+              "name": "New",
+              "width": 19,
+              "height": 19,
+              "icon": "square-pen",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PjBC1",
+          "name": "Thread",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": 16,
+          "justifyContent": "end",
+          "children": [
+            {
+              "id": "z1jOh",
+              "type": "ref",
+              "ref": "EfHME",
+              "name": "User Message",
+              "width": "fill_container",
+              "descendants": {
+                "GbV3H": {
+                  "width": 290
+                },
+                "FaJKO": {
+                  "content": "Write a short research brief on distilling small agent models.",
+                  "fontSize": 14.5
+                },
+                "s3ct8N": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "SMrGJ",
+              "name": "Reply",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Here's the brief. I compared six recent papers and pulled the headline numbers into a table.",
+              "lineHeight": 1.6,
+              "fontFamily": "$font-ui",
+              "fontSize": 14.5,
+              "fontWeight": "normal"
+            },
+            {
+              "id": "pNbDv",
+              "type": "ref",
+              "ref": "SMBup",
+              "name": "Artifact Card",
+              "width": "fill_container",
+              "stroke": "$accent",
+              "strokeWidth": 1.5,
+              "descendants": {
+                "EvmOU": {
+                  "padding": 8,
+                  "stroke": "$border"
+                },
+                "V3ZNc9": {
+                  "enabled": false
+                },
+                "Hupb5": {
+                  "icon": "chevron-right"
+                }
+              }
+            },
+            {
+              "id": "eoco9",
+              "type": "ref",
+              "ref": "SnIqS",
+              "name": "Message Actions",
+              "descendants": {
+                "T5u9VW": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Qv9lo",
+          "name": "Composer",
+          "width": "fill_container",
+          "padding": [
+            8,
+            12,
+            28,
+            12
+          ],
+          "children": [
+            {
+              "id": "Q9xKGw",
+              "type": "ref",
+              "ref": "OUcXN",
+              "name": "Composer",
+              "width": "fill_container",
+              "descendants": {
+                "IB1yY": {
+                  "content": "Add a section on evaluation cost",
+                  "fill": "$text-primary"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "TExEU",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Scrim",
+          "width": 390,
+          "height": 844,
+          "fill": "#1B1A1766"
+        },
+        {
+          "type": "frame",
+          "id": "N2FHD",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 614,
+          "name": "Sheet",
+          "width": 390,
+          "fill": "$surface",
+          "cornerRadius": [
+            20,
+            20,
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "OTVVT",
+              "name": "Handle Wrap",
+              "width": "fill_container",
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "NHGrq",
+                  "name": "Handle",
+                  "fill": "$border",
+                  "width": 36,
+                  "height": 5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "X4GccM",
+              "name": "Text",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                4,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "MOsrC",
+                  "name": "Title",
+                  "fill": "$text-primary",
+                  "content": "Your sign-in has expired",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "NgDqn",
+                  "name": "Body",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sign in again to keep going. Nothing is lost.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "IGL2e",
+              "name": "Row",
+              "width": "fill_container",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "E0M94",
+                  "name": "Icon",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "file-pen-line",
+                  "library": "lucide",
+                  "fill": "$accent"
+                },
+                {
+                  "type": "text",
+                  "id": "xet3g",
+                  "name": "Text",
+                  "fill": "$text-primary",
+                  "content": "Your unsent message stays in the composer",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tLLYh",
+              "name": "Row",
+              "width": "fill_container",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "S6cqy",
+                  "name": "Icon",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "history",
+                  "library": "lucide",
+                  "fill": "$accent"
+                },
+                {
+                  "type": "text",
+                  "id": "RBJQn",
+                  "name": "Text",
+                  "fill": "$text-primary",
+                  "content": "This session reopens where you left it",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "KxtTe",
+              "type": "ref",
+              "ref": "H0OSN",
+              "name": "Sign in again",
+              "width": "fill_container",
+              "height": 48,
+              "justifyContent": "center",
+              "descendants": {
+                "aMS2a": {
+                  "content": "Sign in again",
+                  "fontSize": 15
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "B6G93s",
+      "x": 1560,
+      "y": 39600,
+      "name": "Mobile — Approval waiting elsewhere",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "#D9D5CC",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "iH2pr",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "N6sBNu",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "height": 52,
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 10,
+          "padding": [
+            0,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "o9u5A",
+              "name": "Menu",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "id": "e2hlmA",
+              "type": "ref",
+              "ref": "vCJQN",
+              "name": "Agent Avatar",
+              "fill": "#EFE8F5",
+              "descendants": {
+                "Jg8uM": {
+                  "icon": "book-open-text",
+                  "fill": "#6A4A94"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "tuaBs",
+              "name": "Title",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "u85lTY",
+                  "name": "Agent",
+                  "fill": "$text-primary",
+                  "content": "Research Analyst",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 14.5,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "K7Gyl",
+                  "name": "Session",
+                  "fill": "$text-tertiary",
+                  "content": "Distillation brief",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "QSIcQ",
+              "name": "New",
+              "width": 19,
+              "height": 19,
+              "icon": "square-pen",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "ellipse",
+              "id": "G4TBE2",
+              "layoutPosition": "absolute",
+              "x": 26,
+              "y": 12,
+              "name": "Badge Dot",
+              "fill": "$warning",
+              "width": 9,
+              "height": 9,
+              "stroke": "$bg",
+              "strokeWidth": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kD3hE",
+          "name": "Thread",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": 16,
+          "justifyContent": "end",
+          "children": [
+            {
+              "id": "BXom4",
+              "type": "ref",
+              "ref": "EfHME",
+              "name": "User Message",
+              "width": "fill_container",
+              "descendants": {
+                "GbV3H": {
+                  "width": 290
+                },
+                "FaJKO": {
+                  "content": "Write a short research brief on distilling small agent models.",
+                  "fontSize": 14.5
+                },
+                "s3ct8N": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "KZCpG",
+              "name": "Reply",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Here's the brief. I compared six recent papers and pulled the headline numbers into a table.",
+              "lineHeight": 1.6,
+              "fontFamily": "$font-ui",
+              "fontSize": 14.5,
+              "fontWeight": "normal"
+            },
+            {
+              "id": "p7R06",
+              "type": "ref",
+              "ref": "SMBup",
+              "name": "Artifact Card",
+              "width": "fill_container",
+              "stroke": "$accent",
+              "strokeWidth": 1.5,
+              "descendants": {
+                "EvmOU": {
+                  "padding": 8,
+                  "stroke": "$border"
+                },
+                "V3ZNc9": {
+                  "enabled": false
+                },
+                "Hupb5": {
+                  "icon": "chevron-right"
+                }
+              }
+            },
+            {
+              "id": "oMuuz",
+              "type": "ref",
+              "ref": "SnIqS",
+              "name": "Message Actions",
+              "descendants": {
+                "T5u9VW": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qsKvo",
+          "name": "Composer",
+          "width": "fill_container",
+          "padding": [
+            8,
+            12,
+            28,
+            12
+          ],
+          "children": [
+            {
+              "id": "MT5JC",
+              "type": "ref",
+              "ref": "OUcXN",
+              "name": "Composer",
+              "width": "fill_container",
+              "descendants": {
+                "IB1yY": {
+                  "content": "Message Research Analyst…"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "QyyTp",
+          "type": "ref",
+          "ref": "IjtkQ",
+          "name": "Approval Toast",
+          "layoutPosition": "absolute",
+          "x": 12,
+          "y": 102,
+          "width": 366,
+          "descendants": {
+            "Po3z7": {
+              "fill": "$warning-soft"
+            },
+            "Icijj": {
+              "icon": "shield-alert",
+              "fill": "$warning"
+            },
+            "fMiLW": {
+              "content": "Bank Agent needs your approval"
+            },
+            "IYzyB": {
+              "content": "Send Ada NGN 50,000 · expires in 9:42"
+            },
+            "lUFHN/aMS2a": {
+              "content": "Review"
+            },
+            "l9FZy/BsWQ6": {
+              "content": "Later"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ZQvzZ",
+      "x": 2080,
+      "y": 39600,
+      "name": "Mobile — Artifact streaming",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "#D9D5CC",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "m3TYCJ",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "v7KMQb",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "height": 52,
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 10,
+          "padding": [
+            0,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "GhEVb",
+              "name": "Menu",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "id": "g5UCpP",
+              "type": "ref",
+              "ref": "vCJQN",
+              "name": "Agent Avatar",
+              "fill": "#EFE8F5",
+              "descendants": {
+                "Jg8uM": {
+                  "icon": "book-open-text",
+                  "fill": "#6A4A94"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "TII0T",
+              "name": "Title",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "l7WFm9",
+                  "name": "Agent",
+                  "fill": "$text-primary",
+                  "content": "Research Analyst",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 14.5,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "V7SP3j",
+                  "name": "Session",
+                  "fill": "$text-tertiary",
+                  "content": "Distillation brief",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "YXZ7Z",
+              "name": "New",
+              "width": 19,
+              "height": 19,
+              "icon": "square-pen",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QgqkT",
+          "name": "Thread",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": 16,
+          "justifyContent": "end",
+          "children": [
+            {
+              "id": "OKDZg",
+              "type": "ref",
+              "ref": "EfHME",
+              "name": "User Message",
+              "width": "fill_container",
+              "descendants": {
+                "GbV3H": {
+                  "width": 290
+                },
+                "FaJKO": {
+                  "content": "Write a short research brief on distilling small agent models.",
+                  "fontSize": 14.5
+                },
+                "s3ct8N": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "H13pOM",
+              "name": "Reply",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Writing the brief now. You can open it while I work; it updates live.",
+              "lineHeight": 1.6,
+              "fontFamily": "$font-ui",
+              "fontSize": 14.5,
+              "fontWeight": "normal"
+            },
+            {
+              "id": "USsgB",
+              "type": "ref",
+              "ref": "SMBup",
+              "name": "Artifact Card",
+              "width": "fill_container",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "descendants": {
+                "S6X5o": {
+                  "fill": "$surface-muted"
+                },
+                "ZFJi7": {
+                  "icon": "loader-circle",
+                  "fill": "$accent"
+                },
+                "qUWm6": {
+                  "content": "Writing document…"
+                },
+                "Rh8Ry": {
+                  "content": "62%"
+                },
+                "EvmOU": {
+                  "padding": 8,
+                  "stroke": "$border"
+                },
+                "V3ZNc9": {
+                  "enabled": true,
+                  "content": "View"
+                },
+                "Hupb5": {
+                  "icon": "chevron-right"
+                }
+              }
+            },
+            {
+              "id": "j1kDx",
+              "type": "ref",
+              "ref": "SnIqS",
+              "name": "Message Actions",
+              "enabled": false,
+              "descendants": {
+                "T5u9VW": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mj3s7",
+          "name": "Composer",
+          "width": "fill_container",
+          "padding": [
+            8,
+            12,
+            28,
+            12
+          ],
+          "children": [
+            {
+              "id": "p87rt1",
+              "type": "ref",
+              "ref": "OUcXN",
+              "name": "Composer",
+              "width": "fill_container",
+              "descendants": {
+                "IB1yY": {
+                  "content": "Message Research Analyst…"
+                },
+                "VfFPZ": {
+                  "enabled": false
+                },
+                "Js1ZA": {
+                  "enabled": true
+                },
+                "s9ypRW": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "OFj2k",
+      "x": 0,
+      "y": 40600,
+      "name": "Edge States (P0)",
+      "width": 1440,
+      "fill": "$sidebar",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": 56,
+      "children": [
+        {
+          "type": "frame",
+          "id": "Qh1M3",
+          "name": "Heading",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "nxzBH",
+              "name": "Title",
+              "fill": "$text-primary",
+              "content": "Edge states (P0)",
+              "fontFamily": "$font-ui",
+              "fontSize": 28,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "gKOvi",
+              "name": "Subtitle",
+              "fill": "$text-secondary",
+              "content": "The cases from PRODUCT_PLAN §5 that no screen covered. Each shows the component state the build needs.",
+              "fontFamily": "$font-ui",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ysZlP",
+          "name": "Row",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "I56hQX",
+              "name": "Orphaned session",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "qoIYF",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Orphaned session"
+                    },
+                    "iaryW": {
+                      "content": "Agent removed from the registry; the session stays readable"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "d2xsRj",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "id": "H4IUD",
+                      "type": "ref",
+                      "ref": "D9HsR",
+                      "name": "Notice Banner",
+                      "width": "fill_container",
+                      "descendants": {
+                        "XbJX1": {
+                          "icon": "unplug"
+                        },
+                        "y3psep": {
+                          "content": "This agent is no longer available"
+                        },
+                        "rciEQ": {
+                          "content": "Weather Bot was removed from the registry. You can read and export this session, but not reply."
+                        },
+                        "KhpCK/BsWQ6": {
+                          "content": "Export"
+                        }
+                      }
+                    },
+                    {
+                      "id": "wZc5y",
+                      "type": "ref",
+                      "ref": "K6k66O",
+                      "name": "Composer",
+                      "width": "fill_container",
+                      "fill": "$surface-muted",
+                      "descendants": {
+                        "pd7xv": {
+                          "content": "This agent is no longer available"
+                        },
+                        "ETPuP": {
+                          "opacity": 0.4
+                        },
+                        "zkzNv": {
+                          "enabled": false
+                        },
+                        "l7U0l": {
+                          "enabled": false
+                        },
+                        "yv5LZ": {
+                          "fill": "$border"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "puM8D",
+              "name": "Agent updated mid-session",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "nB1Zi",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Agent updated mid-session"
+                    },
+                    "iaryW": {
+                      "content": "Redeployed while the session was open"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "mKfKU",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "id": "l8JwxG",
+                      "type": "ref",
+                      "ref": "EfHME",
+                      "name": "User Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "GbV3H": {
+                          "width": 380
+                        },
+                        "FaJKO": {
+                          "content": "Can you re-run the benchmark with the new prompts?",
+                          "fontSize": 14
+                        },
+                        "s3ct8N": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kAcUL",
+                      "name": "Version Divider",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "L6D1Yv",
+                          "name": "Line",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "IB1Yp",
+                          "name": "Pill",
+                          "fill": "$surface-muted",
+                          "cornerRadius": 999,
+                          "gap": 6,
+                          "padding": [
+                            4,
+                            10
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "jXsUV",
+                              "name": "Icon",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "refresh-cw",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            },
+                            {
+                              "type": "text",
+                              "id": "OMWFD",
+                              "name": "L",
+                              "fill": "$text-secondary",
+                              "content": "Agent updated to v15 · 14:02",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "ZpCw7",
+                          "name": "Line",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "NJQ3k",
+                      "name": "Text",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Done. With the v15 prompts, pass rate went from 71% to 78% on the 40-task set.",
+                      "lineHeight": 1.6,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "IVd0v",
+          "name": "Row",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "upKK1",
+              "name": "Same session in two tabs",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "I42V5i",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Same session in two tabs"
+                    },
+                    "iaryW": {
+                      "content": "Only the focused tab can send"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "bKgzn",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "id": "yA6LL",
+                      "type": "ref",
+                      "ref": "D9HsR",
+                      "name": "Notice Banner",
+                      "width": "fill_container",
+                      "descendants": {
+                        "XbJX1": {
+                          "icon": "copy"
+                        },
+                        "y3psep": {
+                          "content": "This session is open in another tab"
+                        },
+                        "rciEQ": {
+                          "content": "This tab is read-only so replies don't clash."
+                        },
+                        "KhpCK/BsWQ6": {
+                          "content": "Use here"
+                        }
+                      }
+                    },
+                    {
+                      "id": "LC9s3",
+                      "type": "ref",
+                      "ref": "K6k66O",
+                      "name": "Composer",
+                      "width": "fill_container",
+                      "fill": "$surface-muted",
+                      "descendants": {
+                        "pd7xv": {
+                          "content": "Read-only in this tab"
+                        },
+                        "ETPuP": {
+                          "opacity": 0.4
+                        },
+                        "zkzNv": {
+                          "enabled": false
+                        },
+                        "l7U0l": {
+                          "enabled": false
+                        },
+                        "yv5LZ": {
+                          "fill": "$border"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "SRLth",
+              "name": "Approval decided elsewhere",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "D3khCS",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Approval decided elsewhere"
+                    },
+                    "iaryW": {
+                      "content": "Approved on another device; this card updates live"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "Y3aKdj",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "id": "h4QKz",
+                      "type": "ref",
+                      "ref": "m1FtM",
+                      "name": "Approval Card",
+                      "width": "fill_container",
+                      "descendants": {
+                        "VEV5J": {
+                          "fill": "#F3F8F5",
+                          "stroke": "#D5E8DD"
+                        },
+                        "ovgPk": {
+                          "fill": "$accent-soft"
+                        },
+                        "cOdVT": {
+                          "icon": "shield-check",
+                          "fill": "$accent"
+                        },
+                        "n6WMSI": {
+                          "content": "Approved",
+                          "fill": "$accent"
+                        },
+                        "Tb6pq": {
+                          "content": "Transfer NGN 50,000 to Ada O."
+                        },
+                        "f3oAM": {
+                          "fill": "$accent-soft"
+                        },
+                        "Ne3Pp": {
+                          "icon": "smartphone",
+                          "fill": "$accent"
+                        },
+                        "VEkhd": {
+                          "content": "On your phone",
+                          "fill": "$accent"
+                        },
+                        "Y1oUz": {
+                          "enabled": false
+                        },
+                        "ZYQoY": {
+                          "enabled": false
+                        },
+                        "fSx6x": {
+                          "enabled": false
+                        },
+                        "nQuvR": {
+                          "enabled": false
+                        },
+                        "LIcJC": {
+                          "enabled": true
+                        },
+                        "S1YVK": {
+                          "content": "Approved on your phone · 14:33"
+                        },
+                        "XAyXT": {
+                          "content": "Ref TRX-88213"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Me8sZ",
+          "name": "Row",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "mz3X8",
+              "name": "Expired while away",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "Q9pFT",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Expired while away"
+                    },
+                    "iaryW": {
+                      "content": "The tab was in the background when the timer ran out"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "b9Wt9o",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "id": "XxXlG",
+                      "type": "ref",
+                      "ref": "m1FtM",
+                      "name": "Approval Card",
+                      "width": "fill_container",
+                      "descendants": {
+                        "VEV5J": {
+                          "fill": "$sidebar",
+                          "stroke": "$border"
+                        },
+                        "ovgPk": {
+                          "fill": "$surface-muted"
+                        },
+                        "cOdVT": {
+                          "icon": "timer-off",
+                          "fill": "$text-tertiary"
+                        },
+                        "n6WMSI": {
+                          "content": "Approval request",
+                          "fill": "$text-tertiary"
+                        },
+                        "Tb6pq": {
+                          "content": "Transfer NGN 50,000 to Ada O.",
+                          "fill": "$text-tertiary"
+                        },
+                        "f3oAM": {
+                          "fill": "$surface-muted"
+                        },
+                        "Ne3Pp": {
+                          "icon": "timer-off",
+                          "fill": "$text-tertiary"
+                        },
+                        "VEkhd": {
+                          "content": "Expired",
+                          "fill": "$text-tertiary"
+                        },
+                        "OL4OU": {
+                          "opacity": 0.45
+                        },
+                        "Y1oUz": {
+                          "enabled": false
+                        },
+                        "ZYQoY": {
+                          "enabled": false
+                        },
+                        "fSx6x": {
+                          "enabled": false
+                        },
+                        "nQuvR": {
+                          "enabled": false
+                        },
+                        "LIcJC": {
+                          "enabled": true,
+                          "fill": "$surface-muted"
+                        },
+                        "DJzw2": {
+                          "icon": "info",
+                          "fill": "$text-secondary"
+                        },
+                        "S1YVK": {
+                          "content": "Expired at 14:42 while you were away · nothing was sent",
+                          "fill": "$text-secondary"
+                        },
+                        "XAyXT": {
+                          "content": "Ask again →",
+                          "fill": "$accent",
+                          "fontFamily": "$font-ui",
+                          "fontWeight": "600"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "J5ZIE6",
+              "name": "Artifact interrupted",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "nfRhC",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Artifact interrupted"
+                    },
+                    "iaryW": {
+                      "content": "The stream dropped mid-artifact; the version is marked incomplete"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "uxm4Y",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "id": "byB53",
+                      "type": "ref",
+                      "ref": "SMBup",
+                      "name": "Artifact Card",
+                      "width": "fill_container",
+                      "stroke": "#E8C3BD",
+                      "descendants": {
+                        "S6X5o": {
+                          "fill": "$danger-soft"
+                        },
+                        "ZFJi7": {
+                          "icon": "file-warning",
+                          "fill": "$danger"
+                        },
+                        "qUWm6": {
+                          "content": "v3 · incomplete",
+                          "fill": "$danger"
+                        },
+                        "Rh8Ry": {
+                          "content": "stopped at 62%"
+                        },
+                        "V3ZNc9": {
+                          "enabled": true,
+                          "content": "Retry"
+                        },
+                        "Hupb5": {
+                          "icon": "rotate-ccw"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "l2LBs1",
+                      "name": "Text",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "v2 is still complete and can be opened from the version menu.",
+                      "lineHeight": 1.6,
+                      "fontFamily": "$font-ui",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AgYXJ",
+          "name": "Row",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "J5n89",
+              "name": "Very long message",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "pNqbx",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Very long message"
+                    },
+                    "iaryW": {
+                      "content": "Code blocks collapse after 30 lines"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "KBx98",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "M8N5bq",
+                      "name": "Collapsed Code",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 180,
+                      "cornerRadius": 10,
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "id": "aSZKY",
+                          "type": "ref",
+                          "ref": "wW1XY",
+                          "name": "Code Block",
+                          "width": "fill_container"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sSsOx",
+                      "name": "Show All",
+                      "width": "fill_container",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "id": "N4zkWW",
+                          "type": "ref",
+                          "ref": "XBZK2",
+                          "name": "Show all",
+                          "descendants": {
+                            "mfSA0": {
+                              "enabled": true,
+                              "icon": "chevrons-up-down"
+                            },
+                            "BsWQ6": {
+                              "content": "Show all 214 lines"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "UtVpu",
+              "name": "Huge table",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "R1lJSi",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Huge table"
+                    },
+                    "iaryW": {
+                      "content": "First 50 rows, then “Show all”"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "s2UpH",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "X9FWQ",
+                      "name": "Table",
+                      "clip": true,
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 10,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "AbEIK",
+                          "name": "Header",
+                          "width": "fill_container",
+                          "fill": "$surface-muted",
+                          "stroke": "$border",
+                          "strokeWidth": {
+                            "bottom": 1
+                          },
+                          "gap": 12,
+                          "padding": [
+                            9,
+                            14
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "W6MUi",
+                              "name": "Cell",
+                              "fill": "$text-secondary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Date",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ZPJ1d",
+                              "name": "Cell",
+                              "fill": "$text-secondary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Merchant",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "kQMh2",
+                              "name": "Cell",
+                              "fill": "$text-secondary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Amount",
+                              "textAlign": "right",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "F4LBP",
+                          "name": "Row",
+                          "width": "fill_container",
+                          "fill": "$surface",
+                          "stroke": "$border",
+                          "strokeWidth": {
+                            "bottom": 1
+                          },
+                          "gap": 12,
+                          "padding": [
+                            9,
+                            14
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "RqaHv",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Sep 28",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "y4sNF",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Shoprite Ikeja",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "R3lCP",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "NGN 18,450",
+                              "textAlign": "right",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "mHQI2",
+                          "name": "Row",
+                          "width": "fill_container",
+                          "fill": "$surface",
+                          "stroke": "$border",
+                          "strokeWidth": {
+                            "bottom": 1
+                          },
+                          "gap": 12,
+                          "padding": [
+                            9,
+                            14
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "oh1TA",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Sep 28",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "MDcRY",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Bolt",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "b0bm1",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "NGN 3,200",
+                              "textAlign": "right",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "P689X7",
+                          "name": "Row",
+                          "width": "fill_container",
+                          "fill": "$surface",
+                          "stroke": "$border",
+                          "strokeWidth": {
+                            "bottom": 1
+                          },
+                          "gap": 12,
+                          "padding": [
+                            9,
+                            14
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "wBYjH",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Sep 27",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "pywV4",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "MTN airtime",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "j7llV",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "NGN 5,000",
+                              "textAlign": "right",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bHsK3",
+                          "name": "Row",
+                          "width": "fill_container",
+                          "fill": "$surface",
+                          "stroke": "$border",
+                          "strokeWidth": {
+                            "bottom": 1
+                          },
+                          "gap": 12,
+                          "padding": [
+                            9,
+                            14
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "fhENn",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Sep 27",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "CVRPq",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Chicken Republic",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "rVh6c",
+                              "name": "Cell",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "NGN 6,750",
+                              "textAlign": "right",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ubUsB",
+                      "name": "Footer",
+                      "width": "fill_container",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "vgmh6",
+                          "name": "Count",
+                          "fill": "$text-tertiary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Showing 50 of 12,408 rows",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "B5QIQK",
+                          "type": "ref",
+                          "ref": "XBZK2",
+                          "name": "Show all",
+                          "descendants": {
+                            "BsWQ6": {
+                              "content": "Show all 12,408"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "BjOxy",
+          "name": "Row",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "yoiyz",
+              "name": "Approval waiting under another agent",
+              "width": 652,
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "xsLP2",
+                  "type": "ref",
+                  "ref": "Vu7nt",
+                  "name": "Label",
+                  "descendants": {
+                    "AfOZN": {
+                      "content": "Approval waiting under another agent"
+                    },
+                    "iaryW": {
+                      "content": "The agent switcher carries the badge"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "qsvkl",
+                  "name": "Canvas",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "id": "W1Ccq",
+                      "type": "ref",
+                      "ref": "UauTJ",
+                      "name": "Health Assistant",
+                      "width": "fill_container",
+                      "descendants": {
+                        "wyEgp": {
+                          "fill": "#F6E3E3"
+                        },
+                        "wyEgp/Jg8uM": {
+                          "icon": "heart-pulse",
+                          "fill": "#A23B3B"
+                        },
+                        "dwitZ": {
+                          "content": "Health Assistant"
+                        },
+                        "CBCzC": {
+                          "fill": "$online"
+                        },
+                        "XV4Oe": {
+                          "content": "Online",
+                          "fill": "$text-tertiary"
+                        },
+                        "Nh1o9": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "id": "H4857",
+                      "type": "ref",
+                      "ref": "UauTJ",
+                      "name": "Bank Agent",
+                      "width": "fill_container",
+                      "descendants": {
+                        "wyEgp": {
+                          "fill": "#E2EEE8"
+                        },
+                        "wyEgp/Jg8uM": {
+                          "icon": "landmark",
+                          "fill": "#1F5C4A"
+                        },
+                        "dwitZ": {
+                          "content": "Bank Agent"
+                        },
+                        "CBCzC": {
+                          "fill": "$warning"
+                        },
+                        "XV4Oe": {
+                          "content": "1 approval waiting",
+                          "fill": "$warning"
+                        },
+                        "Nh1o9": {
+                          "enabled": false
+                        }
+                      }
+                    },
+                    {
+                      "id": "rZ5PJ",
+                      "type": "ref",
+                      "ref": "UauTJ",
+                      "name": "Research Analyst",
+                      "width": "fill_container",
+                      "fill": "$surface-muted",
+                      "cornerRadius": 10,
+                      "descendants": {
+                        "wyEgp": {
+                          "fill": "#EFE8F5"
+                        },
+                        "wyEgp/Jg8uM": {
+                          "icon": "book-open-text",
+                          "fill": "#6A4A94"
+                        },
+                        "dwitZ": {
+                          "content": "Research Analyst"
+                        },
+                        "CBCzC": {
+                          "fill": "$online"
+                        },
+                        "XV4Oe": {
+                          "content": "Online",
+                          "fill": "$text-tertiary"
+                        },
+                        "Nh1o9": {
+                          "enabled": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "variables": {
@@ -132794,6 +137320,14 @@
     "font-mono": {
       "type": "string",
       "value": "JetBrains Mono"
+    },
+    "warning": {
+      "type": "color",
+      "value": "#8A5A12"
+    },
+    "warning-soft": {
+      "type": "color",
+      "value": "#F5ECDD"
     }
   },
   "fileToken": "42ed8c3d-f685-4ad4-848f-ca92bb609058"
