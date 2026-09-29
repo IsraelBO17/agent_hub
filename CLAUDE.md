@@ -32,4 +32,4 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 - **Missing lucide icons.** `clock` and `fingerprint` aren't available; use `timer`, `history` or `shield-check`.
 
 ## Git
-- Work on branch `claude/agent-hub-frontend-handoff-7opdv1` unless told otherwise.
+- Work on `main` unless told otherwise.
