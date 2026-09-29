@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.2, D1–D17 and P1–P8 locked; §2 default and §4 questions still open |
+| Status | v0.3, D1–D18 and P1–P8 locked; §2 default and §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -46,7 +46,7 @@ Each entry: the decision, why, and what would make us revisit it.
 **Decision.** Postgres is the record of every session and message. AgentCore Memory is an optional add-on the *agent* may use for its own long-term memory; the UI never reads from it.
 **Why.** History must survive agent redeploys, AgentCore session expiry and framework changes (LangGraph later), and must be queryable for the sidebar, search and export.
 **Revisit if.** Never for history. Memory usage is per agent.
-**Gap to close:** how the agent gets prior turns; see Q6.
+**Context for the agent:** see D18.
 
 ### D5. Streaming: SSE over a `fetch` POST
 **Decision.** `POST /sessions/{id}/messages` returns `text/event-stream`. The client reads it with `fetch` and a stream reader, not `EventSource` (which can't send an `Authorization` header or a body). The API writes a keep-alive comment (`: ping`) every 15 s from its own task, independent of the agent. The ALB idle timeout is set explicitly (300 s proposed) rather than relying on the 60 s default.
@@ -118,6 +118,14 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Why.** Each environment costs roughly $35–45/month always on; two would exceed the $50 budget. With one user, dev is the daily driver.
 **Revisit if.** v1 launches, or a deploy to dev breaks daily use once too often.
 
+### D18. The API sends conversation history on every call
+**Decision.** Agents are stateless between turns. On each invocation the API reads the session's recent history from Postgres and sends it in the payload, together with the new user message. The API also passes our session id as the AgentCore `runtimeSessionId`, so a warm runtime session can reuse whatever it still has in memory, but no agent may depend on it.
+- **What is sent:** prior user and assistant turns as plain role + text (the app's blocks flattened: text kept, thinking dropped, tool steps and artifacts summarised by name and a short result), newest last, trimmed to a per-agent budget (default: last 20 turns or ~32k characters, configurable in the agent's descriptor).
+- **Contract:** every agent must accept `{ "messages": [...history], "input": "..." }` (exact shape fixed in the OpenAPI/agent contract, step 5). An agent that can't gets an adapter (D10).
+**Why.** AgentCore keeps state only while its runtime session is alive; after the idle timeout the agent forgets. Sending history from the record we already own (D4) keeps agents interchangeable, makes reloads, retries and redeploys behave the same, and needs nothing extra from each agent.
+**Later: AgentCore Memory.** An agent may add AgentCore Memory for long-term memory (facts and preferences across sessions, summaries of long sessions), and it can later replace or shorten the history the API sends for that agent. It is opt-in per agent, enabled by a descriptor flag, and Postgres stays the record of the conversation (D4). The UI never reads from it.
+**Revisit if.** Payloads get large enough to hurt latency or token cost (summarise older turns, or move that agent to AgentCore Memory), or an agent framework insists on owning its own thread state (LangGraph checkpointer): then that agent's adapter maps our session to its thread.
+
 ---
 
 ## 2. Unconfirmed defaults (do not build on these until confirmed; see Q3)
@@ -148,13 +156,12 @@ These refine D1–D15 and are binding for the steps that follow.
 
 ## 4. Open questions (answers pending)
 
-Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (let the agent finish), Q7 → §3 (P1–P8 accepted). Still open:
+Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (let the agent finish), Q6 → D18 (API sends history; AgentCore Memory later), Q7 → §3 (P1–P8 accepted). Still open:
 
 | # | Question | Blocks | My default |
 |---|---|---|---|
 | Q2 | **Domain.** Which parent domain, is it in Route 53, and who issues TLS (ACM in us-east-1)? | ALB listener, Amplify custom domain, cookie domain, Google OAuth origins | Subdomains of your portfolio domain, ACM certificates, Route 53 if already there |
 | Q3 | **Networking.** Accept public subnets, public IP, ALB-only inbound, no NAT? | Step 7 | Yes |
-| Q6 | **Where the agent's conversation context comes from.** AgentCore keeps state only while its runtime session is alive (idle timeout); after that, the agent forgets. Options: (a) the API sends recent history in every invocation payload, from Postgres; (b) agents use AgentCore Memory; (c) rely on the runtime session and accept forgetting. | Agent contract, step 8 | (a): the API sends history; agents stay stateless and interchangeable |
 | Q8 | **Budget.** Is the $50/month AWS ceiling in the plan still right, excluding model tokens? | Task size, alarms | Yes |
 | Q9 | **First real agent for step 8.** Research Analyst (the plan's pick), or an agent you already have deployed on AgentCore? An existing one is faster. Is there one, and can the API's IAM role invoke it? | Step 8 | An existing deployed agent, if any |
 | Q10 | **AWS account.** Is there a dedicated account (or at least credentials profile) for Agent Hub, and may I run read-only AWS CLI and `terraform plan` against it? | Step 7 | Ask again at step 7 |
@@ -188,3 +195,5 @@ Answered 2026-09-29: Q1 → D16 (Vite SPA), Q4 → D17 (dev only), Q5 → D11 (l
 | 2026-09-29 | v0.1: decisions D1–D15 recorded; proposals P1–P8 and questions Q1–Q10 raised. |
 | 2026-09-29 | v0.2: Vite SPA (D16), dev only until v1 (D17), disconnect lets the agent finish with a time cap (D11), P1–P8 accepted. |
 | 2026-09-29 | Architecture diagram added (`docs/diagrams/`, step 2). |
+| 2026-09-29 | v0.3: D18, the API sends history on every call; AgentCore Memory recorded as a later, per-agent option. |
+| 2026-09-29 | Send-message sequence diagrams and `SEND_MESSAGE.md` (step 3). Picked defaults: run id = assistant message id, idempotent sends via `clientMessageId`, refresh token 30 days. |

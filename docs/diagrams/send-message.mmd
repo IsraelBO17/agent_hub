@@ -1,0 +1,67 @@
+%% Sequence: user sends a message (normal path). Failure paths: send-message-failures.mmd.
+%% Rules and timers: docs/SEND_MESSAGE.md. Decisions: docs/ARCHITECTURE.md (D5, D8, D10, D11, D18, P1).
+sequenceDiagram
+  autonumber
+  actor U as User
+  participant B as Browser (SPA)
+  participant G as Google
+  participant A as API (FastAPI, Fargate)
+  participant DB as Postgres (Neon)
+  participant R as AgentCore runtime
+
+  Note over B,A: Every Browser → API call goes through the ALB (api.<domain>, HTTPS)
+
+  rect rgb(243, 248, 245)
+    Note over U,DB: Sign-in, once per device (D8)
+    U->>B: Continue with Google
+    B->>G: Google Identity Services
+    G-->>B: ID token (JWT)
+    B->>A: POST /auth/google {idToken}
+    A->>G: JWKS (cached)
+    A->>A: verify signature, aud, iss, exp, email_verified
+    A->>DB: user by Google sub, must be active
+    A->>DB: insert refresh token (hashed, new family)
+    A-->>B: 200 {accessToken, ~15 min} + Set-Cookie refresh (HttpOnly, Secure, SameSite=Strict)
+  end
+
+  rect rgb(238, 235, 228)
+    Note over B,DB: Session check on app load (access token lives in memory only)
+    B->>A: POST /auth/refresh (cookie)
+    A->>DB: token hash valid, not revoked → rotate
+    A-->>B: 200 {accessToken} + new cookie
+  end
+
+  rect rgb(251, 250, 247)
+    Note over U,R: Send a message
+    U->>B: type, press Enter
+    B->>A: POST /sessions/{id}/messages · Bearer · {clientMessageId, text}
+    Note right of B: First send in a new session: POST /agents/{agentId}/sessions<br/>creates the session and sends in one call (F03)
+    A->>A: verify access token (signature only, no DB)
+    A->>DB: session + agent: owner, agent online, no run in progress
+    A->>DB: one transaction: user message + assistant message (status streaming)
+    A->>DB: recent history for the payload (D18)
+    A-->>B: 200 text/event-stream · event run.started {runId, messageIds}
+    A->>R: InvokeAgentRuntime(ARN, runtimeSessionId, {messages, input})
+    Note over A: The agent call runs in its own task,<br/>not tied to the HTTP response (D11)
+    par agent stream
+      loop until the agent finishes
+        R-->>A: chunk (AgentCore / Strands format)
+        A->>A: translate to app blocks (D10)
+        A-->>B: event block.* (text, thinking, tool step, plan, ...)
+        opt block ended, or 2 s since last save
+          A->>DB: checkpoint assistant blocks (P1)
+        end
+      end
+    and keep-alive
+      loop every 15 s, from the API's own timer
+        A-->>B: ": ping" (SSE comment)
+      end
+    end
+    R-->>A: end of stream
+    A->>DB: final blocks, status complete
+    A-->>B: event run.completed · stream closes
+    opt first reply in the session
+      A->>DB: auto-title the session (background)
+    end
+    B->>U: finished reply, composer ready
+  end

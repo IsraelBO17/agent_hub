@@ -11,3 +11,5 @@ If npx can't download Chrome, point it at a local one with `-p puppeteer.json`, 
 | Diagram | Source | Render |
 |---|---|---|
 | Architecture (step 2) | [architecture.mmd](architecture.mmd) | [architecture.png](architecture.png) |
+| Send a message, normal path (step 3) | [send-message.mmd](send-message.mmd) | [send-message.png](send-message.png) |
+| Send a message, failure paths (step 3) | [send-message-failures.mmd](send-message-failures.mmd) | [send-message-failures.png](send-message-failures.png) |

@@ -1,0 +1,79 @@
+%% Sequence: user sends a message, failure paths. Normal path: send-message.mmd.
+%% Rules and timers: docs/SEND_MESSAGE.md.
+sequenceDiagram
+  actor U as User
+  participant B as Browser (SPA)
+  participant A as API (FastAPI, Fargate)
+  participant DB as Postgres (Neon)
+  participant R as AgentCore runtime
+
+  alt Access token expired
+    B->>A: POST /sessions/{id}/messages (expired token)
+    A-->>B: 401 token_expired
+    B->>A: POST /auth/refresh (cookie)
+    alt refresh token valid
+      A->>DB: rotate refresh token
+      A-->>B: 200 new access token
+      B->>A: resend with the same clientMessageId (no duplicate message)
+    else refresh token expired, revoked or reused
+      A->>DB: reuse detected → revoke the whole token family
+      A-->>B: 401 session_expired
+      B->>U: "Auth expired" screen, draft kept in the browser
+      U->>B: Continue with Google → sign-in, then resend
+    end
+
+  else Agent marked offline
+    B->>A: POST /sessions/{id}/messages
+    A->>DB: agent status offline
+    A-->>B: 503 agent_unavailable (JSON, no stream) · nothing saved
+    B->>U: composer disabled, draft kept, past sessions readable
+
+  else A reply is already running in this session
+    B->>A: POST /sessions/{id}/messages
+    A-->>B: 409 run_in_progress · nothing saved
+
+  else Agent unreachable when called
+    A->>R: InvokeAgentRuntime
+    R-->>A: error (not found, throttled, 5xx, timeout)
+    A->>DB: assistant message status failed, error code
+    A-->>B: event run.failed {code, retryable} · stream closes
+    B->>U: "Reply failed" + Retry (reruns the same user message)
+
+  else Agent error mid-stream
+    R-->>A: error event, or the stream breaks
+    A->>DB: keep partial blocks, status failed
+    A-->>B: event run.failed · stream closes
+    B->>U: partial reply + "Reply failed" + Retry
+
+  else User presses Stop
+    U->>B: Stop button or Esc
+    B->>A: POST /sessions/{id}/runs/{runId}/stop
+    A->>R: cancel (close the AgentCore stream)
+    A->>DB: keep partial blocks, status stopped
+    A-->>B: event run.stopped · stream closes
+    A-->>B: 200 (stop request)
+    B->>U: partial reply marked "Stopped"
+
+  else Browser disconnects (network drop, tab closed, laptop sleeps)
+    B--xA: connection lost
+    Note over B: Client also treats 45 s with no bytes<br/>(3 missed pings) as a lost connection
+    A->>A: stop writing SSE · the agent task keeps running (D11)
+    loop until the agent finishes or the 15-min cap
+      R-->>A: chunk
+      A->>DB: checkpoint
+    end
+    A->>DB: status complete (interrupted if the cap was hit)
+    B->>U: banner "Connection lost. The agent is still working"
+    B->>A: on reconnect or reload: GET /sessions/{id}/messages
+    loop every 2 s while status is streaming
+      B->>A: GET /sessions/{id}/messages/{messageId}
+    end
+    B->>U: full reply (or "Interrupted" + Retry)
+
+  else API task stops mid-reply (deploy, crash)
+    Note over A: SIGTERM: refuse new streams, let open ones finish (up to 120 s, P2)
+    A--xB: task killed before the reply finished
+    Note over A,DB: On next start, rows still "streaming" become "interrupted" (P1)
+    B->>A: lost connection → poll GET /sessions/{id}/messages/{messageId}
+    B->>U: partial reply + "Interrupted" + Retry
+  end
