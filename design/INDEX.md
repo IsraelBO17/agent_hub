@@ -3,7 +3,7 @@
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
 - Top-level frames: 244
-- Reusable components: 87 (2659 references, nested ones included)
+- Reusable components: 87 (2660 references, nested ones included)
 - Reference screens and boards: 33
 - Flow screens: 93
 
@@ -42,7 +42,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Button / Primary | `H0OSN` | auto×auto |  | 37 |
 | Button / Secondary | `XBZK2` | auto×auto |  | 72 |
 | Button / Danger | `HsXdL` | auto×auto |  | 5 |
-| Icon Button | `btfe4` | 32×32 |  | 93 |
+| Icon Button | `btfe4` | 32×32 |  | 97 |
 | Kbd | `rjWo1` | auto×20 |  | 124 |
 | Tooltip | `fkIAs` | auto×auto |  | 3 |
 | Checkbox | `llhcq` | 16×16 |  | 18 |
@@ -59,7 +59,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Search Field | `Wjnvx` | 240×auto |  | 20 |
 | Select Button | `ZWD7y` | auto×auto |  | 20 |
 | Segmented Item | `K1CWuA` | auto×auto |  | 14 |
-| Filter Chip | `W0HHV` | auto×auto |  | 37 |
+| Filter Chip | `W0HHV` | auto×auto |  | 34 |
 | Reason Chip | `c3s8Su` | auto×auto |  | 33 |
 | Suggestion Pill | `wULfL` | auto×auto |  | 12 |
 | Form Field | `s2kV7R` | 300×auto |  | 28 |

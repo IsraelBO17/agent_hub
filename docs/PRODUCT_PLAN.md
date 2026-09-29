@@ -185,7 +185,7 @@ Sidebar (desktop; drawer on mobile)
 └─ Footer: user · Artifacts · Archived · Settings
 ```
 
-Change from the design: "All agents", "Artifacts" and "Archived" move out of the main nav into the footer and ⌘K. See §9.
+Change from the original design (done 2026-09-29): "All agents", "Artifacts" and "Archived" moved out of the main nav into footer icons in the `Sidebar Footer` component (and ⌘K). This applies to the desktop sidebar and the mobile drawer. See §9.
 
 ### Screen inventory
 
@@ -196,48 +196,37 @@ Status key:
 
 | Surface | Desktop | Mobile (390) | Priority |
 |---|---|---|---|
-| Catalog | ✅ `PBQLh` | ✅ F10.1 `UK1JP` | P0 |
-| Catalog: loading / error | ➕ | ➕ | P0 |
+| Catalog | ✅ `PBQLh` | ✅ F10.1 `UK1JP` (filter chips removed, §9 item 7) | P0 |
+| Catalog: loading / error | ➕ | ✅ loading F11.1 `EP1MN`; ➕ error | P0 |
 | Catalog: empty (no agents) | 🔧 `j8NhJ`: CTA should be "How to register an agent" | ➕ | P0 |
-| New session (starters) | ✅ `uBRCZ` | ➕ | P0 |
-| Chat: streaming, tools, plan, thinking | ✅ `wtDYF`, F2.5–F2.8 | ➕ streaming, tool chip and plan on mobile | P0 |
-| Chat: all failure states | ✅ "Agent Working & Failure States" board | ➕ mobile banner / inline error placement | P0 |
+| New session (starters) | ✅ `uBRCZ` | ✅ F11.2 `HgtnP` | P0 |
+| Chat: streaming, tools, plan, thinking | ✅ `wtDYF`, F2.5–F2.8 | ✅ F11.5 `DNypg`, plan F11.6 `DuSPU` | P0 |
+| Chat: all failure states | ✅ "Agent Working & Failure States" board | ✅ reconnecting F11.8 `e6XAO`, reply failed F11.9 `vBCdH` | P0 |
 | Chat: auth expired, draft kept | ➕ | ➕ | P0 |
-| Composer states (attachments, disabled, drag-drop) | ✅ | 🔧 broken in 3 screens (see §9); ➕ keyboard-open state | P0 |
-| Sessions sidebar / drawer | ✅ | ✅ F10.5 `i46aRN` (🔧 composer) | P0 |
-| Sessions: loading skeleton | ✅ States board | ➕ | P0 |
-| Delete + undo | 🔧 drop the dialog, keep the undo toast | ➕ swipe or row-menu delete | P0 |
-| Agent switcher | ✅ F8.2 | ➕ bottom sheet | P0 |
-| Agent offline / not found | ✅ States board | ➕ | P0 |
-| Artifact panel: document / code / html / table | ✅ `oQYrz`, `fUZV4`, `j2uc1W`, `LrhPn` (trim to v1 scope) | ✅ sheet `KXQcB`, 🔧 `JLUHx` composer | P0 |
+| Composer states (attachments, disabled, drag-drop) | ✅ | ✅ `Composer / Mobile` `OUcXN`; keyboard open F11.3 `w1IZ2`; disabled F11.11 | P0 |
+| Sessions sidebar / drawer | ✅ | ✅ F10.5 `i46aRN` | P0 |
+| Sessions: loading skeleton | ✅ States board | ✅ F11.15 `JgaZ9` | P0 |
+| Delete + undo | ✅ no dialog: F7.6 `Ba2LD`, F7.7 `ZX9nG` | ✅ long-press F11.16 `G6iHV`, swipe F11.17 `mepQO`, undo F11.18 `XRu2z` | P0 |
+| Agent switcher | ✅ F8.2 | ✅ bottom sheet F11.10 `wE4kz` | P0 |
+| Agent offline / not found | ✅ States board | ✅ offline F11.11 `t4QWfb`; ➕ agent not found (reuse F11.19) | P0 |
+| Artifact panel: document / code / html / table | ✅ `oQYrz`, `fUZV4`, `j2uc1W`, `LrhPn` (trim to v1 scope) | ✅ sheet `KXQcB`, chat `JLUHx` | P0 |
 | Artifact: streaming while generating | ✅ F3.2 | ➕ | P0 |
-| Approval card (all 4 states) | ✅ | ✅ F10.6 `GCuQ2` (pending only; ➕ approved / denied / expired) | P0 |
+| Approval card (all 4 states) | ✅ | ✅ pending F10.6 `GCuQ2`; approved F11.12 `c16G99`, denied F11.13 `s9qGv`, expired F11.14 `AKLDi` | P0 |
 | Approval waiting in another session (sidebar dot) | ➕ | ➕ | P0 |
-| Questions (quick reply / choice) | ✅ Agent-Initiated board | ➕ | P0 |
-| Attachments: upload, fail, too large, wrong type | 🔧 exists but add "too large" / "unsupported" copy | ➕ camera / photo picker entry | P0 |
-| 404 session | ➕ (reuse agent-not-found pattern) | ➕ | P0 |
+| Questions (quick reply / choice) | ✅ Agent-Initiated board | ✅ choice F11.7 `wiL50` | P0 |
+| Attachments: upload, fail, too large, wrong type | 🔧 exists but add "too large" / "unsupported" copy | ✅ attach sheet F11.4 `BXfKu`; unsupported type F11.3 | P0 |
+| 404 session | ➕ (reuse agent-not-found pattern) | ✅ F11.19 `HfWCC` | P0 |
 | ⌘K palette | ✅ `B5LZKO` | ➕ search screen | P1 |
 | Share dialog + public shared view | ✅ dialog | ➕ public read-only page (desktop and mobile) | P1 |
 | Agent detail | ✅ `x05s4W` | ➕ | P1 |
-| Settings | 🔧 `Za8Qd`: hide Dark, move shortcuts out | ➕ | P1 |
+| Settings | 🔧 `Za8Qd`: move shortcuts out (Dark and System already hidden) | ➕ | P1 |
 | Artifacts library / Archived | ✅ | ➕ | P1 |
 | Forms | ✅ | ➕ | P1 |
 | Add / Edit agent, Face ID, voice, doc edit, compare, onboarding, shortcuts overlay | ✅ (parked) | n/a | P2 |
 
-**Mobile screens to add for v1 (13):**
-1. New session with starters
-2. Streaming reply with tool chips
-3. Plan card
-4. Error and reconnect banners
-5. Composer with keyboard open, and attachments
-6. Agent switcher sheet
-7. Approval approved / denied / expired
-8. Question card
-9. Agent offline
-10. 404
-11. Catalog loading
-12. Sessions loading
-13. Row menu (rename / delete)
+**Mobile screens for v1: done.** The 13 missing items (new session, streaming with tool chips, plan card, error and reconnect, keyboard-open composer with attachments, agent switcher sheet, approval approved / denied / expired, question card, agent offline, 404, catalog loading, sessions loading, row menu) are designed as Flow 11, 19 screens in all (F11.1–F11.19). Variants got their own step so every screen has a trigger note. Delete on mobile supports both long-press and swipe.
+
+Still missing on mobile for P0: catalog error, catalog empty, auth expired, artifact streaming, approval waiting in another session, agent not found.
 
 P1 adds the public shared session, search and agent detail.
 
@@ -337,24 +326,24 @@ This assumes A3: about 20 hours a week, starting Tue 29 Sep 2026. Each milestone
 This is a good base. The changes below are ordered by importance.
 
 **Bugs to fix before build (design fix pass, M0):**
-1. **The agent disclaimer is hard-coded to "Coding Agent… isolated sandbox"** on 21 screens belonging to other agents (F3.1–F3.3, F4.1–F4.5, F4.7, F5.1–F5.7, F6.5, F6.8, F8.4–F8.5, F9.8). **Fix:** make the disclaimer a Composer property fed from the descriptor (F02).
-2. **Mobile composer replaced by a Checkbox** on `JLUHx` (Mobile — Chat with artifact), `j57Yaa` (F10.2) and `i46aRN` (F10.5). These screens have no composer. **Fix:** rebuild the mobile composer as a component variant.
-3. **Delete copy contradicts itself.** The States board dialog says "This can't be undone", while F7.6 and F7.7 offer a 10-second undo. F7.6 also asks for confirmation *and* offers undo, which is double friction. **Fix:** no dialog; delete immediately with Undo. Keep typed confirmation for Delete all only.
-4. **Wrong composer placeholder:** the HTML preview screen (`j2uc1W`) says "Ask for changes to the brief…" for a budget dashboard. **Fix:** "Ask for changes to Budget dashboard…"
-5. **New sessions don't appear in the sidebar** in several flow screens (a known issue). This also hides the core session-creation moment. **Fix:** add the new session at the top with a "new" state.
+1. **The agent disclaimer is hard-coded to "Coding Agent… isolated sandbox"** on 21 screens belonging to other agents (F3.1–F3.3, F4.1–F4.5, F4.7, F5.1–F5.7, F6.5, F6.8, F8.4–F8.5, F9.8). **Fix:** make the disclaimer a Composer property fed from the descriptor (F02). **Done:** `Composer Disclaimer` component `QTWM6`, per-agent copy.
+2. **Mobile composer replaced by a Checkbox** on `JLUHx` (Mobile — Chat with artifact), `j57Yaa` (F10.2) and `i46aRN` (F10.5). These screens have no composer. **Fix:** rebuild the mobile composer as a component variant. **Done:** `Composer / Mobile` component `OUcXN`.
+3. **Delete copy contradicts itself.** The States board dialog says "This can't be undone", while F7.6 and F7.7 offer a 10-second undo. F7.6 also asks for confirmation *and* offers undo, which is double friction. **Fix:** no dialog; delete immediately with Undo. Keep typed confirmation for Delete all only. **Done:** F7.6 is now "Delete from row menu"; the Confirm Dialog is kept for Delete all only.
+4. **Wrong composer placeholder:** the HTML preview screen (`j2uc1W`) says "Ask for changes to the brief…" for a budget dashboard. **Fix:** "Ask for changes to Budget dashboard…" **Done**, and the same fix on the Spreadsheet screen (`LrhPn`).
+5. **New sessions don't appear in the sidebar** in several flow screens (a known issue). This also hides the core session-creation moment. **Fix:** add the new session at the top with a "new" state. **Done** on F2.3–F2.4, F5.1–F5.7, F6.7 and F8.3.
 
 **Structural changes:**
 6. **"Beta" is mixed up with health status.** Online / Degraded / Offline is *health* (computed); Beta is *maturity* (declared). A beta agent can be offline. **Fix:** a status dot plus a separate `Beta` tag. The filter chips become: All · Available · Unavailable, or just go away (next item).
-7. **The catalog is over-built for 6 agents.** Filter chips with counts, a sort menu and search are furniture for 50 agents. **Fix:** in v1 show the grid, the "Continue where you left off" list and search only above 8 agents. Drop the sort menu. Replace "Add agent" (a flow we're not building) with a quiet "Register an agent" doc link.
-8. **The sidebar nav is heavy.** Seven items sit above the session list (switcher, New, Search, All agents, Artifacts, Archived, plus settings), which pushes the list, the thing you actually come back for, down. **Fix:** keep the switcher, New session and Search; move All agents, Artifacts and Archived to the footer and ⌘K.
+7. **The catalog is over-built for 6 agents.** *(Mobile filter chips removed from F10.1 and F11.1; desktop still open.)* Filter chips with counts, a sort menu and search are furniture for 50 agents. **Fix:** in v1 show the grid, the "Continue where you left off" list and search only above 8 agents. Drop the sort menu. Replace "Add agent" (a flow we're not building) with a quiet "Register an agent" doc link.
+8. **The sidebar nav is heavy.** Seven items sit above the session list (switcher, New, Search, All agents, Artifacts, Archived, plus settings), which pushes the list, the thing you actually come back for, down. **Fix:** keep the switcher, New session and Search; move All agents, Artifacts and Archived to the footer and ⌘K. **Done** in the `Sidebar` and `Sidebar Footer` components.
 9. **Trash icon in the chat header.** A destructive action sits one click away in primary chrome, next to the session title. **Fix:** move it into the ⋯ menu. Also move the session id and message count (`ses_7f3a91 · 6 messages`) into the Session info drawer.
 10. **Face ID step (F4.2) implies a real bank integration** ("Your approval is sent to your bank"). **Fix:** park it for P2. The v1 approval is an in-app decision with an audit record; its copy should say "Nothing is sent until you approve".
 11. **Approvals need a presence outside their own session.** If you're in another session, a pending approval is invisible and quietly expires. **Fix:** a sidebar badge on the session plus a toast. Design it.
-12. **Dark mode is offered but not designed.** **Fix:** remove the option from Settings for v1.
+12. **Dark mode is offered but not designed.** **Fix:** remove the option from Settings for v1. **Done:** Dark and System are hidden; only Light remains.
 13. **"Mock API" chip in the app header.** It's dev chrome in a portfolio product. **Fix:** show it only in dev builds.
 
 **System hygiene:**
-14. **Contrast.** `text-tertiary` #8E897E is 3.3:1 on `bg` and 2.9:1 on `surface-muted`. It fails WCAG AA for the small text it's used for (timestamps, helper text, the disclaimer; 842 fills in the file). **Fix:** #6F6A62, which passes AA on every surface (4.5–5.1:1). `busy` (#C98A1B, 2.8:1) is fine as a dot but not as text; use #8A5A12 for amber text.
+14. **Contrast.** `text-tertiary` #8E897E is 3.3:1 on `bg` and 2.9:1 on `surface-muted`. It fails WCAG AA for the small text it's used for (timestamps, helper text, the disclaimer; 842 fills in the file). **Fix:** #6F6A62, which passes AA on every surface (4.5–5.1:1). `busy` (#C98A1B, 2.8:1) is fine as a dot but not as text; use #8A5A12 for amber text. **Done** for `text-tertiary`; the amber text colour is still open.
 15. **Type scale sprawl.** There are 26 font sizes, including 12.5, 13.5, 14.5 and 15.5. **Fix:** 7 steps: 12 / 13 / 14 / 15 / 20 / 28 / 40.
 16. **Colour sprawl.** There are 99 raw hex fills next to 17 tokens. **Fix:** tokenise the agent palette (`agent-{hue}-bg/fg`), the amber warning set, hover states and chart colours. Callout variants become component variants, not per-instance overrides.
 17. **Charts are hand-drawn with fixed coordinates.** **Fix:** specify them as a component spec (axes, series, tooltip) implemented with one chart library. Don't copy them from the file.

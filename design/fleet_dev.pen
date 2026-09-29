@@ -3689,10 +3689,10 @@
       "strokeWidth": {
         "top": 1
       },
-      "gap": 10,
+      "gap": 8,
       "padding": [
         12,
-        18
+        14
       ],
       "alignItems": "center",
       "children": [
@@ -3749,14 +3749,72 @@
           ]
         },
         {
-          "type": "icon",
-          "id": "dff0f",
-          "name": "Settings",
-          "width": 16,
-          "height": 16,
-          "icon": "settings",
-          "library": "lucide",
-          "fill": "$text-tertiary"
+          "type": "frame",
+          "id": "TZo3n",
+          "name": "Links",
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "r8GAW8",
+              "type": "ref",
+              "ref": "btfe4",
+              "name": "All agents",
+              "width": 26,
+              "height": 26,
+              "cornerRadius": 7,
+              "descendants": {
+                "xaABz": {
+                  "icon": "layout-grid",
+                  "fill": "$text-tertiary"
+                }
+              }
+            },
+            {
+              "id": "L17bKD",
+              "type": "ref",
+              "ref": "btfe4",
+              "name": "Artifacts",
+              "width": 26,
+              "height": 26,
+              "cornerRadius": 7,
+              "descendants": {
+                "xaABz": {
+                  "icon": "shapes",
+                  "fill": "$text-tertiary"
+                }
+              }
+            },
+            {
+              "id": "lbVJU",
+              "type": "ref",
+              "ref": "btfe4",
+              "name": "Archived",
+              "width": 26,
+              "height": 26,
+              "cornerRadius": 7,
+              "descendants": {
+                "xaABz": {
+                  "icon": "archive",
+                  "fill": "$text-tertiary"
+                }
+              }
+            },
+            {
+              "id": "m0auh",
+              "type": "ref",
+              "ref": "btfe4",
+              "name": "Settings",
+              "width": 26,
+              "height": 26,
+              "cornerRadius": 7,
+              "descendants": {
+                "xaABz": {
+                  "icon": "settings",
+                  "fill": "$text-tertiary"
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -4231,12 +4289,13 @@
               "type": "ref",
               "ref": "MoK3u",
               "name": "All Agents",
-              "width": "fill_container",
+              "width": "fill_container(256)",
               "padding": [
                 8,
                 10
               ],
               "height": 32,
+              "enabled": false,
               "descendants": {
                 "qaU3E": {
                   "icon": "layout-grid",
@@ -4257,7 +4316,8 @@
               "type": "ref",
               "ref": "MoK3u",
               "name": "Artifacts",
-              "width": "fill_container",
+              "width": "fill_container(256)",
+              "enabled": false,
               "descendants": {
                 "qaU3E": {
                   "icon": "shapes",
@@ -4278,7 +4338,8 @@
               "type": "ref",
               "ref": "MoK3u",
               "name": "Archived",
-              "width": "fill_container",
+              "width": "fill_container(256)",
+              "enabled": false,
               "descendants": {
                 "qaU3E": {
                   "icon": "archive",
@@ -48289,6 +48350,12 @@
             "YDQXP/M9DTK2": {
               "fill": "$text-primary",
               "fontWeight": "600"
+            },
+            "l25fy/lbVJU": {
+              "fill": "$surface-muted"
+            },
+            "l25fy/lbVJU/xaABz": {
+              "fill": "$text-primary"
             }
           }
         },
@@ -50091,6 +50158,12 @@
             "Z4Iv3/M9DTK2": {
               "fill": "$text-primary",
               "fontWeight": "600"
+            },
+            "l25fy/L17bKD": {
+              "fill": "$surface-muted"
+            },
+            "l25fy/L17bKD/xaABz": {
+              "fill": "$text-primary"
             }
           }
         },
@@ -94259,6 +94332,12 @@
             "YDQXP/M9DTK2": {
               "fill": "$text-primary",
               "fontWeight": "600"
+            },
+            "l25fy/lbVJU": {
+              "fill": "$surface-muted"
+            },
+            "l25fy/lbVJU/xaABz": {
+              "fill": "$text-primary"
             }
           }
         },
@@ -96061,6 +96140,12 @@
             "Z4Iv3/M9DTK2": {
               "fill": "$text-primary",
               "fontWeight": "600"
+            },
+            "l25fy/L17bKD": {
+              "fill": "$surface-muted"
+            },
+            "l25fy/L17bKD/xaABz": {
+              "fill": "$text-primary"
             }
           }
         },
@@ -116946,74 +117031,6 @@
               "icon": "search",
               "library": "lucide",
               "fill": "$text-primary"
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "wZIEZ",
-          "name": "Filters",
-          "width": "fill_container",
-          "gap": 8,
-          "padding": [
-            0,
-            16,
-            12,
-            16
-          ],
-          "children": [
-            {
-              "id": "f6EVk",
-              "type": "ref",
-              "ref": "W0HHV",
-              "name": "All",
-              "fill": "$text-primary",
-              "stroke": "$text-primary",
-              "descendants": {
-                "G8zLP": {
-                  "content": "All",
-                  "fill": "$bg"
-                },
-                "LMev0": {
-                  "content": "6"
-                }
-              }
-            },
-            {
-              "id": "CMJ1Z",
-              "type": "ref",
-              "ref": "W0HHV",
-              "name": "Online",
-              "descendants": {
-                "jI7h0": {
-                  "enabled": true,
-                  "fill": "$online"
-                },
-                "G8zLP": {
-                  "content": "Online"
-                },
-                "LMev0": {
-                  "content": "4"
-                }
-              }
-            },
-            {
-              "id": "pU4pC",
-              "type": "ref",
-              "ref": "W0HHV",
-              "name": "Beta",
-              "descendants": {
-                "jI7h0": {
-                  "enabled": true,
-                  "fill": "$busy"
-                },
-                "G8zLP": {
-                  "content": "Beta"
-                },
-                "LMev0": {
-                  "content": "1"
-                }
-              }
             }
           ]
         },
