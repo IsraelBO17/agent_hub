@@ -37,10 +37,11 @@ design-index: ## Regenerate design/INDEX.md after saving the design in Pencil
 	python3 design/tools/pen_index.py
 
 # Terraform: plans only. Applying is a deliberate `terraform -chdir=... apply` after reading the plan (infra/README.md).
+# TF_DATA_DIR keeps validation away from the real backend setup, so it needs no AWS credentials.
 infra-validate: ## Format-check and validate the Terraform (no AWS calls)
 	terraform -chdir=infra fmt -check -recursive
-	terraform -chdir=infra/bootstrap init -backend=false -input=false >/dev/null && terraform -chdir=infra/bootstrap validate
-	terraform -chdir=infra/envs/dev init -backend=false -input=false >/dev/null && terraform -chdir=infra/envs/dev validate
+	cd infra/bootstrap && TF_DATA_DIR=.terraform-validate terraform init -backend=false -input=false >/dev/null && TF_DATA_DIR=.terraform-validate terraform validate
+	cd infra/envs/dev && TF_DATA_DIR=.terraform-validate terraform init -backend=false -input=false >/dev/null && TF_DATA_DIR=.terraform-validate terraform validate
 
 infra-plan-bootstrap: ## Plan the state bucket and DNS zone (needs AWS_PROFILE)
 	terraform -chdir=infra/bootstrap init -input=false >/dev/null && terraform -chdir=infra/bootstrap plan
