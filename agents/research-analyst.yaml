@@ -1,0 +1,44 @@
+# Descriptor for Agent Hub (profile: agent_hub/docs/AGENT_PROFILE.md; shape: openapi.yaml → Agent).
+# Registered with `hub agents add agent.yaml` in an agent-onboarding pull request once deployed to dev.
+slug: research-analyst
+name: Research Analyst
+description: Reads the web pages you give it and answers your questions from what they say, with links to its sources.
+tagline: Answers from the pages you share
+greeting: What should I read for you?
+icon: book-open-text # lucide
+color: blue
+stage: beta # beta | stable
+version: 0.1.0
+framework: strands
+runtimeType: agentcore
+runtimeArn: arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD # dev
+details:
+  model: Claude Sonnet 5
+  region: us-east-1
+disclaimer: It only reads the pages you link, and those pages can be wrong or out of date.
+capabilities:
+  attachments:
+    enabled: false
+    contentTypes: []
+    maxFileBytes: 0
+    maxFiles: 0
+  artifacts: false
+  approvals: false
+  questions: false
+tools:
+  - name: fetch_url
+    description: Reads a web page you link
+    requiresApproval: false # read (SPEC.md); keep in sync with AGENT_APPROVAL_TOOLS
+starters:
+  - title: Summarise a page
+    description: Five bullet points, with a link to the page
+    prompt: "Summarise this page in five bullet points: "
+  - title: Compare two pages
+    description: Where they agree and where they differ
+    prompt: "Compare what these two pages say about "
+  - title: Check a claim
+    description: Does the source actually say it?
+    prompt: "Does this page support the claim that "
+  - title: Pull out the numbers
+    description: Key figures, with context
+    prompt: "List the key figures on this page, with context: "
