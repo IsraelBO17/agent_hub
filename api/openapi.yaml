@@ -3201,8 +3201,9 @@ components:
       description: |
         The payload the API sends to every agent (`InvokeAgentRuntime` for `agentcore`, a POST for `http`), D18 and D20.
         Not a browser API. Agents are stateless between calls: history comes in every time. `runtimeSessionId` is our
-        session id, but agents must not depend on it. The agent's **output** format is recorded from the real runtime in
-        build step 8 before the translator is written (D10).
+        session id, but agents must not depend on it. The agent's **output** (an SSE stream of JSON frames ending in
+        `result` or `error`) is recorded from the real runtime in `api/tests/fixtures/agentcore/` (D10). To stop a
+        running reply, send `AgentCancel` on the same runtime session.
       type: object
       required: [messages, input, attachments, context]
       properties:
@@ -3278,3 +3279,40 @@ components:
           enum: [approve, deny]
         reason:
           type: string
+    AgentCancel:
+      x-contract: agent
+      description: |
+        Stops a running reply (Stop, SEND_MESSAGE rule 7). Sent as a second `InvokeAgentRuntime` on **the same
+        `runtimeSessionId`** as the reply: AgentCore routes a session to one microVM, so it reaches the process running
+        the reply. Closing the reply's response stream does not stop the agent, and neither does `StopRuntimeSession`
+        (verified; `api/tests/fixtures/agentcore/README.md`). The agent answers with one `AgentCancelResult` frame; the
+        running reply then ends with `{"result": {"stopReason": "cancelled"}}` at its next checkpoint (model output,
+        before or during a tool call).
+      type: object
+      additionalProperties: false
+      required: [cancel]
+      properties:
+        cancel:
+          type: object
+          additionalProperties: false
+          required: [messageId]
+          properties:
+            messageId:
+              $ref: '#/components/schemas/Uuid'
+              description: '`context.messageId` of the reply to stop.'
+    AgentCancelResult:
+      x-contract: agent
+      description: |
+        The agent's single frame in answer to `AgentCancel`. `cancelled: false` means no reply with that id is running
+        in the process the session reached (it already finished, or the session was restarted); treat it as stopped.
+      type: object
+      required: [cancel]
+      properties:
+        cancel:
+          type: object
+          required: [messageId, cancelled]
+          properties:
+            messageId:
+              $ref: '#/components/schemas/Uuid'
+            cancelled:
+              type: boolean
