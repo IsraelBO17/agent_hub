@@ -1,0 +1,29 @@
+{
+  "case": "invalid-payload",
+  "recorded_at": "2026-09-30T11:26:44+00:00",
+  "runtime_arn": "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
+  "runtime_session_id": "fleet-record-invalid-payload-a0fa81a9-f957-4ef6-a61f-b04347168155",
+  "request": {
+    "input": "hi"
+  },
+  "response": {
+    "status": 200,
+    "content_type": "text/event-stream; charset=utf-8",
+    "headers": {
+      "content-type": "text/event-stream; charset=utf-8",
+      "transfer-encoding": "chunked",
+      "connection": "keep-alive",
+      "x-amzn-bedrock-agentcore-runtime-session-id": "fleet-record-invalid-payload-a0fa81a9-f957-4ef6-a61f-b04347168155"
+    }
+  },
+  "timing": {
+    "first_byte_s": 0.657,
+    "total_s": 0.658,
+    "frames": [
+      {
+        "at_s": 0.658,
+        "bytes": 118
+      }
+    ]
+  }
+}

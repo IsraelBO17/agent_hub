@@ -1,0 +1,2 @@
+data: {"error": "messages is required", "error_type": "ValueError", "message": "An error occurred during streaming"}
+

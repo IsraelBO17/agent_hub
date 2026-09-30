@@ -1,0 +1,78 @@
+data: {"init_event_loop": true}
+
+data: {"start": true}
+
+data: {"start_event_loop": true}
+
+data: {"event": {"messageStart": {"role": "assistant"}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "Total trav"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "el time is 3"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "h"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "25"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "m, minus the"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": " 25-minute st"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "op g"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "ives 3"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": " hours of act"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "ual mo"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": "ving time, so speed is"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": " 270/3 = 90"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"text": " km/h.\n\n"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"reasoningContent": {"signature": "Et8CCnkIEhABGAIqQH5peItDclEMcOyq60VkOqpiGaliU32+RJPrJToBitnqETsqE7fHOn9NdSzxMVTX6NyEO09Nfj2xOR/CZNbZ2kIyDmNsYXVkZS1zYWZmcm9uOABCCHRoaW5raW5nWgw5OTIzODI4MTA2NTOoAenj89UGEgx3aJagVmMqLQMF8ZEaDIK2v0xTAfq57oFpmSIwksyA1YsOMelH5I+2CoTHh/ZCVY/7hDnXV5NKgP56+fgpSkR1keRB6WOJqlLtdp4HKpMBO6DZ6ZMMMiT0OhhYTCBzxJOE8JP1ArMdC+4pxkUMpMXDGtmvtda/+EExTCspcAjm5QAT7CnJIk174+kNoNqPdQ5oqeAlvrotdvou9HnA+KFT5TKnwpHnI7tSS1S1RGdGP9MQmRZbAWITBxsWMRTbBz3S9zgMEJeofy+pr+lzGUbFpbhkPmUPmI+G448uc0+unAvZGAE="}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockStop": {"contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "Total"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " journ"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "ey time is 3h25m"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " (205 min"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "); subtrac"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "ting the 25-minute st"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "op leaves 180 min"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "utes (3 h"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": ") of act"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "ual moving time,"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " so average"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " moving speed = 270 "}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "km ÷ 3 "}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "h = **90 km/h"}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "**."}, "contentBlockIndex": 1}}}
+
+data: {"event": {"contentBlockStop": {"contentBlockIndex": 1}}}
+
+data: {"event": {"messageStop": {"stopReason": "end_turn"}}}
+
+data: {"event": {"metadata": {"usage": {"inputTokens": 1761, "outputTokens": 156, "totalTokens": 1917}, "metrics": {"latencyMs": 4641}}}}
+
+data: {"message": {"role": "assistant", "content": [{"reasoningContent": {"reasoningText": {"text": "Total travel time is 3h25m, minus the 25-minute stop gives 3 hours of actual moving time, so speed is 270/3 = 90 km/h.\n\n", "signature": "Et8CCnkIEhABGAIqQH5peItDclEMcOyq60VkOqpiGaliU32+RJPrJToBitnqETsqE7fHOn9NdSzxMVTX6NyEO09Nfj2xOR/CZNbZ2kIyDmNsYXVkZS1zYWZmcm9uOABCCHRoaW5raW5nWgw5OTIzODI4MTA2NTOoAenj89UGEgx3aJagVmMqLQMF8ZEaDIK2v0xTAfq57oFpmSIwksyA1YsOMelH5I+2CoTHh/ZCVY/7hDnXV5NKgP56+fgpSkR1keRB6WOJqlLtdp4HKpMBO6DZ6ZMMMiT0OhhYTCBzxJOE8JP1ArMdC+4pxkUMpMXDGtmvtda/+EExTCspcAjm5QAT7CnJIk174+kNoNqPdQ5oqeAlvrotdvou9HnA+KFT5TKnwpHnI7tSS1S1RGdGP9MQmRZbAWITBxsWMRTbBz3S9zgMEJeofy+pr+lzGUbFpbhkPmUPmI+G448uc0+unAvZGAE="}}}, {"text": "Total journey time is 3h25m (205 min); subtracting the 25-minute stop leaves 180 minutes (3 h) of actual moving time, so average moving speed = 270 km ÷ 3 h = **90 km/h**."}], "metadata": {"usage": {"inputTokens": 1761, "outputTokens": 156, "totalTokens": 1917}, "metrics": {"latencyMs": 4641, "timeToFirstByteMs": 4100}}, "tracking_id": "5cc9764a-2e5f-46a0-92cc-c14f9d8aa441"}}
+
+data: {"result": {"stopReason": "end_turn", "usage": {"inputTokens": 1761, "outputTokens": 156, "totalTokens": 1917}}}
+

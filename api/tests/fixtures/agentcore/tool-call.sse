@@ -1,0 +1,80 @@
+data: {"init_event_loop": true}
+
+data: {"start": true}
+
+data: {"start_event_loop": true}
+
+data: {"event": {"messageStart": {"role": "assistant"}}}
+
+data: {"event": {"contentBlockStart": {"start": {"toolUse": {"toolUseId": "tooluse_vzopmpUsttPXN0IOi6vSa9", "name": "fetch_url", "type": "tool_use"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": ""}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "{\"ur"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "l\""}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": ": \"https"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "://ex"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "ample.co"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "m\"}"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockStop": {"contentBlockIndex": 0}}}
+
+data: {"event": {"messageStop": {"stopReason": "tool_use"}}}
+
+data: {"event": {"metadata": {"usage": {"inputTokens": 1712, "outputTokens": 53, "totalTokens": 1765}, "metrics": {"latencyMs": 1803}}}}
+
+data: {"message": {"role": "assistant", "content": [{"toolUse": {"toolUseId": "tooluse_vzopmpUsttPXN0IOi6vSa9", "name": "fetch_url", "input": {"url": "https://example.com"}}}], "metadata": {"usage": {"inputTokens": 1712, "outputTokens": 53, "totalTokens": 1765}, "metrics": {"latencyMs": 1803, "timeToFirstByteMs": 1629}}, "tracking_id": "5338270d-494d-44b9-9234-07180839b5a5"}}
+
+data: {"message": {"role": "user", "content": [{"toolResult": {"status": "success", "content": [{"json": {"url": "https://example.com", "final_url": "https://example.com/", "status": 200, "title": "Example Domain", "text": "This domain is for use in documentation examples without needing permission. This is not a service, avoid relying on it for testing and monitoring purposes.", "truncated": false, "links": [{"text": "Learn more", "url": "https://iana.org/help/example-domains"}]}}], "toolUseId": "tooluse_vzopmpUsttPXN0IOi6vSa9"}}], "tracking_id": "8278f428-a7e5-49c6-92b9-f59c170cbea3"}}
+
+data: {"start": true}
+
+data: {"start": true}
+
+data: {"start_event_loop": true}
+
+data: {"event": {"messageStart": {"role": "assistant"}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "According"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " to the page"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " itself,"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " ["}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "example.com](https://example."}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "com) is a domain reser"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "ved for"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " use in documentation examples ("}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "not"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " meant to be relied on"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " as"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " an"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " actual service or for testing/"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "monitoring)."}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockStop": {"contentBlockIndex": 0}}}
+
+data: {"event": {"messageStop": {"stopReason": "end_turn"}}}
+
+data: {"event": {"metadata": {"usage": {"inputTokens": 1895, "outputTokens": 59, "totalTokens": 1954}, "metrics": {"latencyMs": 1997}}}}
+
+data: {"message": {"role": "assistant", "content": [{"text": "According to the page itself, [example.com](https://example.com) is a domain reserved for use in documentation examples (not meant to be relied on as an actual service or for testing/monitoring)."}], "metadata": {"usage": {"inputTokens": 1895, "outputTokens": 59, "totalTokens": 1954}, "metrics": {"latencyMs": 1997, "timeToFirstByteMs": 1361}}, "tracking_id": "b6553daa-0680-4bc5-8420-54d570909e78"}}
+
+data: {"result": {"stopReason": "end_turn", "usage": {"inputTokens": 3607, "outputTokens": 112, "totalTokens": 3719}}}
+

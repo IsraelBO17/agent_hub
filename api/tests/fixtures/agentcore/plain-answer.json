@@ -1,0 +1,136 @@
+{
+  "case": "plain-answer",
+  "recorded_at": "2026-09-30T11:26:28+00:00",
+  "runtime_arn": "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
+  "runtime_session_id": "fleet-record-plain-answer-e5a16cd2-c724-4eae-a4cc-6bd1860285a7",
+  "request": {
+    "messages": [],
+    "input": "In one sentence, what does HTTP status 404 mean?",
+    "attachments": [],
+    "context": {
+      "sessionId": "9a4a97c0-458e-4580-a26e-c60ad57ac434",
+      "messageId": "c381bcec-2678-4430-90ff-5c9e3bd55ec3",
+      "agentVersion": "0.1.0"
+    }
+  },
+  "response": {
+    "status": 200,
+    "content_type": "text/event-stream; charset=utf-8",
+    "headers": {
+      "content-type": "text/event-stream; charset=utf-8",
+      "transfer-encoding": "chunked",
+      "connection": "keep-alive",
+      "x-amzn-bedrock-agentcore-runtime-session-id": "fleet-record-plain-answer-e5a16cd2-c724-4eae-a4cc-6bd1860285a7"
+    }
+  },
+  "timing": {
+    "first_byte_s": 1.041,
+    "total_s": 3.396,
+    "frames": [
+      {
+        "at_s": 1.041,
+        "bytes": 33
+      },
+      {
+        "at_s": 1.041,
+        "bytes": 23
+      },
+      {
+        "at_s": 1.042,
+        "bytes": 34
+      },
+      {
+        "at_s": 2.642,
+        "bytes": 58
+      },
+      {
+        "at_s": 2.643,
+        "bytes": 90
+      },
+      {
+        "at_s": 3.042,
+        "bytes": 99
+      },
+      {
+        "at_s": 3.044,
+        "bytes": 120
+      },
+      {
+        "at_s": 3.045,
+        "bytes": 103
+      },
+      {
+        "at_s": 3.046,
+        "bytes": 107
+      },
+      {
+        "at_s": 3.046,
+        "bytes": 94
+      },
+      {
+        "at_s": 3.047,
+        "bytes": 100
+      },
+      {
+        "at_s": 3.048,
+        "bytes": 114
+      },
+      {
+        "at_s": 3.049,
+        "bytes": 96
+      },
+      {
+        "at_s": 3.353,
+        "bytes": 92
+      },
+      {
+        "at_s": 3.356,
+        "bytes": 95
+      },
+      {
+        "at_s": 3.358,
+        "bytes": 93
+      },
+      {
+        "at_s": 3.358,
+        "bytes": 91
+      },
+      {
+        "at_s": 3.37,
+        "bytes": 104
+      },
+      {
+        "at_s": 3.373,
+        "bytes": 119
+      },
+      {
+        "at_s": 3.375,
+        "bytes": 104
+      },
+      {
+        "at_s": 3.376,
+        "bytes": 95
+      },
+      {
+        "at_s": 3.389,
+        "bytes": 65
+      },
+      {
+        "at_s": 3.389,
+        "bytes": 62
+      },
+      {
+        "at_s": 3.391,
+        "bytes": 138
+      },
+      {
+        "at_s": 3.395,
+        "bytes": 473
+      },
+      {
+        "at_s": 3.396,
+        "bytes": 119
+      }
+    ]
+  }
+}
