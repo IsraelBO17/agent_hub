@@ -1,6 +1,6 @@
 # What AgentCore actually streams (recorded 2026-09-30)
 
-*Copied from `docs/AGENTCORE_STREAM.md` in the private `fleet-agent-research-analyst` repository, where the agent, the recorder and the replaying contract tests live. The `.sse` files here are the raw response bodies; each `.json` holds the request, the response headers and when each frame arrived.*
+*Copied from `docs/AGENTCORE_STREAM.md` in the private `fleet-agent-research-analyst` repository, where the agent, the recorders and the replaying contract tests live. The `.sse` files here are the raw response bodies; each `.json` holds the request, the response headers and when each frame arrived.*
 
 Build step 7 for issue #3. Input for the hub's stream translator (D10, agent_hub#8) and for SEND_MESSAGE's "Not verified yet" list.
 
@@ -81,4 +81,47 @@ tool-error:    → messageStop(tool_use) → metadata → message(assistant: [to
 
 A third check: while a run was in progress, a second `InvokeAgentRuntime` on **the same runtime session** was accepted within 0.6 s and reached the agent's own code, and the first run finished normally.
 
-**Consequence for the hub (SEND_MESSAGE rule 7, "Only Stop cancels"):** stopping the hub's reading stops the mirroring and the saving, but the agent keeps running and spending tokens until it finishes (bounded by its own limits: 8 tool calls, 10 model calls, 300 s). To really stop it, the agent needs a cancel signal. The simplest one the checks above support: the hub sends a second invocation on the same runtime session, e.g. `{"cancel": {"messageId": "<assistant message id>"}}`, and the agent keeps its running agents in a per-process map keyed by `context.messageId` and calls Strands' `Agent.cancel()` (the run then ends with a `result` frame whose `stopReason` is `cancelled`). Not built in v0.
+**Consequence for the hub (SEND_MESSAGE rule 7, "Only Stop cancels"):** stopping the hub's reading stops the mirroring and the saving, not the agent. So the agent has a cancel signal.
+
+## Stop: the cancel invocation
+
+To stop a running reply, the hub invokes **the same runtime session** (AgentCore routes a session to one microVM, so it reaches the process running the reply) with:
+
+```json
+{"cancel": {"messageId": "<context.messageId of the running reply>"}}
+```
+
+The reply to that invocation is one frame, then the stream ends:
+
+```json
+{"cancel": {"messageId": "…", "cancelled": true}}
+```
+
+`cancelled: false` means no reply with that id is running in this process: it already finished, or it never ran there (e.g. the session was restarted). The hub can treat both as stopped.
+
+The running reply then ends at its next checkpoint, with its usual last frame:
+
+```json
+{"result": {"stopReason": "cancelled", "usage": {…}}}
+```
+
+- **During model output** (including the silent thinking period), Strands' Bedrock provider aborts the request in flight.
+- **During a tool call**, `fetch_url` gives up within 0.1 s. The tool result is `{"error": "cancelled"}` with `status: "error"`, and no further model call is made.
+- **Between steps**, Strands checks before each tool call and each model call.
+
+Details:
+- A new run for a message id that is still running (a Retry) cancels the old run first.
+- The agent's 300 s run limit also ends a run with `stopReason: "cancelled"`. The hub knows whether it sent Stop.
+- A cancelled reply's partial text is whatever the hub already received; the agent doesn't resend it.
+
+**Checked on the deployed runtime** (version 3, image `7ee34936c986`, 2026-09-30):
+
+| Where the run was | Probe | Result |
+|---|---|---|
+| Between tool calls (page 1 read, page 2 next) | `stop_probe.py --cancel`, probe `af6df798a6a8` | `cancelled: true`; run ended 0.67 s after the cancel was sent with `stopReason: "cancelled"`; page 3 never fetched (page 2's fetch had already completed when the cancel arrived) |
+| Writing the final answer | `stop_probe.py --cancel`, probe `da74ec8560b2` | `cancelled: true`; run ended 0.64 s after the cancel was sent; no fetch after the cancel reply |
+| Inside a fetch of a page that takes 10 s | `record_cancel.py` → fixtures `cancelled-mid-fetch`, `cancel-reply` | `cancelled: true`; the tool returned `{"error": "cancelled"}` and the run ended 1.9 s after the cancel was sent, 7.0 s after the request |
+
+So the cancel reaches the process running the reply, and the reply stops at whichever point it has reached.
+
+Implementation: `research_analyst.contract.parse_payload`, `research_analyst.runs.Runs`, `app.py`; tested in `tests/test_cancel.py` (in-process, with a scripted model) and in `tests/contract/test_stream.py` against the recorded cancel fixtures.
