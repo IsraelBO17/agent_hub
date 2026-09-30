@@ -54,7 +54,10 @@ sequenceDiagram
     A->>DB: set cancel_requested_at
     A-->>B: 202 (stop request, may land on any task)
     Note over A: The task running the reply sees the flag<br/>within 2 s (checkpoint or keep-alive tick)
-    A->>R: cancel (close the AgentCore stream)
+    A->>R: InvokeAgentRuntime, same runtimeSessionId · AgentCancel {cancel: {messageId}}
+    R-->>A: AgentCancelResult {cancelled}
+    Note over A,R: Closing the reply stream or StopRuntimeSession<br/>does NOT stop the agent (verified, issue #3)
+    R-->>A: reply stream ends: result.stopReason "cancelled"
     A->>DB: keep partial blocks, status stopped
     A-->>B: event run.stopped · stream closes
     B->>U: partial reply marked "Stopped" + Retry
