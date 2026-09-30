@@ -31,7 +31,7 @@ api-test: ## Run the API tests (they recreate the schema; local database only)
 	cd api && uv run pytest
 
 contract-lint: ## Lint the OpenAPI contract
-	cd api && npx -y @redocly/cli lint openapi.yaml
+	cd api && npx -y @redocly/cli@2.56.1 lint openapi.yaml
 
 design-index: ## Regenerate design/INDEX.md after saving the design in Pencil
 	python3 design/tools/pen_index.py
