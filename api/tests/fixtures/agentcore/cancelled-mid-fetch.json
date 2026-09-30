@@ -1,0 +1,98 @@
+{
+  "case": "cancelled-mid-fetch",
+  "recorded_at": "2026-09-30T12:24:22+00:00",
+  "runtime_arn": "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
+  "runtime_session_id": "fleet-record-cancel-82b7b1de-c8aa-487c-9cf9-808e2a9963f5",
+  "request": {
+    "messages": [],
+    "input": "What does https://httpbin.org/delay/10 return? One sentence.",
+    "attachments": [],
+    "context": {
+      "sessionId": "a0d4482d-4f1d-48f4-98f8-49396494df3a",
+      "messageId": "d4bd3f77-4568-4211-8639-7098f738ac55",
+      "agentVersion": "0.1.0"
+    }
+  },
+  "response": {
+    "status": 200,
+    "content_type": "text/event-stream; charset=utf-8"
+  },
+  "timing": {
+    "first_byte_s": 1.689,
+    "total_s": 6.973,
+    "frames": [
+      {
+        "at_s": 1.689,
+        "bytes": 33
+      },
+      {
+        "at_s": 1.689,
+        "bytes": 23
+      },
+      {
+        "at_s": 1.689,
+        "bytes": 34
+      },
+      {
+        "at_s": 3.33,
+        "bytes": 58
+      },
+      {
+        "at_s": 3.33,
+        "bytes": 178
+      },
+      {
+        "at_s": 3.33,
+        "bytes": 103
+      },
+      {
+        "at_s": 3.5,
+        "bytes": 109
+      },
+      {
+        "at_s": 3.502,
+        "bytes": 115
+      },
+      {
+        "at_s": 3.502,
+        "bytes": 105
+      },
+      {
+        "at_s": 3.503,
+        "bytes": 110
+      },
+      {
+        "at_s": 3.504,
+        "bytes": 110
+      },
+      {
+        "at_s": 3.505,
+        "bytes": 112
+      },
+      {
+        "at_s": 3.505,
+        "bytes": 65
+      },
+      {
+        "at_s": 3.506,
+        "bytes": 62
+      },
+      {
+        "at_s": 3.507,
+        "bytes": 138
+      },
+      {
+        "at_s": 4.087,
+        "bytes": 389
+      },
+      {
+        "at_s": 6.677,
+        "bytes": 295
+      },
+      {
+        "at_s": 6.68,
+        "bytes": 120
+      }
+    ]
+  }
+}

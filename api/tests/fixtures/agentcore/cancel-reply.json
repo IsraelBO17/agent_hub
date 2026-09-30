@@ -1,0 +1,25 @@
+{
+  "case": "cancel-reply",
+  "recorded_at": "2026-09-30T12:24:22+00:00",
+  "runtime_arn": "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
+  "runtime_session_id": "fleet-record-cancel-82b7b1de-c8aa-487c-9cf9-808e2a9963f5",
+  "request": {
+    "cancel": {
+      "messageId": "d4bd3f77-4568-4211-8639-7098f738ac55"
+    }
+  },
+  "response": {
+    "status": 200,
+    "content_type": "text/event-stream; charset=utf-8"
+  },
+  "timing": {
+    "first_byte_s": 1.878,
+    "total_s": 1.882,
+    "frames": [
+      {
+        "at_s": 1.878,
+        "bytes": 92
+      }
+    ]
+  }
+}
