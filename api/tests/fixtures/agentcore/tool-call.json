@@ -1,0 +1,192 @@
+{
+  "case": "tool-call",
+  "recorded_at": "2026-09-30T11:26:38+00:00",
+  "runtime_arn": "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
+  "runtime_session_id": "fleet-record-tool-call-29b16079-7547-4236-8589-756198456e49",
+  "request": {
+    "messages": [],
+    "input": "What is https://example.com for? One sentence.",
+    "attachments": [],
+    "context": {
+      "sessionId": "dc167109-812c-4dff-b6ac-babc7128aab9",
+      "messageId": "b682d04f-5a55-4bbd-a8f6-892e356d3ae1",
+      "agentVersion": "0.1.0"
+    }
+  },
+  "response": {
+    "status": 200,
+    "content_type": "text/event-stream; charset=utf-8",
+    "headers": {
+      "content-type": "text/event-stream; charset=utf-8",
+      "transfer-encoding": "chunked",
+      "connection": "keep-alive",
+      "x-amzn-bedrock-agentcore-runtime-session-id": "fleet-record-tool-call-29b16079-7547-4236-8589-756198456e49"
+    }
+  },
+  "timing": {
+    "first_byte_s": 0.635,
+    "total_s": 4.718,
+    "frames": [
+      {
+        "at_s": 0.636,
+        "bytes": 33
+      },
+      {
+        "at_s": 0.636,
+        "bytes": 23
+      },
+      {
+        "at_s": 0.638,
+        "bytes": 34
+      },
+      {
+        "at_s": 2.268,
+        "bytes": 58
+      },
+      {
+        "at_s": 2.269,
+        "bytes": 178
+      },
+      {
+        "at_s": 2.269,
+        "bytes": 103
+      },
+      {
+        "at_s": 2.482,
+        "bytes": 108
+      },
+      {
+        "at_s": 2.482,
+        "bytes": 106
+      },
+      {
+        "at_s": 2.483,
+        "bytes": 112
+      },
+      {
+        "at_s": 2.483,
+        "bytes": 108
+      },
+      {
+        "at_s": 2.484,
+        "bytes": 111
+      },
+      {
+        "at_s": 2.485,
+        "bytes": 107
+      },
+      {
+        "at_s": 2.485,
+        "bytes": 65
+      },
+      {
+        "at_s": 2.485,
+        "bytes": 62
+      },
+      {
+        "at_s": 2.486,
+        "bytes": 138
+      },
+      {
+        "at_s": 2.488,
+        "bytes": 380
+      },
+      {
+        "at_s": 2.791,
+        "bytes": 596
+      },
+      {
+        "at_s": 2.792,
+        "bytes": 23
+      },
+      {
+        "at_s": 2.792,
+        "bytes": 23
+      },
+      {
+        "at_s": 2.792,
+        "bytes": 34
+      },
+      {
+        "at_s": 4.064,
+        "bytes": 58
+      },
+      {
+        "at_s": 4.065,
+        "bytes": 98
+      },
+      {
+        "at_s": 4.443,
+        "bytes": 101
+      },
+      {
+        "at_s": 4.444,
+        "bytes": 97
+      },
+      {
+        "at_s": 4.444,
+        "bytes": 91
+      },
+      {
+        "at_s": 4.447,
+        "bytes": 118
+      },
+      {
+        "at_s": 4.448,
+        "bytes": 111
+      },
+      {
+        "at_s": 4.448,
+        "bytes": 96
+      },
+      {
+        "at_s": 4.449,
+        "bytes": 121
+      },
+      {
+        "at_s": 4.449,
+        "bytes": 92
+      },
+      {
+        "at_s": 4.653,
+        "bytes": 111
+      },
+      {
+        "at_s": 4.655,
+        "bytes": 92
+      },
+      {
+        "at_s": 4.656,
+        "bytes": 92
+      },
+      {
+        "at_s": 4.659,
+        "bytes": 120
+      },
+      {
+        "at_s": 4.66,
+        "bytes": 101
+      },
+      {
+        "at_s": 4.709,
+        "bytes": 65
+      },
+      {
+        "at_s": 4.709,
+        "bytes": 62
+      },
+      {
+        "at_s": 4.712,
+        "bytes": 138
+      },
+      {
+        "at_s": 4.716,
+        "bytes": 465
+      },
+      {
+        "at_s": 4.718,
+        "bytes": 120
+      }
+    ]
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "case": "tool-error",
+  "recorded_at": "2026-09-30T11:26:43+00:00",
+  "runtime_arn": "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
+  "runtime_session_id": "fleet-record-tool-error-7baa4494-1482-4358-9532-4a85308c85ce",
+  "request": {
+    "messages": [],
+    "input": "Summarise https://www.iana.org/this-page-does-not-exist-fleet-test in one sentence.",
+    "attachments": [],
+    "context": {
+      "sessionId": "ddda10a3-d392-486a-9687-73c88a6c259e",
+      "messageId": "ee21eb36-d567-4f9c-a8e7-5847abbba073",
+      "agentVersion": "0.1.0"
+    }
+  },
+  "response": {
+    "status": 200,
+    "content_type": "text/event-stream; charset=utf-8",
+    "headers": {
+      "content-type": "text/event-stream; charset=utf-8",
+      "transfer-encoding": "chunked",
+      "connection": "keep-alive",
+      "x-amzn-bedrock-agentcore-runtime-session-id": "fleet-record-tool-error-7baa4494-1482-4358-9532-4a85308c85ce"
+    }
+  },
+  "timing": {
+    "first_byte_s": 0.661,
+    "total_s": 5.124,
+    "frames": [
+      {
+        "at_s": 0.661,
+        "bytes": 33
+      },
+      {
+        "at_s": 0.661,
+        "bytes": 23
+      },
+      {
+        "at_s": 0.661,
+        "bytes": 34
+      },
+      {
+        "at_s": 2.295,
+        "bytes": 58
+      },
+      {
+        "at_s": 2.296,
+        "bytes": 178
+      },
+      {
+        "at_s": 2.297,
+        "bytes": 103
+      },
+      {
+        "at_s": 2.607,
+        "bytes": 111
+      },
+      {
+        "at_s": 2.611,
+        "bytes": 111
+      },
+      {
+        "at_s": 2.617,
+        "bytes": 114
+      },
+      {
+        "at_s": 2.618,
+        "bytes": 106
+      },
+      {
+        "at_s": 2.622,
+        "bytes": 112
+      },
+      {
+        "at_s": 2.622,
+        "bytes": 113
+      },
+      {
+        "at_s": 2.623,
+        "bytes": 110
+      },
+      {
+        "at_s": 2.624,
+        "bytes": 114
+      },
+      {
+        "at_s": 2.624,
+        "bytes": 107
+      },
+      {
+        "at_s": 2.63,
+        "bytes": 65
+      },
+      {
+        "at_s": 2.631,
+        "bytes": 62
+      },
+      {
+        "at_s": 2.632,
+        "bytes": 138
+      },
+      {
+        "at_s": 2.635,
+        "bytes": 417
+      },
+      {
+        "at_s": 2.719,
+        "bytes": 300
+      },
+      {
+        "at_s": 2.719,
+        "bytes": 23
+      },
+      {
+        "at_s": 2.719,
+        "bytes": 23
+      },
+      {
+        "at_s": 2.72,
+        "bytes": 34
+      },
+      {
+        "at_s": 4.242,
+        "bytes": 58
+      },
+      {
+        "at_s": 4.243,
+        "bytes": 93
+      },
+      {
+        "at_s": 4.639,
+        "bytes": 94
+      },
+      {
+        "at_s": 4.639,
+        "bytes": 111
+      },
+      {
+        "at_s": 4.64,
+        "bytes": 96
+      },
+      {
+        "at_s": 4.64,
+        "bytes": 108
+      },
+      {
+        "at_s": 4.641,
+        "bytes": 117
+      },
+      {
+        "at_s": 4.641,
+        "bytes": 108
+      },
+      {
+        "at_s": 4.642,
+        "bytes": 93
+      },
+      {
+        "at_s": 4.643,
+        "bytes": 109
+      },
+      {
+        "at_s": 4.951,
+        "bytes": 97
+      },
+      {
+        "at_s": 4.952,
+        "bytes": 110
+      },
+      {
+        "at_s": 4.952,
+        "bytes": 92
+      },
+      {
+        "at_s": 4.952,
+        "bytes": 91
+      },
+      {
+        "at_s": 4.953,
+        "bytes": 93
+      },
+      {
+        "at_s": 4.953,
+        "bytes": 99
+      },
+      {
+        "at_s": 4.954,
+        "bytes": 99
+      },
+      {
+        "at_s": 5.113,
+        "bytes": 65
+      },
+      {
+        "at_s": 5.117,
+        "bytes": 62
+      },
+      {
+        "at_s": 5.118,
+        "bytes": 138
+      },
+      {
+        "at_s": 5.122,
+        "bytes": 456
+      },
+      {
+        "at_s": 5.123,
+        "bytes": 120
+      }
+    ]
+  }
+}

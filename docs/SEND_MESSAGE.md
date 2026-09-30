@@ -88,9 +88,12 @@ Errors use the common format in D23 (`code`, `requestId`, `retryable`, optional 
 | `run_time_limit` | `run.failed` with status `interrupted` | Hit the 15-min cap | "Stopped after 15 minutes" + Retry |
 | `message_too_long` | 422 | Text over 32,000 characters | Keep draft; show the limit |
 
+## Verified (2026-09-30, Research Analyst v0 on AgentCore, issue #3)
+
+- **What AgentCore actually streams:** recorded for a plain answer, thinking, a tool call, a tool error and an invalid payload in [`api/tests/fixtures/agentcore/`](../api/tests/fixtures/agentcore/README.md). HTTP 200 SSE of `data: <json>` frames only: Bedrock ConverseStream events unchanged, finished `message`s (tool calls and results), and a final `result` with the stop reason and tokens. Agent errors also arrive as HTTP 200, as one `error` frame. No keep-alives: the stream is silent while the model thinks (4 s in the recording) or a tool runs. The translator (#8) is written against these.
+- **Closing the AgentCore response stream does not stop the run**, and neither does `StopRuntimeSession`: in both probes the agent kept fetching pages seconds later. Stop (rule 7) therefore needs a cancel signal in the agent. A second invocation on the same runtime session is accepted mid-run, so the proposal is a `{"cancel": {"messageId": ...}}` invocation that calls Strands' `Agent.cancel()`. Until then, a stopped run keeps spending until the agent's own limits end it.
+
 ## Not verified yet
 
-- **What AgentCore actually streams.** The translator (step 22 in the normal-path diagram) is drawn against the app's block format; the real Strands/AgentCore output is recorded in step 8 before the translator is written.
-- **Whether closing the AgentCore response stream actually stops the agent run** on the runtime side, or only stops us reading it. Stop must be checked against the real runtime in step 8; if closing isn't enough, the agent needs a cancel signal.
 - **SSE through the ALB with keep-alives.** Proven in step 8.
 - **Resuming a Strands agent after an approval** by re-invoking it with the decision (D19). Spiked at the start of the approvals slice (P8).

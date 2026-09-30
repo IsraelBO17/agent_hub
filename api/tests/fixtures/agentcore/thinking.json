@@ -1,0 +1,188 @@
+{
+  "case": "thinking",
+  "recorded_at": "2026-09-30T11:26:33+00:00",
+  "runtime_arn": "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
+  "runtime_session_id": "fleet-record-thinking-aa994c95-0eb5-4b06-a93d-aa6d8817ef57",
+  "request": {
+    "messages": [],
+    "input": "A train leaves at 09:40 and arrives at 13:05, with a 25-minute stop halfway. What was its average moving speed if the route is 270 km? Think it through, then answer in one line.",
+    "attachments": [],
+    "context": {
+      "sessionId": "00b9e972-a73c-415a-a696-3c059321f927",
+      "messageId": "a1f6ddc7-3d7f-4f66-a55a-ea827223d27f",
+      "agentVersion": "0.1.0"
+    }
+  },
+  "response": {
+    "status": 200,
+    "content_type": "text/event-stream; charset=utf-8",
+    "headers": {
+      "content-type": "text/event-stream; charset=utf-8",
+      "transfer-encoding": "chunked",
+      "connection": "keep-alive",
+      "x-amzn-bedrock-agentcore-runtime-session-id": "fleet-record-thinking-aa994c95-0eb5-4b06-a93d-aa6d8817ef57"
+    }
+  },
+  "timing": {
+    "first_byte_s": 0.69,
+    "total_s": 5.402,
+    "frames": [
+      {
+        "at_s": 0.69,
+        "bytes": 33
+      },
+      {
+        "at_s": 0.69,
+        "bytes": 23
+      },
+      {
+        "at_s": 0.691,
+        "bytes": 34
+      },
+      {
+        "at_s": 4.791,
+        "bytes": 58
+      },
+      {
+        "at_s": 4.792,
+        "bytes": 121
+      },
+      {
+        "at_s": 4.792,
+        "bytes": 123
+      },
+      {
+        "at_s": 4.793,
+        "bytes": 112
+      },
+      {
+        "at_s": 4.808,
+        "bytes": 113
+      },
+      {
+        "at_s": 4.84,
+        "bytes": 123
+      },
+      {
+        "at_s": 4.846,
+        "bytes": 124
+      },
+      {
+        "at_s": 4.85,
+        "bytes": 115
+      },
+      {
+        "at_s": 4.908,
+        "bytes": 117
+      },
+      {
+        "at_s": 4.965,
+        "bytes": 124
+      },
+      {
+        "at_s": 4.996,
+        "bytes": 117
+      },
+      {
+        "at_s": 5.09,
+        "bytes": 133
+      },
+      {
+        "at_s": 5.092,
+        "bytes": 122
+      },
+      {
+        "at_s": 5.136,
+        "bytes": 121
+      },
+      {
+        "at_s": 5.142,
+        "bytes": 592
+      },
+      {
+        "at_s": 5.142,
+        "bytes": 65
+      },
+      {
+        "at_s": 5.143,
+        "bytes": 94
+      },
+      {
+        "at_s": 5.144,
+        "bytes": 95
+      },
+      {
+        "at_s": 5.144,
+        "bytes": 105
+      },
+      {
+        "at_s": 5.145,
+        "bytes": 98
+      },
+      {
+        "at_s": 5.146,
+        "bytes": 99
+      },
+      {
+        "at_s": 5.146,
+        "bytes": 110
+      },
+      {
+        "at_s": 5.147,
+        "bytes": 106
+      },
+      {
+        "at_s": 5.147,
+        "bytes": 98
+      },
+      {
+        "at_s": 5.148,
+        "bytes": 97
+      },
+      {
+        "at_s": 5.148,
+        "bytes": 105
+      },
+      {
+        "at_s": 5.149,
+        "bytes": 100
+      },
+      {
+        "at_s": 5.149,
+        "bytes": 109
+      },
+      {
+        "at_s": 5.15,
+        "bytes": 97
+      },
+      {
+        "at_s": 5.15,
+        "bytes": 102
+      },
+      {
+        "at_s": 5.151,
+        "bytes": 92
+      },
+      {
+        "at_s": 5.389,
+        "bytes": 65
+      },
+      {
+        "at_s": 5.39,
+        "bytes": 62
+      },
+      {
+        "at_s": 5.392,
+        "bytes": 139
+      },
+      {
+        "at_s": 5.401,
+        "bytes": 1113
+      },
+      {
+        "at_s": 5.401,
+        "bytes": 120
+      }
+    ]
+  }
+}

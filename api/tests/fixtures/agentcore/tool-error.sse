@@ -1,0 +1,90 @@
+data: {"init_event_loop": true}
+
+data: {"start": true}
+
+data: {"start_event_loop": true}
+
+data: {"event": {"messageStart": {"role": "assistant"}}}
+
+data: {"event": {"contentBlockStart": {"start": {"toolUse": {"toolUseId": "tooluse_uILLUDHKdNE0cZCSPbVoQs", "name": "fetch_url", "type": "tool_use"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": ""}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "{\"url\""}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": ": \"http"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "s://www.ian"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "a.o"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "rg/this-p"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "age-does-n"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "ot-exis"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "t-fleet-tes"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"toolUse": {"input": "t\"}"}}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockStop": {"contentBlockIndex": 0}}}
+
+data: {"event": {"messageStop": {"stopReason": "tool_use"}}}
+
+data: {"event": {"metadata": {"usage": {"inputTokens": 1733, "outputTokens": 73, "totalTokens": 1806}, "metrics": {"latencyMs": 1928}}}}
+
+data: {"message": {"role": "assistant", "content": [{"toolUse": {"toolUseId": "tooluse_uILLUDHKdNE0cZCSPbVoQs", "name": "fetch_url", "input": {"url": "https://www.iana.org/this-page-does-not-exist-fleet-test"}}}], "metadata": {"usage": {"inputTokens": 1733, "outputTokens": 73, "totalTokens": 1806}, "metrics": {"latencyMs": 1928, "timeToFirstByteMs": 1613}}, "tracking_id": "110df6c1-2275-4339-9ac0-7322c34ba9a6"}}
+
+data: {"message": {"role": "user", "content": [{"toolResult": {"status": "error", "content": [{"json": {"error": "http_error", "detail": "The server answered 404 Not Found.", "status": 404}}], "toolUseId": "tooluse_uILLUDHKdNE0cZCSPbVoQs"}}], "tracking_id": "c02f456c-460f-4d30-9b32-f72a629249cd"}}
+
+data: {"start": true}
+
+data: {"start": true}
+
+data: {"start_event_loop": true}
+
+data: {"event": {"messageStart": {"role": "assistant"}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "That"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " page"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " doesn't exist — the"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " server"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " returned a 404 Not"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " Found error when I tried to"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " fetch it, so there"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "'s n"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "othing to summarize."}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " Double-"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "check the URL or send"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " me"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " a"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " val"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": "id link on"}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockDelta": {"delta": {"text": " iana.org."}, "contentBlockIndex": 0}}}
+
+data: {"event": {"contentBlockStop": {"contentBlockIndex": 0}}}
+
+data: {"event": {"messageStop": {"stopReason": "end_turn"}}}
+
+data: {"event": {"metadata": {"usage": {"inputTokens": 1841, "outputTokens": 65, "totalTokens": 1906}, "metrics": {"latencyMs": 2393}}}}
+
+data: {"message": {"role": "assistant", "content": [{"text": "That page doesn't exist — the server returned a 404 Not Found error when I tried to fetch it, so there's nothing to summarize. Double-check the URL or send me a valid link on iana.org."}], "metadata": {"usage": {"inputTokens": 1841, "outputTokens": 65, "totalTokens": 1906}, "metrics": {"latencyMs": 2393, "timeToFirstByteMs": 1526}}, "tracking_id": "34169434-8493-46b0-9935-07bac1b7fd1d"}}
+
+data: {"result": {"stopReason": "end_turn", "usage": {"inputTokens": 3574, "outputTokens": 138, "totalTokens": 3712}}}
+
