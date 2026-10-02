@@ -1,0 +1,37 @@
+# API profile: Agent Hub (project `fleet`)
+
+Agent Hub's API follows the [API Development Standard](https://github.com/IsraelBO17/api-standard/blob/main/docs/STANDARD.md) and is built from the [`api-standard`](https://github.com/IsraelBO17/api-standard) template, whose contents live in `api/` (D24). This profile adds Agent Hub's values and the choices the standard leaves to a profile (standard §21). It never weakens the standard. Where a rule here and a decision in [`ARCHITECTURE.md`](ARCHITECTURE.md) disagree, the decision wins and this file is fixed.
+
+## Rules
+
+| Topic | Agent Hub rule |
+|---|---|
+| Repository | Monorepo (D24): the template's files go in `api/`; the root `Makefile` calls them as `make api-*` (`make db-up`, `make api-test`, `make contract-lint`) |
+| Contract | [`api/openapi.yaml`](../api/openapi.yaml) (D23), linted by `make contract-lint` (Redocly, pinned) as well as the template's validity test. Not served by the API (`DOCS_ENABLED=false`) |
+| Validation status | **422** `invalid_request` (the contract's choice; standard §9 allows it): `VALIDATION_STATUS=422`. Every other `[422]` code in `ErrorCode` (`empty_message`, `file_too_large`, …) is a validation-class error too |
+| Errors | RFC 9457 with `code`, `requestId`, `retryable`, `retryAfter`; `type` is `https://fleet.qucoon.com/errors/<code>` (`ERRORS_BASE_URL=https://fleet.qucoon.com/errors/`). Streams and stored errors (`run.failed`, `messages.error`) use the same object (D23) |
+| Wire | Standard defaults: `/v1`, camelCase, UUIDs, RFC 3339 UTC. Cursor pagination with `limit` ≤ 100; **messages page backwards by `seq`**, not by `created_at` (D23). Agents are addressed by slug |
+| Tables | Already named without feature prefixes (`users`, `sessions`, `messages`, …; `docs/DATA_MODEL.md`), and they stay that way. Owner column `user_id` on every user-owned table; children use composite foreign keys `(parent_id, user_id)` (D9). Enumerations are text + `CHECK` |
+| Identity | Google sign-in (D8): the browser posts a Google ID token once to `POST /v1/auth/google`; the API verifies it (Google's keys, `aud` = `GOOGLE_CLIENT_ID`, `iss`, `exp`, `email_verified`), looks the user up by Google `sub`, and issues its own session. Only invited users sign in (D9: unknown → `403 not_invited`, inactive → `403 account_disabled`) |
+| Sessions | Access token about 15 minutes, held in memory. Refresh token 30 days, rotated on every use, stored hashed in `refresh_tokens`, reuse revokes the family. Cookie `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, host-only on `api.fleet.qucoon.com` (D8, D25). `/v1/auth/*` checks `Origin` |
+| CORS | Only the app origin `https://fleet.qucoon.com` (injected as `APP_ORIGIN`), with credentials. The local web app (`http://localhost:5173`) is allowed in local settings only |
+| Database | Neon Postgres, us-east-1 (D3). The app uses the **pooled** URL (`DATABASE_URL`, PgBouncer transaction mode); migrations use the **direct** URL (`DATABASE_URL_DIRECT`). TLS required. Prepared statements: off (`DB_PREPARED_STATEMENTS=false`) until the issue #5 test through Neon's pooler decides; the result is recorded in D3. Expect a slow first query after Neon's idle resume: connect timeout 10 s, one retry |
+| Streams | `POST /v1/sessions/{id}/messages` returns SSE read with `fetch` (D5). Event names, statuses and timers are in [`SEND_MESSAGE.md`](SEND_MESSAGE.md): keep-alive `: ping` every 15 s from the API's own timer (which also writes `heartbeat_at`), checkpoints at block ends and at least every 2 s, run cap 15 minutes (per-agent override), stale heartbeat 60 s. **A disconnect does not cancel** (D11); only Stop does, through `messages.cancel_requested_at`, picked up within 2 s, then an `AgentCancel` invocation on the same runtime session (P4) |
+| Agent calls | `InvokeAgentRuntime` only for runtimes listed by exact ARN (`agent_runtime_arns`, D27). The call runs in its own task, outside any database transaction; the SSE response mirrors it (SEND_MESSAGE rule 5) |
+| Background work | One API task, no autoscaling (P7): the job worker runs inside the API process (`RUN_WORKER_IN_API=true`). Sweeps: stale-heartbeat sweep (every minute and at startup, P1), approval expiry (D19), the session purge. A reply stream is not a job; its `messages` row is its record (standard §13) |
+| Limits | At most 3 running replies per user (`429 too_many_runs`, D23), enforced in Postgres. Uploads: 20 MB per file, 10 per message, `pdf png jpeg webp gif csv txt`, narrowed per agent (D23) |
+| Files | One private S3 bucket (`FILES_BUCKET`); presigned PUT/GET only after an ownership check; keys start `u/{userId}/` (D7). Agents get 15-minute signed GET URLs (D20) |
+| Settings | ECS injects plain values `APP_ENV`, `PORT` (8000), `APP_ORIGIN`, `FILES_BUCKET`, `GOOGLE_CLIENT_ID`, `AWS_REGION`, and from Secrets Manager `DATABASE_URL`, `DATABASE_URL_DIRECT`, `SESSION_SIGNING_KEY` (D15). The API's `Settings` read `APP_ENV` as the standard's `ENV` and `APP_ORIGIN` as `CORS_ORIGINS=[APP_ORIGIN]`. Code defaults for the rest: `FORWARDED_ALLOW_IPS=*` (the task's security group admits only the ALB), `SHUTDOWN_GRACE_SECONDS=110`, `TOKEN_ISSUER`/`TOKEN_AUDIENCE=https://api.fleet.qucoon.com` |
+| Cloud | AWS account `ml_account` (992382810653), us-east-1, shared with other projects (D27). Plan with `AWS_PROFILE=ml_account`; never apply without the owner's yes |
+| Names | `fleet-<env>-<component>-<type>-<region>`, e.g. `fleet-dev-api-alb-us-east-1`, `fleet-dev-api-ecr-us-east-1` (D26) |
+| Tags | `Owner`, `Project=fleet`, `Environment`, `aws-apn-id`, `ManagedBy=terraform` on every resource via provider `default_tags`; `Owner` and `aws-apn-id` values only in the gitignored `infra/envs/dev/terraform.tfvars` (D26). This repository is public |
+| Deploy | ECS Fargate, ARM64, one task, behind an ALB on `api.fleet.qucoon.com` (D2, D25). ALB idle timeout 300 s, deregistration delay 300 s, health check `GET /v1/health`; container stop timeout 120 s; rolling deploys at 100 % / 200 % (D5, P2). Image in ECR `fleet-dev-api-ecr-us-east-1`, tagged with the git SHA. The API is switched on by `enable_api = true`; non-secret values (image tag, desired count, runtime ARNs) live in a committed variables file, not the gitignored tfvars |
+| Migrations | Alembic with `DATABASE_URL_DIRECT`, before the new image takes traffic: a one-off ECS task of the same image (`alembic upgrade head`), or `make api-migrate` from a trusted machine until that task exists in Terraform |
+| Logs and tracing | JSON logs to CloudWatch through the task's log driver. Traces: OpenTelemetry with ADOT, collector-less to CloudWatch; **not enabled yet**, because Transaction Search is an account-wide setting in a shared account (owner's decision) |
+| Data | One user in v1 (D9); Postgres is the record of every conversation (D4); uploads and artifacts in S3 with metadata in Postgres (D7) |
+
+## Building on this profile
+
+1. Work in `api/`, following `api/CLAUDE.md` (from the template) and the recipes in `api/docs/RECIPES.md`.
+2. Use these values wherever a recipe says "from the profile"; anything the profile and [`ARCHITECTURE.md`](ARCHITECTURE.md) don't settle is a question for the owner.
+3. A change that would contradict a decision (D1–D27, P1–P8) is proposed in `ARCHITECTURE.md` first; a gap in the standard is fixed in `api-standard` with a version bump, not worked around here.

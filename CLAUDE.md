@@ -13,6 +13,7 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 - `docs/SEND_MESSAGE.md`: the send/stream flow, message statuses, timers and error codes (diagrams in `docs/diagrams/`).
 - `docs/DATA_MODEL.md`: Postgres tables, enforced rules and indexes (models in `api/app/db/models.py`, migrations with Alembic in `api/migrations/`).
 - `api/openapi.yaml`: the API contract (OpenAPI 3.1): every endpoint, error code, SSE event and message block, plus the API → agent payload. Lint with `make contract-lint` (Redocly CLI, version pinned in the Makefile).
+- `docs/API_PROFILE.md`: how Agent Hub's API is built: the owner's [api-standard](https://github.com/IsraelBO17/api-standard) template and standard, plus fleet's values (contract, AWS names and tags, Neon, SSE rules, deploy settings).
 - `docs/AGENT_PROFILE.md`: how Agent Hub agents are built: the [agent-standard](https://github.com/IsraelBO17/agent-standard) template and standard, plus fleet's contract and conventions. Agent code lives in `fleet-agent-<slug>` repos, not here.
 - `docs/PRODUCT_PLAN.md`: scope (P0/P1/P2), acceptance criteria, screen inventory, roadmap, design critique (§9).
 - `docs/UI_COMPONENTS.md`: how each Pencil component maps to shadcn/ui on Base UI (D28, no Radix), the token mapping, and the design gaps to settle.
