@@ -27,6 +27,8 @@ crash.log
 !.env.example
 *.tfvars
 !*.tfvars.example
+# Non-secret deploy values (image tag, counts, runtime ARNs) are committed on purpose.
+!infra/envs/*/deploy.auto.tfvars
 
 # OS
 .DS_Store
