@@ -2006,7 +2006,7 @@
    "group": "flows/f10-mobile",
    "scope": "P0",
    "status": "built",
-   "note": "Built as a list of rows, not cards.",
+   "note": "",
    "built": [
     "m1-mock/mobile-catalog.png"
    ],
