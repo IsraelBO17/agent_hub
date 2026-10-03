@@ -1,7 +1,7 @@
 {
   "$comment": "Agent Hub's sizes, which the Pencil file has no variables for (WEB_PROFILE, Token pipeline). Numbers only: colours come from the Pencil file. Shadows and layout sizes name the Pencil component they are read from, so their values are never copied by hand. `make tokens` reads this and ../design/fleet_dev.pen.",
   "fontSizes": { "12": 16, "13": 18, "14": 20, "15": 22, "20": 26, "28": 34, "40": 46 },
-  "radii": [4, 5, 6, 7, 8, 9, 10, 12, 14, 16],
+  "radii": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16],
   "shadows": {
     "control": "K1CWuA",
     "raised": "K6k66O",

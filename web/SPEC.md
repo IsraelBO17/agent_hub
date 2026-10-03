@@ -7,7 +7,7 @@
 | Version | 0.1.0 |
 | Stage | Build (M1) |
 | Project profile | [`../docs/WEB_PROFILE.md`](../docs/WEB_PROFILE.md) |
-| Standard | Web Development Standard 1.1 |
+| Standard | Web Development Standard 1.2 |
 
 Agent Hub's web app was specified before this template existed, so the spec lives in the planning documents rather than in this file. This file indexes them, maps the routes to their design frames, and holds the screen blocks for screens as they are built (standard §5, Appendix A).
 
@@ -29,7 +29,7 @@ From PRODUCT_PLAN §5. Frames are from [`../design/INDEX.md`](../design/INDEX.md
 | `/archived` | Archived sessions | `HbIFz` · `grrlx` | Yes | P1 | later |
 | `/settings` | Settings | `RHrDH` · `RT72e` | Yes | P1 | later |
 | `/s/:shareId` | Shared session (read-only) | `q1bvDq` · `W2aSQ` | No | P1 | later |
-| `/sign-in` | Sign in | `MMxdZ` · `U0HaRi` | No | P0 | #6 |
+| `/sign-in` | Sign in | `MMxdZ` · `U0HaRi` | No | P0 | #6 (built) |
 | `*` | Page not found | Session not found `H7ZqtC` · F11.19 `HfWCC` (adapted) | No | P0 | #4 |
 
 `about` is a reserved session id: `/agents/:agentId/about` wins over `/agents/:agentId/:sessionId`. ⌘K is an overlay, not a route.
@@ -47,6 +47,21 @@ One per screen. The code follows the block; when a screen changes, its block cha
 - **states:** sidebar expanded / collapsed (desktop); drawer open / closed (mobile). Keyboard: skip link first; focus moves to the page's h1 after navigation; a collapsed sidebar is inert.
 - **open questions:** none.
 
+### screen: Sign in (`/sign-in`) (issue #6)
+- **purpose:** sign in with Google; the only screen a signed-out user sees (except a shared session).
+- **design:** `MMxdZ`; loading `vkBhc`; not allowed `zte2v`; signed out `DfY8F`; failed `G7FDcP`; mobile `U0HaRi`, `dLCVX`.
+- **data:** Google Identity Services gives an ID token (Google's own rendered button: outline, "Continue with Google"); `POST /v1/auth/google` → the access token (kept in memory) and the user; the API sets the refresh cookie. In mock mode a button drawn like the Pencil Google Button (`hveC0`) sends a fake credential to MSW.
+- **actions:** Continue with Google → signed in → `next` (a relative path, else `/`). Use a different account → back to the button, with Google's account chooser.
+- **states:** idle; signing in (Google Button / Loading); failed ("Sign-in didn't finish. Try again.": invalid token, network, `503 identity_provider_unavailable`); not allowed (`403 not_invited`, the email from the problem); account turned off (`403 account_disabled`, the not-allowed layout); signed out (`?signed-out`: the "You've signed out" note). A signed-in user is sent to `next`.
+- **open questions:** none.
+
+### shell: the session (issue #6)
+- **On load:** `POST /v1/auth/refresh` once (the cookie), then `GET /v1/me`. Until that settles, protected routes show the shell's skeleton.
+- **Protected:** every route except `/sign-in` and `/s/:shareId`. Signed out → `/sign-in?next=<path and search>`.
+- **Requests:** `Authorization: Bearer`; on a `401`, one refresh (shared by concurrent requests), then the request once more. A failed refresh ends the session: the cache is cleared and the user goes to sign-in with `next` (the in-place "Session expired" dialog that keeps a draft, `N8ysh`, comes with the composer in #8).
+- **User:** initials and name in the sidebar footer and the App Header (no Google photo: the CSP allows images from `self` only).
+- **Sign out** (Settings → Account, `RHrDH`): `POST /v1/auth/logout`, the cache cleared, other tabs signed out too (`BroadcastChannel`), then `/sign-in?signed-out`.
+
 ### screen: Catalog (`/`)
 - **purpose:** see every agent and continue where you left off.
 - **design:** `PBQLh`; mobile F10.1 `UK1JP`.
@@ -61,7 +76,12 @@ One per screen. The code follows the block; when a screen changes, its block cha
 - **states:** placeholder: the Chat Header (agent skeleton, then "New session" or "Session" as the h1) and an empty state in the chat column.
 - **open questions:** none.
 
-### screen: Agent detail, Artifacts library, Archived sessions, Settings, Shared session (P1)
+### screen: Settings (`/settings`)
+- **purpose:** P1, except the Account section (issue #6): the signed-in user (initials, name, email, "Signed in with Google") and Sign out.
+- **design:** `RHrDH` (Account); mobile `RT72e`.
+- **states:** the Account card; the rest "Coming later".
+
+### screen: Agent detail, Artifacts library, Archived sessions, Shared session (P1)
 - **purpose:** PRODUCT_PLAN §5.
 - **design:** see §2. Agent detail sits in HubLayout; the shared session has no shell (public).
 - **data:** none until each is built.

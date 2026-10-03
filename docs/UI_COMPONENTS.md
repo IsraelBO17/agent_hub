@@ -118,7 +118,7 @@ Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taki
 - **Stepper** (`sV1X6`): an `<ol>` with `aria-current="step"`.
 - **Typing Indicator** (`eFeRx`): announced through a polite live region.
 - **Code Block, Inline Code** (`wW1XY`, `Uzd9M`): copying uses an Icon Button with a tooltip.
-- **Google Button and / Loading** (`hveC0`, `Y8uI7x`): Google's branding rules set its look (Roboto, height 40, radius 4). Built on `button` for behaviour only.
+- **Google Button and / Loading** (`hveC0`, `Y8uI7x`): Google's branding rules set its look (Roboto, height 40, radius 4). Signed in for real, Google draws its own button (Google Identity Services), which is the only way to get an ID token; the drawn one is the mock-mode stand-in, and / Loading is ours (issue #6).
 - **`<ChartBlock>`**: Recharts per `CHART_SPEC.md`. Don't add shadcn `chart`.
 - **Section Heading, Tile Label** (`o1lqG`, `Vu7nt`): typography helpers.
 - **Not built:** Mobile Status Bar, Home Indicator (canvas only).
