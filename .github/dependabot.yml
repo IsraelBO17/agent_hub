@@ -1,4 +1,5 @@
-# API standard §15: weekly updates for the API's Python (uv) and Docker image, and for GitHub Actions.
+# API standard §15 and web standard §25: weekly updates for the API's Python (uv) and Docker image, the web
+# app's npm packages, and GitHub Actions.
 version: 2
 updates:
   - package-ecosystem: uv
@@ -9,6 +10,11 @@ updates:
   - package-ecosystem: docker
     directory: /api
     schedule: {interval: weekly}
+  - package-ecosystem: npm
+    directory: /web
+    schedule: {interval: weekly}
+    groups:
+      minor-and-patch: {update-types: [minor, patch]}
   - package-ecosystem: github-actions
     directory: /
     schedule: {interval: weekly}

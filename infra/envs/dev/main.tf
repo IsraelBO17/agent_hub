@@ -94,12 +94,31 @@ module "api" {
 }
 
 module "web" {
-  source = "../../modules/amplify"
-  name   = "${local.prefix}-web-amplify-${var.region}"
+  source     = "../../modules/amplify"
+  name       = "${local.prefix}-web-amplify-${var.region}"
+  repository = var.web_repository
+  branch     = "main"
+  domain     = local.app_domain
   environment_variables = {
     VITE_API_URL          = "https://${local.api_domain}"
     VITE_GOOGLE_CLIENT_ID = var.google_client_id
+    VITE_ENVIRONMENT      = var.environment
   }
+  # WEB_PROFILE Hosting: the standard's policy plus Google Identity Services. Styles allow inline attributes:
+  # the UI library positions popups with style attributes; scripts never run inline.
+  content_security_policy = join("; ", [
+    "default-src 'self'",
+    "script-src 'self' https://accounts.google.com/gsi/client",
+    "style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style",
+    "img-src 'self' data:",
+    "font-src 'self'",
+    "connect-src 'self' https://${local.api_domain} https://accounts.google.com/gsi/",
+    "frame-src https://accounts.google.com/gsi/",
+    "frame-ancestors 'none'",
+    "base-uri 'none'",
+    "object-src 'none'",
+    "form-action 'self'",
+  ])
 }
 
 resource "aws_budgets_budget" "monthly" {

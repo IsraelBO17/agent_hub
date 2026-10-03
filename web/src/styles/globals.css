@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+@import "./tokens.css";
+@import "./theme.css";
+
+/* Light theme only: `.dark` is never set, so the primitives' `dark:` styles never apply. */
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-ui;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* The Focus Ring (Pencil Tx1AB, "States · Focus" board): 2 px focus-ring with a 2 px gap, following the
+     control's radius. Rows inside menus, the palette and lists turn it off and show their highlight fill. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

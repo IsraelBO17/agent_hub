@@ -15,7 +15,7 @@ agent_hub/
 │   ├── app/            Application code (today: db/models.py)
 │   ├── migrations/     Alembic migrations
 │   └── tests/
-├── web/            Vite + React + TypeScript SPA (npm). Amplify Hosting.        (created in step 8)
+├── web/            Vite + React + TypeScript SPA (npm), from the web-standard template. Amplify Hosting. See web/README.md
 ├── infra/          Terraform (D14).                                           (created in step 7)
 │   ├── bootstrap/      State bucket, applied once by hand
 │   ├── modules/        network, ecr, service, alb, s3, secrets, amplify
@@ -41,10 +41,11 @@ Adding an agent touches only `agents/` (and the `agents` table), never `web/` or
 | Scope and acceptance criteria | [`docs/PRODUCT_PLAN.md`](docs/PRODUCT_PLAN.md) |
 | Screens and components | [`design/README.md`](design/README.md), [`design/INDEX.md`](design/INDEX.md) |
 | Pencil components → shadcn/ui (Base UI) | [`docs/UI_COMPONENTS.md`](docs/UI_COMPONENTS.md) |
+| How the web app is built | [`docs/WEB_PROFILE.md`](docs/WEB_PROFILE.md), [`web/README.md`](web/README.md) |
 
 ## Commands
 
-Needs Docker, [uv](https://docs.astral.sh/uv/) and Node (for `npx`). Run `make` to list them.
+Needs Docker, [uv](https://docs.astral.sh/uv/) and Node 24. Run `make` to list them.
 
 ```bash
 make db-up
@@ -56,4 +57,8 @@ make api-test
 
 ```bash
 make contract-lint
+```
+
+```bash
+make web-check
 ```

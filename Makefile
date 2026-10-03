@@ -7,10 +7,10 @@ DB_PORT ?= 55432
 export DATABASE_URL_DIRECT ?= postgresql://postgres:dev@localhost:$(DB_PORT)/agent_hub
 
 .DEFAULT_GOAL := help
-.PHONY: help db-up db-down api-migrate api-check api-test api-run agent-add agents contract-lint design-index infra-validate infra-plan-bootstrap infra-init infra-plan
+.PHONY: help db-up db-down api-migrate api-check api-test api-run agent-add agents contract-lint design-index infra-validate infra-plan-bootstrap infra-init infra-plan web-install web-dev web-check web-e2e web-tokens web-api
 
 help: ## List targets
-	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-22s %s\n", $$1, $$2}'
+	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-22s %s\n", $$1, $$2}'
 
 db-up: ## Start the local Postgres 17 container
 	@docker start $(DB_CONTAINER) >/dev/null 2>&1 || docker run -d --rm --name $(DB_CONTAINER) \
@@ -41,6 +41,24 @@ agents: ## List the agent registry
 
 contract-lint: ## Lint the OpenAPI contract
 	cd api && npx -y @redocly/cli@2.56.1 lint openapi.yaml
+
+web-install: ## Install the web app's dependencies (npm ci in web/)
+	$(MAKE) -C web install
+
+web-dev: ## Run the web app on :5173, with mocks (web/README.md)
+	$(MAKE) -C web dev
+
+web-check: ## The web app's done gate: types, lint, tokens, tests, contract drift, build, budget, audit
+	$(MAKE) -C web check
+
+web-e2e: ## The web app's browser suite with axe, in mock mode
+	$(MAKE) -C web e2e
+
+web-tokens: ## Regenerate the web app's CSS tokens from the design
+	$(MAKE) -C web tokens
+
+web-api: ## Regenerate the web app's API types from api/openapi.yaml
+	$(MAKE) -C web api
 
 design-index: ## Regenerate design/INDEX.md after saving the design in Pencil
 	python3 design/tools/pen_index.py
