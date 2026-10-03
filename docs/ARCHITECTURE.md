@@ -70,7 +70,7 @@ Each entry: the decision, why, and what would make us revisit it.
 ### D8. Auth: Google sign-in, then the API's own session
 **Decision.** The browser gets a Google ID token (Google Identity Services) and posts it once to `POST /v1/auth/google`. The API verifies signature (Google JWKS), `aud` (our client ID), `iss`, `exp` and `email_verified`, looks the user up by Google `sub`, and rejects unknown or inactive users. It then issues:
 - a short-lived **access token** (JWT, ~15 min, signed with the session key from Secrets Manager), held in memory by the client and sent as `Authorization: Bearer`;
-- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, host-only (no `Domain` attribute), so it goes only to `api.fleet.qucoon.com` (D25) (all routes live under `/v1`, D23).
+- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, host-only (no `Domain` attribute), so it goes only to `api-fleet.qucoon.com` (D25) (all routes live under `/v1`, D23).
 Refresh rotates the token and detects reuse (reuse of an old token revokes the whole family). App (`app.`) and API (`api.`) share a parent domain, so the cookie is same-site; CORS allows only the app origin with credentials, and `/v1/auth/*` also checks `Origin`.
 **Why.** No Cognito to operate; Google does the hard part; our own session gives revocation and short token lifetime.
 **Revisit if.** We need non-Google sign-in, SSO, or passkey step-up (P2).
@@ -161,14 +161,14 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 
 ### D25. Domain: `fleet.qucoon.com`, as CNAMEs in the `qucoon.com` zone
 **Decision (owner, 2026-09-29, Q2; amended 2026-10-03).** `qucoon.com` is hosted in Route 53 in **another AWS account**, and its owner adds fleet's records there as **CNAMEs**; there is no delegated zone. Terraform prints them (`dns_records_for_qucoon` in `infra/envs/dev`):
-- `api.fleet.qucoon.com` → the ALB's DNS name, and the API certificate's validation CNAME (kept: ACM renews with it).
+- `api-fleet.qucoon.com` → the ALB's DNS name. **One label** under `qucoon.com`, so qucoon's shared wildcard certificate covers it.
 - `fleet.qucoon.com` → Amplify's domain, and Amplify's validation CNAME (when the web app is deployed).
 - Web app (Amplify): `https://fleet.qucoon.com`; share links `https://fleet.qucoon.com/s/<slug>`.
-- API (ALB): `https://api.fleet.qucoon.com`.
-- Certificates: ACM in us-east-1, DNS-validated by the CNAMEs above. Amplify manages its own certificate for the app.
+- API (ALB): `https://api-fleet.qucoon.com`.
+- Certificates: the ALB uses qucoon's wildcard `*.qucoon.com` ACM certificate (us-east-1, in this account), owned and renewed by the qucoon cloud team; Terraform references it by ARN and never manages it. Amplify manages its own certificate for the app.
 - Google OAuth authorised JavaScript origin: `https://fleet.qucoon.com`; CORS allows only that origin.
 - Checked 2026-09-29: `qucoon.com` is on Route 53 (`awsdns` name servers), has no CAA records (nothing blocks Amazon certificates), and `fleet` isn't in use.
-**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). CNAMEs (amended 2026-10-03, at the domain owner's request) leave the `qucoon.com` zone under its owner's control; the first design, a delegated zone, was deleted outside Terraform before it was used. The cost: each record is a handoff, and the API's CNAME follows the ALB, so the ALB must not be replaced casually.
+**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). CNAMEs (amended 2026-10-03, at the domain owner's request) leave the `qucoon.com` zone under its owner's control; the first design, a delegated zone, was deleted outside Terraform before it was used. The API is `api-fleet`, not `api.fleet`, at the cloud team's request: a wildcard certificate covers one label only. App and API still share the site `qucoon.com`, so the `SameSite=Strict` cookie works. The cost: each record is a handoff, and the API's CNAME follows the ALB, so the ALB must not be replaced casually.
 **Revisit if.** The app moves to another domain: change one Terraform variable, the Google OAuth origin and the CORS origin.
 
 ### D26. Resource names and required tags
@@ -281,3 +281,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-10-03 | API standard written (personal, project-neutral, private template `IsraelBO17/api-standard`); Agent Hub's values in `docs/API_PROFILE.md` (validation 422, Neon pooled/direct URLs, SSE timers, deploy settings). |
 | 2026-10-03 | D3 verified (issue #5): psycopg 3 works through Neon's pooler with prepared statements on or off; the app keeps them off. API shell built from the API standard (`api/`). |
 | 2026-10-03 | D25 amended: CNAMEs in the `qucoon.com` zone instead of a delegated zone (the zone had been deleted outside Terraform). The API deploys in two phases: certificate, then ALB and service. |
+| 2026-10-03 | D25: the API is `api-fleet.qucoon.com` on qucoon's wildcard `*.qucoon.com` certificate (cloud team's request; they deleted the dedicated certificate). One-phase deploy again. |

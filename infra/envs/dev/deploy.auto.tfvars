@@ -6,9 +6,9 @@ enable_api        = true
 api_desired_count = 1
 api_image_tag     = "dcb9559" # git SHA of the commit the image was built from (ECR tags are immutable)
 
+# qucoon's shared wildcard certificate (*.qucoon.com), owned by the qucoon cloud team (D25).
+api_certificate_arn = "arn:aws:acm:us-east-1:992382810653:certificate/14063ea3-87d8-4f3e-bd3e-6f76dc640b81"
+
 agent_runtime_arns = [
   "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
 ]
-
-# Phase 1 creates only the certificate; set true once ACM shows it Issued (D25, infra/README.md).
-api_certificate_issued = false

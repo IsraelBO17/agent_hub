@@ -4,9 +4,25 @@ variable "region" {
 }
 
 variable "app_domain" {
-  description = "The app's host name; the API is api.<app_domain>. Both are CNAMEs in the qucoon.com zone, which another account manages (D25)."
+  description = "The app's host name, a CNAME in the qucoon.com zone, which another account manages (D25)."
   type        = string
   default     = "fleet.qucoon.com"
+}
+
+variable "api_domain" {
+  description = "The API's host name: one label under qucoon.com, so the *.qucoon.com wildcard covers it (D25)."
+  type        = string
+  default     = "api-fleet.qucoon.com"
+}
+
+variable "api_certificate_arn" {
+  description = "qucoon's *.qucoon.com ACM certificate in us-east-1, owned by the qucoon cloud team; required when enable_api is true."
+  type        = string
+  default     = ""
+  validation {
+    condition     = var.api_certificate_arn == "" || can(regex("^arn:aws:acm:us-east-1:[0-9]{12}:certificate/[0-9a-f-]+$", var.api_certificate_arn))
+    error_message = "An ACM certificate ARN in us-east-1 (the ALB's region)."
+  }
 }
 
 variable "project" {
@@ -40,15 +56,9 @@ variable "aws_apn_id" {
 
 variable "enable_api" {
   description = <<-EOT
-    Phase 1: creates the API's ACM certificate, whose validation CNAME the qucoon.com owner adds (D25).
-    With api_certificate_issued it also creates the ALB and the ECS service (~$24/month for the ALB alone).
+    Creates the ALB (HTTPS with qucoon's wildcard certificate) and the ECS service (~$24/month for the
+    ALB alone). Needs api_certificate_arn.
   EOT
-  type        = bool
-  default     = false
-}
-
-variable "api_certificate_issued" {
-  description = "Phase 2: set true once ACM shows the API certificate as Issued; creates the ALB and the ECS service."
   type        = bool
   default     = false
 }

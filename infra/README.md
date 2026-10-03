@@ -12,7 +12,7 @@ modules/
   ecr/            API image repository (immutable tags, scan on push, keep 15).
   storage/        Private files bucket (uploads, artifacts, exports), CORS for the app origin.
   secrets/        Secrets Manager containers; values are set by hand, never through Terraform.
-  alb/            Public ALB: HTTPS (ACM), HTTP→HTTPS, idle timeout 300 s, drain 300 s, api.fleet.qucoon.com.
+  alb/            Public ALB: HTTPS (ACM), HTTP→HTTPS, idle timeout 300 s, drain 300 s; api-fleet.qucoon.com on the *.qucoon.com certificate.
   service/        ECS cluster, task definition (ARM64, stopTimeout 120 s), service, logs, IAM, task security group.
   amplify/        Amplify app for web/ (branch, GitHub and custom domain come in step 8).
 ```
@@ -42,9 +42,7 @@ Nothing here is applied without the owner's go-ahead on the plan output.
    terraform -chdir=infra/envs/dev apply
    ```
    With `enable_api = false` (the default) this creates the network, ECR, the files bucket, the secrets and the Amplify app; no load balancer and no ECS service.
-5. **The API, in two phases** (values in the committed `envs/dev/deploy.auto.tfvars`; show each plan to the owner before applying):
-   - **Phase 1:** `enable_api = true`, `api_certificate_issued = false`. Creates only the API's certificate. Send the validation record from `terraform -chdir=infra/envs/dev output dns_records_for_qucoon` to the `qucoon.com` owner and wait until `output api_certificate_status` is `ISSUED`.
-   - **Phase 2:** `api_certificate_issued = true`, with `api_image_tag` set and `api_desired_count = 1`. Creates the ALB and the ECS service. Send the `api.fleet.qucoon.com` CNAME from the same output, then check `curl https://api.fleet.qucoon.com/v1/health`.
+5. **The API** (values in the committed `envs/dev/deploy.auto.tfvars`: `enable_api = true`, `api_certificate_arn` (qucoon's `*.qucoon.com` certificate), `api_image_tag`, `api_desired_count = 1`). Plan, show it to the owner, apply on their yes. Then send the `api-fleet.qucoon.com` CNAME from `terraform -chdir=infra/envs/dev output dns_records_for_qucoon` to the `qucoon.com` owner, and check `curl https://api-fleet.qucoon.com/v1/health`.
 5. **Secret values** (by hand, never in Terraform or git): for each name in the `secret_names` output,
    ```bash
    aws secretsmanager put-secret-value --secret-id fleet-dev-session-key-secret-us-east-1 --secret-string "$(openssl rand -base64 48)"
@@ -57,8 +55,7 @@ Two switches, so nothing is billed before it's needed:
 
 | Variable | Default | Effect |
 |---|---|---|
-| `enable_api` | `false` | Phase 1: creates the API's ACM certificate (validated by a CNAME in `qucoon.com`). |
-| `api_certificate_issued` | `false` | Phase 2: creates the ALB, the ECS cluster, task definition, service and their IAM roles. Set once the certificate is issued. |
+| `enable_api` | `false` | Creates the ALB (HTTPS with `api_certificate_arn`), the ECS cluster, task definition, service and their IAM roles. |
 | `api_desired_count` | `0` | Number of API tasks. Set to `1` once an image is in ECR (P7: one task, no autoscaling). |
 
 ## Monthly cost, dev (us-east-1, 730 h, checked 2026-09-29)

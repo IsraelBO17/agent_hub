@@ -75,7 +75,7 @@ info:
   contact:
     name: Israel B.
 servers:
-  - url: https://api.fleet.qucoon.com
+  - url: https://api-fleet.qucoon.com
     description: Dev, the only environment until v1 (ARCHITECTURE D17, D25).
   - url: http://localhost:8000
     description: Local development

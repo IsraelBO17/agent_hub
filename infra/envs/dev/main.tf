@@ -3,7 +3,7 @@
 locals {
   prefix     = "${var.project}-${var.environment}" # names: <prefix>-<component>-<type>-<region> (D26)
   app_domain = var.app_domain                      # https://fleet.qucoon.com (Amplify)
-  api_domain = "api.${var.app_domain}"             # https://api.fleet.qucoon.com (ALB)
+  api_domain = var.api_domain                      # https://api-fleet.qucoon.com (ALB)
   app_origin = "https://${local.app_domain}"
   api_port   = 8000
   # The account is shared: the API may invoke only fleet's own runtimes, listed explicitly.
@@ -39,39 +39,31 @@ module "secrets" {
   }
 }
 
-# The API's certificate. DNS-validated by a CNAME the qucoon.com owner adds (D25); the
-# `dns_records_for_qucoon` output lists it. Created first, on its own (phase 1).
-resource "aws_acm_certificate" "api" {
-  count             = var.enable_api ? 1 : 0
-  domain_name       = local.api_domain
-  validation_method = "DNS"
-  tags              = { Name = "${local.prefix}-api-cert-${var.region}" }
-
+# The API uses qucoon's shared wildcard certificate (*.qucoon.com), owned by the qucoon cloud team and
+# referenced by ARN only, so Terraform never changes or deletes it (D25). The first design created its own
+# certificate; that one was deleted outside Terraform: forget it.
+removed {
+  from = aws_acm_certificate.api
   lifecycle {
-    create_before_destroy = true
+    destroy = false
   }
 }
 
-locals {
-  # Phase 2: the load balancer and the service, once the certificate is issued.
-  api_serving = var.enable_api && var.api_certificate_issued
-}
-
 module "alb" {
-  count             = local.api_serving ? 1 : 0
+  count             = var.enable_api ? 1 : 0
   source            = "../../modules/alb"
   prefix            = "${local.prefix}-api"
   region            = var.region
   vpc_id            = module.network.vpc_id
   vpc_cidr          = module.network.vpc_cidr
   subnet_ids        = module.network.public_subnet_ids
-  certificate_arn   = aws_acm_certificate.api[0].arn
+  certificate_arn   = var.api_certificate_arn
   container_port    = local.api_port
   health_check_path = "/v1/health"
 }
 
 module "api" {
-  count                 = local.api_serving ? 1 : 0
+  count                 = var.enable_api ? 1 : 0
   source                = "../../modules/service"
   prefix                = "${local.prefix}-api"
   region                = var.region

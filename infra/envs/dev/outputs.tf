@@ -43,24 +43,12 @@ output "alb_dns_name" {
   value = one(module.alb[*].dns_name)
 }
 
-output "api_certificate_status" {
-  value = one(aws_acm_certificate.api[*].status)
-}
-
 output "dns_records_for_qucoon" {
-  description = "CNAME records for the owner of the qucoon.com zone to add (D25). Keep the validation record: ACM renews with it."
-  value = concat(
-    [for o in flatten([for c in aws_acm_certificate.api : c.domain_validation_options]) : {
-      purpose = "certificate validation for ${o.domain_name}"
-      name    = o.resource_record_name
-      type    = o.resource_record_type
-      value   = o.resource_record_value
-    }],
-    [for dns in module.alb[*].dns_name : {
-      purpose = "the API"
-      name    = "${local.api_domain}."
-      type    = "CNAME"
-      value   = dns
-    }],
-  )
+  description = "CNAME records for the owner of the qucoon.com zone to add (D25)."
+  value = [for dns in module.alb[*].dns_name : {
+    purpose = "the API"
+    name    = "${local.api_domain}."
+    type    = "CNAME"
+    value   = dns
+  }]
 }

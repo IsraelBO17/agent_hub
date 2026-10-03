@@ -33,8 +33,8 @@ class Settings(BaseSettings):
     # Auth (§12)
     session_signing_key: SecretStr
     access_token_ttl_seconds: int = 900
-    token_issuer: str = "https://api.fleet.qucoon.com"  # noqa: S105  (a name, not a secret)
-    token_audience: str = "https://api.fleet.qucoon.com"  # noqa: S105
+    token_issuer: str = "https://api-fleet.qucoon.com"  # noqa: S105  (a name, not a secret)
+    token_audience: str = "https://api-fleet.qucoon.com"  # noqa: S105
     google_client_id: str  # D8; not secret (also ships to the web app)
 
     # HTTP (§8, §15)
