@@ -1695,7 +1695,9 @@ export interface components {
          */
         AgentInvocation: {
             /**
-             * @description Earlier turns, oldest first, trimmed to the agent's budget (default 20 turns or ~32k characters).
+             * @description Earlier turns, oldest first, trimmed to the agent's budget (default 20 turns or ~32k characters). The
+             *     oldest turn sent may be cut to fit: it keeps its start and ends in `… [truncated]`. The latest earlier
+             *     turn is always sent, cut if it alone is over the budget.
              *     Blocks are flattened to text: thinking dropped; tools, artifacts, files and approvals summarised in one line
              *     each (e.g. `[tool run_tests: 4 of 20 failed]`, `[attached lab-results-aug.pdf]`).
              */
