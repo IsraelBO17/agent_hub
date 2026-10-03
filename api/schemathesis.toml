@@ -7,10 +7,11 @@
 allow-x00 = false
 
 # An opaque cursor can match its schema (a string) and still be invalid; 400 is the documented
-# answer. Applies to every list operation: name them list<Resources> (standard §8).
+# answer. Applies to every list operation: name them list<Resources> (standard §8). A list under a
+# parent (a session's messages) also answers 404 when the parent doesn't exist or isn't yours.
 [[operations]]
 include-operation-id-regex = "^list[A-Z]"
-checks.positive_data_acceptance.expected-statuses = ["2xx", 400]
+checks.positive_data_acceptance.expected-statuses = ["2xx", 400, 404]
 
 # PATCH /v1/me is in the contract but not built yet (P1), so `Allow` honestly lists only GET.
 # Remove this when PATCH /v1/me is implemented.

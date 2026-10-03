@@ -22,6 +22,15 @@ from tests.contract_routes import implemented, labels
 
 AGENTS = Path(__file__).resolve().parents[3] / "agents"
 
+# Sends start a run: its own task, writing through its own sessions, outside this test's
+# rolled-back transaction, and calling AgentCore. tests/integration/test_chat.py covers them,
+# checking every response and stream event against these same schemas (tests/support/contract.py).
+_SENDS = "a send starts a run outside the test transaction; covered by test_chat.py"
+STREAMS = {
+    "POST /v1/agents/{slug}/sessions": _SENDS,
+    "POST /v1/sessions/{sessionId}/messages": _SENDS,
+}
+
 
 @pytest.fixture
 async def registered_agents(session: AsyncSession) -> None:
@@ -75,5 +84,7 @@ def test_app_matches_contract(case: schemathesis.Case[Any], fastapi_app: FastAPI
     if case.operation.label not in labels(implemented(fastapi_app)):
         # Documented but not built yet: the contract is written first (standard §4).
         pytest.skip(f"{case.operation.label} is not implemented yet")
+    if case.operation.label in STREAMS:
+        pytest.skip(STREAMS[case.operation.label])
     token = issue_access_token(get_settings(), uuid.uuid4())
     case.call_and_validate(headers={"Authorization": f"Bearer {token}"})

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Agent Hub API
-  version: 0.3.0
+  version: 0.4.0
   summary: One chat interface for many AI agents. Browser ↔ API contract, plus the API → agent payload.
   description: |
     The contract between the Agent Hub web app and its FastAPI service (build plan step 5).
@@ -594,6 +594,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
     post:
       tags: [Messages]
       operationId: sendMessage
@@ -821,6 +823,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
 
   /v1/messages/{messageId}/stop:
     parameters:
@@ -1506,8 +1510,10 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
     AgentUnavailable:
-      description: '`agent_unavailable`: the agent is marked offline. Keep the draft and poll the agent (D22). Nothing was saved.'
+      description: '`agent_unavailable`: the agent is marked offline. Keep the draft and poll the agent (D22). Or `shutting_down`: the API is draining for a deploy; send again after `retryAfter` (P2). Nothing was saved.'
       headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
         X-Request-Id:
           $ref: '#/components/headers/XRequestId'
       content:
