@@ -71,6 +71,8 @@ Build steps 1–7 (Terraform written, not applied): decisions, diagrams, schema,
 
 **Exit:** you sign in and chat with Research Analyst on `fleet.qucoon.com` from laptop and phone; a 3-minute reply streams through the ALB without dropping; reload shows the full history; Stop works; `/v1/health` is green behind the ALB.
 
+**✅ Done 2026-10-03**, ahead of the 16 Oct date: every exit check passed on `fleet.qucoon.com` (laptop and phone; #10 for the stream). Retry, planned with Stop in #9, moved to M2 with the other reply end states (F08).
+
 ### M2: Chat core, Mon 19 Oct – Fri 6 Nov (≈ 60 h)
 
 - Sessions: sidebar grouped by date, rename, delete with undo, agent switcher, 404s (F06, F07).
@@ -159,7 +161,7 @@ Product metrics (sessions per week, first-render time, "nothing hangs", approval
 |---|---|---|---|
 | AgentCore's real stream doesn't fit the block model | M / H | Record in M1 before writing the translator | M1 |
 | Approval pause/resume doesn't work (P8) | M / H | Spike opens M3; fallback in D19 | M3 week 1 |
-| SSE drops through the ALB or on deploys | L / H | 300 s idle timeout, 15 s pings, 300 s drain; a 3-minute stream is an M1 exit test | ✅ M1, #10 (2026-10-03): 3 min 16 s through the ALB, and a reply across a deploy; browser check with #4 |
+| SSE drops through the ALB or on deploys | L / H | 300 s idle timeout, 15 s pings, 300 s drain; a 3-minute stream is an M1 exit test | ✅ M1, #10 (2026-10-03): 3 min 16 s through the ALB, and a reply across a deploy; from the browser, 3 min 23 s to the web app, first rendered event 10–21 ms after the first byte |
 | Schedule: 230 h of work, no slack | H / M | Vertical slices, cut list, weekly status | Every Friday |
 | Model spend from long or orphaned runs | M / M | 15-minute run cap, 3 concurrent runs, a model-spend alarm (to set) | M2 |
 | Solo builder: illness, other work | M / M | Each milestone ships something usable; the plan survives a week's loss by cutting | Every Friday |

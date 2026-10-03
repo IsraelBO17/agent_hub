@@ -100,7 +100,7 @@ Errors use the common format in D23 (`code`, `requestId`, `retryable`, optional 
 - **Locally (issue #8):** a client that hangs up after 2 s leaves the reply running to `complete`, and polling `GET /v1/messages/{id}` picks it up; SIGTERM in the middle of a reply lets it finish, then the process exits.
 - **From the browser (2026-10-03, Chrome on macOS, `fleet.qucoon.com`):** a Research Analyst reply of 3 min 23 s (three 10 s fetches, then about 6,100 words, 3,646 events, 776 KB) streamed through the ALB to the web app without a drop and without falling back to polling; the longest gap between chunks was 10 s, so no ping was needed. **First rendered event: 21 ms and 10 ms after the first SSE byte** (target ≤ 150 ms); headers arrived 0.64–0.75 s after the send. Stop from the browser ended a reply within about 2 s with its partial text kept.
 - **Found by that run:** a tab in the background gets no animation frames, so the web app's per-frame batching held a hidden tab's events until it was shown again (and showed "Still working" meanwhile). Fixed: the batch also flushes on a 250 ms timer. A long reply also showed that the API's history budget drops every earlier turn when the latest one is over 32,000 characters (to fix in the API).
-- **Not yet:** the same check from a phone.
+- **From a phone (2026-10-03, owner):** sign-in, a streamed reply, reload and Stop all work on `fleet.qucoon.com`.
 
 ## Not verified yet
 
