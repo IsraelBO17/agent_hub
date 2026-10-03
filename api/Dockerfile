@@ -3,7 +3,7 @@
 # One image, every role: the API (default), the worker (`python -m app.worker`), and
 # migrations (`alembic upgrade head`, run with the direct database URL).
 
-FROM ghcr.io/astral-sh/uv:0.12.21-python3.12-trixie-slim@sha256:5ae92e4d35b8d586d50ddf4aba6ecdd9f744237284d31c86bf45077e4e17e4bd AS builder
+FROM ghcr.io/astral-sh/uv:0.12.22-python3.12-trixie-slim@sha256:1ff88987c417eb9c1ebcf6e8dc728d26b61f538d3010bf4c18f33fcc1a67c6b6 AS builder
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_NO_DEV=1 UV_PYTHON_DOWNLOADS=0
 WORKDIR /app
 RUN --mount=type=cache,target=/root/.cache/uv \
