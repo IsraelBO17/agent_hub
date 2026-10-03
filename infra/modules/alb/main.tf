@@ -1,4 +1,5 @@
-# Public ALB for the API with its certificate and DNS name (D2, D5, P2, D25).
+# Public ALB for the API (D2, D5, P2). Its certificate and DNS live outside: the names are CNAMEs in the
+# qucoon.com zone, managed by its owner in another account (D25).
 # Idle timeout and deregistration delay are explicit because SSE and deploy draining depend on them.
 
 variable "prefix" {
@@ -22,12 +23,8 @@ variable "subnet_ids" {
   type = list(string)
 }
 
-variable "zone_id" {
-  type = string
-}
-
-variable "domain" {
-  description = "API host name, e.g. api.fleet.qucoon.com."
+variable "certificate_arn" {
+  description = "ACM certificate for the API host name, validated by a CNAME in the qucoon.com zone."
   type        = string
 }
 
@@ -111,35 +108,10 @@ resource "aws_lb_target_group" "api" {
   }
 }
 
-resource "aws_acm_certificate" "api" {
-  domain_name       = var.domain
-  validation_method = "DNS"
-  tags              = { Name = "${var.prefix}-cert-${var.region}" }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_route53_record" "validation" {
-  for_each = {
-    for o in aws_acm_certificate.api.domain_validation_options : o.domain_name => {
-      name   = o.resource_record_name
-      type   = o.resource_record_type
-      record = o.resource_record_value
-    }
-  }
-  zone_id         = var.zone_id
-  name            = each.value.name
-  type            = each.value.type
-  records         = [each.value.record]
-  ttl             = 300
-  allow_overwrite = true
-}
-
+# Waits until the certificate is ISSUED (its validation CNAME is in place), so the HTTPS listener
+# never references a pending certificate.
 resource "aws_acm_certificate_validation" "api" {
-  certificate_arn         = aws_acm_certificate.api.arn
-  validation_record_fqdns = [for r in aws_route53_record.validation : r.fqdn]
+  certificate_arn = var.certificate_arn
 }
 
 resource "aws_lb_listener" "https" {
@@ -167,17 +139,6 @@ resource "aws_lb_listener" "http" {
       port        = "443"
       status_code = "HTTP_301"
     }
-  }
-}
-
-resource "aws_route53_record" "api" {
-  zone_id = var.zone_id
-  name    = var.domain
-  type    = "A"
-  alias {
-    name                   = aws_lb.this.dns_name
-    zone_id                = aws_lb.this.zone_id
-    evaluate_target_health = false
   }
 }
 

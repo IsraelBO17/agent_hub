@@ -3,6 +3,10 @@ __pycache__/
 *.pyc
 .venv/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+requirements-audit.txt
 
 # Node (web/)
 node_modules/
@@ -23,6 +27,8 @@ crash.log
 !.env.example
 *.tfvars
 !*.tfvars.example
+# Non-secret deploy values (image tag, counts, runtime ARNs) are committed on purpose.
+!infra/envs/*/deploy.auto.tfvars
 
 # OS
 .DS_Store

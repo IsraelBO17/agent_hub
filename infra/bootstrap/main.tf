@@ -1,8 +1,7 @@
-# Created once, by hand, before anything else (D14, D25):
-# - the S3 bucket that holds the dev environment's Terraform state (native S3 locking, no DynamoDB table);
-# - the Route 53 zone for fleet.qucoon.com. Its four name servers are added as NS records named `fleet` in the
-#   qucoon.com zone, which lives in a different AWS account.
-# State for this folder stays local (gitignored). If it is lost, import the two resources.
+# Created once, by hand, before anything else (D14): the S3 bucket that holds the dev environment's
+# Terraform state (native S3 locking, no DynamoDB table). DNS is not here: fleet's names are CNAMEs in
+# the qucoon.com zone, managed in another account (D25).
+# State for this folder stays local (gitignored). If it is lost, import the bucket.
 # Names: <project>-<environment>-<component>-<type>-<region> (D26).
 
 terraform {
@@ -92,12 +91,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "state" {
   }
 }
 
-resource "aws_route53_zone" "fleet" {
-  name    = var.zone_name
-  comment = "Agent Hub. Delegated from the qucoon.com zone in another account (D25)."
-  tags    = { Name = "${local.prefix}-dns-zone-${var.region}" }
-
+# The delegated zone (the first design of D25) was deleted outside Terraform and replaced by CNAMEs in the
+# qucoon.com zone. Forget it without trying to destroy anything.
+removed {
+  from = aws_route53_zone.fleet
   lifecycle {
-    prevent_destroy = true
+    destroy = false
   }
 }

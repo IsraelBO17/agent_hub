@@ -164,7 +164,7 @@ resource "aws_vpc_security_group_ingress_rule" "from_alb" {
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.task.id
-  description       = "Neon, Google, AgentCore, AWS APIs (no NAT, ARCHITECTURE §2)"
+  description       = "Neon, Google, AgentCore, AWS APIs (no NAT, ARCHITECTURE section 2)" # EC2 rejects characters such as §
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
 }

@@ -42,3 +42,13 @@ output "amplify_app_id" {
 output "alb_dns_name" {
   value = one(module.alb[*].dns_name)
 }
+
+output "dns_records_for_qucoon" {
+  description = "CNAME records for the owner of the qucoon.com zone to add (D25)."
+  value = [for dns in module.alb[*].dns_name : {
+    purpose = "the API"
+    name    = "${local.api_domain}."
+    type    = "CNAME"
+    value   = dns
+  }]
+}

@@ -7,7 +7,7 @@ DB_PORT ?= 55432
 export DATABASE_URL_DIRECT ?= postgresql://postgres:dev@localhost:$(DB_PORT)/agent_hub
 
 .DEFAULT_GOAL := help
-.PHONY: help db-up db-down api-migrate api-check api-test contract-lint design-index infra-validate infra-plan-bootstrap infra-init infra-plan
+.PHONY: help db-up db-down api-migrate api-check api-test api-run contract-lint design-index infra-validate infra-plan-bootstrap infra-init infra-plan
 
 help: ## List targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-22s %s\n", $$1, $$2}'
@@ -27,8 +27,11 @@ api-migrate: ## Apply migrations to the local database
 api-check: ## Check the models and migrations agree
 	cd api && uv run alembic upgrade head && uv run alembic check
 
-api-test: ## Run the API tests (they recreate the schema; local database only)
-	cd api && uv run pytest
+api-test: ## The API's done gate: lint, types, migrations, tests, audit (recreates the local schema)
+	$(MAKE) -C api check
+
+api-run: ## Run the API locally on :8000
+	$(MAKE) -C api run
 
 contract-lint: ## Lint the OpenAPI contract
 	cd api && npx -y @redocly/cli@2.56.1 lint openapi.yaml

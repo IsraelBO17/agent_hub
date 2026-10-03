@@ -3,12 +3,6 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "zone_name" {
-  description = "The delegated subdomain (D25)."
-  type        = string
-  default     = "fleet.qucoon.com"
-}
-
 variable "project" {
   type    = string
   default = "fleet"

@@ -40,7 +40,8 @@ Each entry: the decision, why, and what would make us revisit it.
 ### D3. Database: Neon Postgres, us-east-1
 **Decision.** Neon Postgres in us-east-1. The app uses Neon's pooled connection string plus a small app-level pool (SQLAlchemy async). Migrations (Alembic) use the **direct** (unpooled) string, because Neon's pooler runs PgBouncer in transaction mode, which doesn't suit DDL and session-level features.
 **Why.** Relational data (sessions, messages, versions, approvals with audit) fits Postgres; Neon is serverless-priced and fast to create by hand.
-**Watch.** PgBouncer transaction mode and asyncpg prepared statements: confirm the driver settings in step 8 (for example `statement_cache_size=0` if Neon's pooler rejects them). Neon's resume after idle adds latency to the first query; keep the app pool's connect timeout generous and retry once.
+**Verified 2026-10-03 (issue #5).** The driver is psycopg 3 (3.3.6, bundled libpq 18), not asyncpg. Through Neon's pooled string (PgBouncer, transaction mode), 24 concurrent sessions repeating parameterised queries succeeded with server-side prepared statements **forced on** (`prepare_threshold=0`) and with them off: no prepared-statement errors in any run (`api/tests/integration/test_neon_pooler.py`, run with `POOLER_TEST_URL`). `SET LOCAL statement_timeout` from the engine's `begin` event applies through the pooler (a longer query was cancelled); the `options` startup parameter is not used, since poolers reject it. **Decision:** prepared statements work, and the app keeps them off (`DB_PREPARED_STATEMENTS=false`) until a measured need; turning them on is a setting. Local runs from outside AWS sometimes timed out opening many TLS connections at once; that is network, not the pooler.
+**Watch.** Neon's resume after idle adds latency to the first query; the app's connect timeout is 10 s with `pool_pre_ping`.
 **Revisit if.** Cold resume hurts the first reply noticeably (turn off scale-to-zero on the dev branch or move to RDS), or we need private networking to the database.
 
 ### D4. Postgres owns conversation history
@@ -69,7 +70,7 @@ Each entry: the decision, why, and what would make us revisit it.
 ### D8. Auth: Google sign-in, then the API's own session
 **Decision.** The browser gets a Google ID token (Google Identity Services) and posts it once to `POST /v1/auth/google`. The API verifies signature (Google JWKS), `aud` (our client ID), `iss`, `exp` and `email_verified`, looks the user up by Google `sub`, and rejects unknown or inactive users. It then issues:
 - a short-lived **access token** (JWT, ~15 min, signed with the session key from Secrets Manager), held in memory by the client and sent as `Authorization: Bearer`;
-- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, host-only (no `Domain` attribute), so it goes only to `api.fleet.qucoon.com` (D25) (all routes live under `/v1`, D23).
+- a rotating **refresh token** (random, stored hashed in `refresh_tokens`) in a cookie: `HttpOnly; Secure; SameSite=Strict; Path=/v1/auth`, host-only (no `Domain` attribute), so it goes only to `api-fleet.qucoon.com` (D25) (all routes live under `/v1`, D23).
 Refresh rotates the token and detects reuse (reuse of an old token revokes the whole family). App (`app.`) and API (`api.`) share a parent domain, so the cookie is same-site; CORS allows only the app origin with credentials, and `/v1/auth/*` also checks `Origin`.
 **Why.** No Cognito to operate; Google does the hard part; our own session gives revocation and short token lifetime.
 **Revisit if.** We need non-Google sign-in, SSO, or passkey step-up (P2).
@@ -154,18 +155,20 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Revisit if.** A second client needs different shapes.
 
 ### D24. One repository, one folder per deployable part
-**Decision (2026-09-29, step 6).** `api/` (FastAPI, uv), `web/` (Vite SPA, npm), `infra/` (Terraform: `bootstrap/`, `modules/`, `envs/dev/`), `agents/` (one descriptor YAML per agent, inserted by the registry CLI), plus `design/` and `docs/`. No monorepo tooling (no workspaces, Nx or Turborepo): the three parts use three languages and share only the OpenAPI contract, which stays at `api/openapi.yaml` and is read by `web/` for its types. A root `Makefile` holds shortcuts only. Folders are created by the step that first fills them. Agent code lives in each agent's own repository, named `fleet-agent-<slug>` (confirmed by the owner 2026-09-30); this repo holds only descriptors (and the Scenario Agent, if it is built here). How agents are built: `docs/AGENT_PROFILE.md` (fleet's profile of the owner's [agent-standard](https://github.com/IsraelBO17/agent-standard)). Amplify builds `web/` as a monorepo app root.
+**Decision (2026-09-29, step 6).** `api/` (FastAPI, uv), `web/` (Vite SPA, npm), `infra/` (Terraform: `bootstrap/`, `modules/`, `envs/dev/`), `agents/` (one descriptor YAML per agent, inserted by the registry CLI), plus `design/` and `docs/`. No monorepo tooling (no workspaces, Nx or Turborepo): the three parts use three languages and share only the OpenAPI contract, which stays at `api/openapi.yaml` and is read by `web/` for its types. A root `Makefile` holds shortcuts only. Folders are created by the step that first fills them. Agent code lives in each agent's own repository, named `fleet-agent-<slug>` (confirmed by the owner 2026-09-30); this repo holds only descriptors (and the Scenario Agent, if it is built here). How agents are built: `docs/AGENT_PROFILE.md` (fleet's profile of the owner's [agent-standard](https://github.com/IsraelBO17/agent-standard)). How the API in `api/` is built: `docs/API_PROFILE.md` (fleet's profile of the owner's [api-standard](https://github.com/IsraelBO17/api-standard)). Amplify builds `web/` as a monorepo app root.
 **Why.** The simplest layout that keeps "adding an agent touches only `agents/`" checkable in a pull request, and keeps each part deployable on its own.
 **Revisit if.** A second TypeScript package appears (then npm workspaces), or the contract gains another consumer (then move it to a top-level `contract/`).
 
-### D25. Domain: `fleet.qucoon.com`, delegated to its own Route 53 zone
-**Decision (owner, 2026-09-29, Q2; changed the same day from `fleet.qucoon.com`).** `qucoon.com` is hosted in Route 53 in **another AWS account**. Only `fleet.qucoon.com` is delegated to a Route 53 zone in the Agent Hub account (created by `infra/bootstrap`): whoever manages `qucoon.com` adds four `NS` records named `fleet` with the values Terraform prints.
+### D25. Domain: `fleet.qucoon.com`, as CNAMEs in the `qucoon.com` zone
+**Decision (owner, 2026-09-29, Q2; amended 2026-10-03).** `qucoon.com` is hosted in Route 53 in **another AWS account**, and its owner adds fleet's records there as **CNAMEs**; there is no delegated zone. Terraform prints them (`dns_records_for_qucoon` in `infra/envs/dev`):
+- `api-fleet.qucoon.com` → the ALB's DNS name. **One label** under `qucoon.com`, so qucoon's shared wildcard certificate covers it.
+- `fleet.qucoon.com` → Amplify's domain, and Amplify's validation CNAME (when the web app is deployed).
 - Web app (Amplify): `https://fleet.qucoon.com`; share links `https://fleet.qucoon.com/s/<slug>`.
-- API (ALB): `https://api.fleet.qucoon.com`.
-- Certificates: ACM in us-east-1, validated through DNS records in the delegated zone. Amplify manages its own certificate for the app.
+- API (ALB): `https://api-fleet.qucoon.com`.
+- Certificates: the ALB uses qucoon's wildcard `*.qucoon.com` ACM certificate (us-east-1, in this account), owned and renewed by the qucoon cloud team; Terraform references it by ARN and never manages it. Amplify manages its own certificate for the app.
 - Google OAuth authorised JavaScript origin: `https://fleet.qucoon.com`; CORS allows only that origin.
 - Checked 2026-09-29: `qucoon.com` is on Route 53 (`awsdns` name servers), has no CAA records (nothing blocks Amazon certificates), and `fleet` isn't in use.
-**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). A delegated zone keeps Agent Hub's records in its own account and leaves the rest of `qucoon.com` untouched; $0.50/month.
+**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). CNAMEs (amended 2026-10-03, at the domain owner's request) leave the `qucoon.com` zone under its owner's control; the first design, a delegated zone, was deleted outside Terraform before it was used. The API is `api-fleet`, not `api.fleet`, at the cloud team's request: a wildcard certificate covers one label only. App and API still share the site `qucoon.com`, so the `SameSite=Strict` cookie works. The cost: each record is a handoff, and the API's CNAME follows the ALB, so the ALB must not be replaced casually.
 **Revisit if.** The app moves to another domain: change one Terraform variable, the Google OAuth origin and the CORS origin.
 
 ### D26. Resource names and required tags
@@ -232,7 +235,7 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 
 ## 5. Open items (known, not yet decided)
 
-- The four `NS` records for `fleet` in the `qucoon.com` zone (another AWS account), added by whoever manages it once Terraform creates the delegated zone (D25).
+- The CNAMEs for `fleet` in the `qucoon.com` zone (another AWS account), added by whoever manages it from Terraform's `dns_records_for_qucoon` output (D25).
 - Google OAuth client: created by hand in Google Cloud console. Needs the app origin as an authorised JavaScript origin.
 - Terraform state bucket: bootstrapped first, by a separate minimal config.
 - Neon: created by hand; its pooled and direct connection strings go into Secrets Manager.
@@ -249,7 +252,7 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | Neon resume delay after idle | Retry once on connect; consider disabling scale-to-zero on the primary branch |
 | Real AgentCore stream format unknown | Record real output in step 8 before writing the translator |
 | Approval pause/resume on AgentCore (P8) | Spike before building approvals |
-| Neon pooler vs. asyncpg prepared statements | Verify driver settings in step 8 |
+| Neon pooler vs. prepared statements | Resolved 2026-10-03 (D3): psycopg 3 works through the pooler with or without them; kept off |
 | Orphaned runs keep spending tokens after the user leaves (D11) | Per-run time cap; revisit if cost shows up |
 
 ## 7. Change log
@@ -275,3 +278,7 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-09-30 | The standard moved to its own template repository, `IsraelBO17/agent-standard` (private); Agent Hub keeps only its profile, `docs/AGENT_PROFILE.md`. |
 | 2026-09-30 | Step 8 (issue #3): Research Analyst v0's AgentCore stream recorded (`api/tests/fixtures/agentcore/`); the agent sends plain JSON frames ending in `result`. Closing the response stream, and `StopRuntimeSession`, do not stop a run: Stop sends a `cancel` invocation on the same runtime session (`AgentCancel`), verified on the real runtime (SEND_MESSAGE "Verified"). |
 | 2026-10-03 | D28: UI primitives from shadcn/ui on Base UI (no Radix), restyled to the Pencil components; component map in `docs/UI_COMPONENTS.md`. D16 points to it. |
+| 2026-10-03 | API standard written (personal, project-neutral, private template `IsraelBO17/api-standard`); Agent Hub's values in `docs/API_PROFILE.md` (validation 422, Neon pooled/direct URLs, SSE timers, deploy settings). |
+| 2026-10-03 | D3 verified (issue #5): psycopg 3 works through Neon's pooler with prepared statements on or off; the app keeps them off. API shell built from the API standard (`api/`). |
+| 2026-10-03 | D25 amended: CNAMEs in the `qucoon.com` zone instead of a delegated zone (the zone had been deleted outside Terraform). The API deploys in two phases: certificate, then ALB and service. |
+| 2026-10-03 | D25: the API is `api-fleet.qucoon.com` on qucoon's wildcard `*.qucoon.com` certificate (cloud team's request; they deleted the dedicated certificate). One-phase deploy again. |

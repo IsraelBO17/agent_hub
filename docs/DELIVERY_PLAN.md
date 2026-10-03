@@ -63,7 +63,7 @@ Build steps 1–7 (Terraform written, not applied): decisions, diagrams, schema,
 
 | Slice | Contents |
 |---|---|
-| Infra up | Profile chosen; bootstrap applied; `fleet` NS records added in the qucoon.com zone (other account); dev applied with `enable_api = true`; Neon project; Google OAuth client; secrets set |
+| Infra up | Profile chosen; bootstrap applied; `fleet` CNAMEs added in the qucoon.com zone (other account, D25); dev applied with `enable_api = true`; Neon project; Google OAuth client; secrets set |
 | Agent | Research Analyst v0 deployed on AgentCore; **its raw stream recorded and committed** |
 | API | FastAPI app with `/v1/health`, Google sign-in/refresh/logout/`me`, `GET /agents`, create session + send + stream (text, thinking, tool), list messages, stop; heartbeat and cancel flag; the registry CLI and `agents/research-analyst.yaml` |
 | Web | Vite app with the design tokens; the typed client from `openapi.yaml`; sign-in, catalog, new session, streaming chat with thinking and tool chips, Stop |

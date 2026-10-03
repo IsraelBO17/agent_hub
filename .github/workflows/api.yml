@@ -1,0 +1,33 @@
+# The API's done gate (api-standard §20): `make check` in api/ against a real Postgres, plus the
+# contract lint. Runs when the API, its contract or this workflow changes.
+name: api
+on:
+  pull_request:
+    paths: ["api/**", ".github/workflows/api.yml"]
+  push:
+    branches: [main]
+    paths: ["api/**", ".github/workflows/api.yml"]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: dev
+          POSTGRES_DB: agent_hub
+        ports: ["55432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      # Third-party actions pinned by commit SHA, version in the comment.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      - run: uv sync --locked
+      - run: make check
+      - run: npx -y @redocly/cli@2.56.1 lint openapi.yaml

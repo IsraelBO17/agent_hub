@@ -1,13 +1,9 @@
 # The dev environment, the only one until v1 (D17). Apply order and the manual steps: infra/README.md.
 
-data "aws_route53_zone" "fleet" {
-  name = var.zone_name
-}
-
 locals {
   prefix     = "${var.project}-${var.environment}" # names: <prefix>-<component>-<type>-<region> (D26)
-  app_domain = var.zone_name                       # https://fleet.qucoon.com (Amplify, step 8)
-  api_domain = "api.${var.zone_name}"              # https://api.fleet.qucoon.com (ALB)
+  app_domain = var.app_domain                      # https://fleet.qucoon.com (Amplify)
+  api_domain = var.api_domain                      # https://api-fleet.qucoon.com (ALB)
   app_origin = "https://${local.app_domain}"
   api_port   = 8000
   # The account is shared: the API may invoke only fleet's own runtimes, listed explicitly.
@@ -43,6 +39,16 @@ module "secrets" {
   }
 }
 
+# The API uses qucoon's shared wildcard certificate (*.qucoon.com), owned by the qucoon cloud team and
+# referenced by ARN only, so Terraform never changes or deletes it (D25). The first design created its own
+# certificate; that one was deleted outside Terraform: forget it.
+removed {
+  from = aws_acm_certificate.api
+  lifecycle {
+    destroy = false
+  }
+}
+
 module "alb" {
   count             = var.enable_api ? 1 : 0
   source            = "../../modules/alb"
@@ -51,8 +57,7 @@ module "alb" {
   vpc_id            = module.network.vpc_id
   vpc_cidr          = module.network.vpc_cidr
   subnet_ids        = module.network.public_subnet_ids
-  zone_id           = data.aws_route53_zone.fleet.zone_id
-  domain            = local.api_domain
+  certificate_arn   = var.api_certificate_arn
   container_port    = local.api_port
   health_check_path = "/v1/health"
 }

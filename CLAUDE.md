@@ -2,9 +2,9 @@
 
 One web app that is a single chat interface for many AI agents (AWS Strands Agents on Amazon Bedrock AgentCore Runtime, LangGraph later). Agents are data from `GET /agents`; adding one must never need UI changes.
 
-**Current stage: planning and foundations.** The only code is the database schema and migrations in `api/` (step 4). Do not scaffold the rest of the app unless asked.
+**Current stage: building M1.** `api/` is a FastAPI service built from the owner's API standard (`docs/API_PROFILE.md`); issue #5 added its shell. Features are built issue by issue; do not scaffold ahead of an issue unless asked.
 
-**Layout (D24):** `api/` (FastAPI, uv; `api/openapi.yaml` is the contract), `web/` (Vite SPA, npm), `infra/` (Terraform), `agents/` (one descriptor YAML per agent), `design/`, `docs/`. Create a folder only in the step that fills it. `make` lists the common commands.
+**Layout (D24):** `api/` (FastAPI, uv; `api/openapi.yaml` is the contract; work there follows `api/CLAUDE.md`), `web/` (Vite SPA, npm), `infra/` (Terraform), `agents/` (one descriptor YAML per agent), `design/`, `docs/`. Create a folder only in the step that fills it. `make` lists the common commands.
 
 ## Read first
 - `docs/BUILD_PLAN.md`: the ordered build steps, their status, how we work, and open questions. Start here.
@@ -13,6 +13,7 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 - `docs/SEND_MESSAGE.md`: the send/stream flow, message statuses, timers and error codes (diagrams in `docs/diagrams/`).
 - `docs/DATA_MODEL.md`: Postgres tables, enforced rules and indexes (models in `api/app/db/models.py`, migrations with Alembic in `api/migrations/`).
 - `api/openapi.yaml`: the API contract (OpenAPI 3.1): every endpoint, error code, SSE event and message block, plus the API → agent payload. Lint with `make contract-lint` (Redocly CLI, version pinned in the Makefile).
+- `docs/API_PROFILE.md`: how Agent Hub's API is built: the owner's [api-standard](https://github.com/IsraelBO17/api-standard) template and standard, plus fleet's values (contract, AWS names and tags, Neon, SSE rules, deploy settings).
 - `docs/AGENT_PROFILE.md`: how Agent Hub agents are built: the [agent-standard](https://github.com/IsraelBO17/agent-standard) template and standard, plus fleet's contract and conventions. Agent code lives in `fleet-agent-<slug>` repos, not here.
 - `docs/PRODUCT_PLAN.md`: scope (P0/P1/P2), acceptance criteria, screen inventory, roadmap, design critique (§9).
 - `docs/UI_COMPONENTS.md`: how each Pencil component maps to shadcn/ui on Base UI (D28, no Radix), the token mapping, and the design gaps to settle.

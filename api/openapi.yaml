@@ -75,7 +75,7 @@ info:
   contact:
     name: Israel B.
 servers:
-  - url: https://api.fleet.qucoon.com
+  - url: https://api-fleet.qucoon.com
     description: Dev, the only environment until v1 (ARCHITECTURE D17, D25).
   - url: http://localhost:8000
     description: Local development
@@ -1531,8 +1531,11 @@ components:
         - `invalid_google_token` [401] the Google ID token failed verification
         - `session_expired` [401] refresh token expired, revoked or reused; sign in again
         - `origin_not_allowed` [403], `not_invited` [403], `account_disabled` [403]
+        - `forbidden` [403] signed in, but the action needs a role the user doesn't have
         - `agent_not_found`, `session_not_found`, `message_not_found`, `approval_not_found`, `file_not_found`,
           `artifact_not_found`, `share_not_found` [404]
+        - `not_found` [404] no such route; `method_not_allowed` [405] the route exists but not for this method (`Allow` lists the methods)
+        - `conflict` [409] generic; the specific codes below are used where one exists
         - `run_in_progress` [409] a reply is streaming in this session
         - `agent_retired` [409] the agent was removed; its sessions are read-only
         - `not_retryable` [409] retry on a message that isn't stopped, failed or interrupted
@@ -1541,8 +1544,10 @@ components:
         - `idempotency_conflict` [409] a `clientMessageId` reused with different content
         - `file_not_ready` [409] sending a file that isn't `uploaded`, or completing one before the bytes arrived
         - `file_attached` [409] deleting a file that was already sent
+        - `payload_too_large` [413] the request body is over the limit (files go to S3 directly, D7)
         - `too_many_runs` [429] three replies already running for this user
         - `agent_unavailable` [503, event] agent offline, or AgentCore unreachable
+        - `shutting_down` [503] the API task is draining for a deploy; retry (`retryAfter`) (P2)
         - `agent_error` [event] the agent failed mid-run
         - `rate_limited` [event] AgentCore or the model throttled the call (`retryAfter`)
         - `run_time_limit` [event] the 15-minute run cap was hit; status `interrupted`
@@ -1565,6 +1570,7 @@ components:
         - origin_not_allowed
         - not_invited
         - account_disabled
+        - forbidden
         - agent_not_found
         - session_not_found
         - message_not_found
@@ -1572,6 +1578,9 @@ components:
         - file_not_found
         - artifact_not_found
         - share_not_found
+        - not_found
+        - method_not_allowed
+        - conflict
         - run_in_progress
         - agent_retired
         - not_retryable
@@ -1580,8 +1589,10 @@ components:
         - idempotency_conflict
         - file_not_ready
         - file_attached
+        - payload_too_large
         - too_many_runs
         - agent_unavailable
+        - shutting_down
         - agent_error
         - rate_limited
         - run_time_limit

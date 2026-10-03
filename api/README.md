@@ -1,35 +1,48 @@
 # Agent Hub API
 
-FastAPI service (not written yet). Today this folder holds the **database schema and migrations** (build plan step 4) and the **API contract**, [`openapi.yaml`](openapi.yaml) (step 5). Repo layout: root [`README.md`](../README.md).
+The FastAPI service behind Agent Hub (ARCHITECTURE D1, D2). Built to the owner's [API standard](https://github.com/IsraelBO17/api-standard) with Agent Hub's values in [`../docs/API_PROFILE.md`](../docs/API_PROFILE.md). Repo layout: root [`README.md`](../README.md).
 
-- Models: `app/db/models.py` (source of truth for the schema). Notes: `docs/DATA_MODEL.md`.
-- Migrations: `migrations/` (Alembic). They connect with `DATABASE_URL_DIRECT`, Neon's **direct** (unpooled) connection string, not the pooled one (ARCHITECTURE D3).
+| | |
+|---|---|
+| Owner | Israel B. |
+| Stage | Build (M1) |
+| Version | 0.1.0 |
+| Stack | FastAPI · SQLAlchemy 2 async (psycopg 3) · Neon Postgres · ECS Fargate (exceptions: none) |
+| Contract | [`openapi.yaml`](openapi.yaml) (D23) |
+| Spec | [`SPEC.md`](SPEC.md), which indexes the planning documents |
 
-## Run locally
+- Code: `src/app/`: `main.py` wires `core/` (settings, errors, request ids, logging, database, auth verification, jobs) and the features. `serve.py` is the container's command.
+- Schema: `src/app/db/models.py` (source of truth until each feature moves its tables into `features/<name>/models.py`). Notes: [`../docs/DATA_MODEL.md`](../docs/DATA_MODEL.md).
+- Migrations: `migrations/` (Alembic). They use `DATABASE_URL_DIRECT`, Neon's **direct** (unpooled) connection string; the app uses the pooled one (D3).
 
-Needs [uv](https://docs.astral.sh/uv/) and Docker.
+## Run and test
+
+Needs [uv](https://docs.astral.sh/uv/) and Docker. From the repository root:
 
 ```bash
-docker run -d --rm --name agenthub-pg -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=agent_hub -p 55432:5432 postgres:17-alpine
+make db-up
 ```
 
 ```bash
-export DATABASE_URL_DIRECT=postgresql://postgres:dev@localhost:55432/agent_hub
+make api-test
 ```
+
+`make api-test` is the done gate (`make check` in this folder): lint, format, types, migrations in sync, unit, integration and contract tests, and the dependency audit. It wipes and re-creates the local database.
+
+Run the API on port 8000 (local settings come from `.env.example`; put overrides in `.env`):
 
 ```bash
-uv run alembic upgrade head
+make api-migrate && make api-run
 ```
 
-```bash
-uv run pytest
-```
-
-The tests drop and recreate the schema, so point them only at a disposable database.
+A local access token for curl: `make -C api token`.
 
 ## Changing the schema
 
-1. Edit `app/db/models.py`.
-2. `uv run alembic revision --autogenerate -m "what changed"`, then read and fix the generated file (autogenerate misses some things, such as renames).
-3. `uv run alembic upgrade head`, `uv run alembic check` (should report no changes) and `uv run pytest`.
-4. Update `docs/DATA_MODEL.md` and `docs/diagrams/er.mmd` (re-render the PNG).
+1. Edit the models.
+2. `make -C api migration m="what changed"`, then read and fix the generated file (autogenerate misses some things, such as renames and CHECK changes).
+3. `make api-check` (should report no changes) and `make api-test`.
+4. Update [`../docs/DATA_MODEL.md`](../docs/DATA_MODEL.md) and `docs/diagrams/er.mmd` (re-render the PNG).
+
+## Deploy
+Recipe 8 in [`docs/RECIPES.md`](docs/RECIPES.md) with the profile's values; Terraform in [`../infra/`](../infra/README.md).
