@@ -78,6 +78,8 @@ Refresh rotates the token and detects reuse (reuse of an old token revokes the w
 **Revisit if.** We need non-Google sign-in, SSO, or passkey step-up (P2).
 
 ### D9. Single user via allowlist, multi-user-ready schema
+> **Superseded in part by D31 (2026-10-04):** colleagues use v1; the schema below is unchanged.
+
 **Decision.** Users are keyed by Google `sub` (email kept for display and invites). Only the owner's row is active, seeded by hand. Every user-owned table has `user_id` from day one, and every query filters on it.
 **Why.** Adding users later means inviting them, not migrating data.
 **Revisit if.** Teams or shared agents arrive (P2): add an `agent_access` table, not a schema rewrite.
@@ -211,6 +213,18 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Why.** Both are almost free now and expensive to undo once the UI and API have hard-coded "a chat started by a person". The later work, task mode, triggers and an Inbox, is on the roadmap as one theme (`PRODUCT_PLAN.md` §4, "Beyond chat").
 **Revisit if.** A non-chat agent becomes urgent: then the theme moves forward in `DELIVERY_PLAN.md`.
 
+
+### D31. Qucoon colleagues use v1; each agent has an audience
+**Decision (owner, 2026-10-04, `docs/PROBLEM_BRIEF.md` §5).** v1 is Qucoon's internal agent hub, not a one-person tool: 10–20 colleagues sign in with Google, each with private history. This supersedes D9's "only the owner's row is active"; D9's schema stays as it is.
+- **Invites by CLI,** no admin screens: `users.status = invited` activates on first sign-in (as built in #6).
+- **Agent access** (D9's "Revisit if"): an `agent_access` table. An agent is visible to everyone or to named users; a new agent is visible only to its builders until it's released. Builders of an agent see the per-reply details view.
+- **Copy is for staff, not builders:** runtime names, endpoints and registration hints show only to builders.
+- **Ledger is replaced** as the approvals agent in M3 by a real agent (the documents agent asking before it files); the P8 spike is unchanged.
+- **A builder's details view of each reply** (model, agent version, timings, tokens and cost, request ID, tool calls in full, raw events) is built in M2.
+- **Messages from outside the run** (for example the HR admin's reply arriving in a staff member's session) are designed in M3 and built in v1 only if the HR agent ships by 18 Dec; they extend D19 and D22, and follow D30's precaution 2.
+**Why.** Real demand since M1 is colleagues, not a portfolio audience; the schema already isolates users, so the cost is access, copy and privacy, not migration.
+**Revisit if.** Users outgrow invites by CLI, or need groups and roles beyond "everyone or named users" and "builder".
+
 ---
 
 ## 2. Networking (confirmed by the owner, 2026-09-29, Q3)
@@ -308,3 +322,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-10-03 | Issue #10, browser half: a 3 min 23 s reply streamed to the web app on `fleet.qucoon.com` without a drop; first rendered event 10–21 ms after the first SSE byte (target 150). Background tabs: the web app's per-frame batching now also flushes on a timer. The phone check remains. |
 | 2026-10-03 | D18 amended: the turn that crosses the history's character budget is cut to fit instead of ending the history before it, so one long reply (a ~38,000-character report) no longer leaves the agent with no earlier turns. |
 | 2026-10-03 | D30: v1 stays chat-first; `capabilities.interaction` (chat/task) reserved in the descriptor, and nothing may assume a person started a session. Task agents, triggers and an Inbox are a roadmap theme. |
+| 2026-10-04 | D31 (product-design session): colleagues use v1 with private history and per-agent access; supersedes D9's single active user. Ledger replaced as the approvals agent; builder details view in M2; messages from outside the run designed in M3. |

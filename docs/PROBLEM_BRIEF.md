@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| Status | Draft for owner review (product-design session, step 2) |
+| Status | **Approved 2026-10-04** (owner), with the decisions in §5 |
 | Date | 2026-10-03, after M1 closed |
 | Evidence | The owner's answers on real use since M1 (below), the repo (`agents/` holds one descriptor), issue #31, the gallery `design/renders/index.html` |
-| Replaces | Nothing yet. If approved, it updates PRODUCT_PLAN §1–2 (users, problem, jobs); the decisions in §5 need the owner first |
+| Changes | PRODUCT_PLAN §1–2 (users, problem, jobs) and ARCHITECTURE D31, which supersedes D9's single active user |
 
 **Principle (owner, 2026-10-03).** The hub is the front end for conversational agents. It isn't the custom app for any one agent. An agent with its own workflow (an admin dashboard, a document pipeline) gets its own front end, and the hub shows the conversations.
 
@@ -88,15 +88,13 @@ Demoted, with reasons:
   - **Approvals with a real agent:** for example, the documents agent asking before it files into SharePoint.
   - **An Inbox (F30)** for triggered runs. D30 keeps this after v1, and that still holds unless a triggered agent arrives before 18 Dec.
 
-## 5. Decisions this raises (owner)
+## 5. Decisions (owner, 2026-10-04: yes to all five, as recommended; ARCHITECTURE D31)
 
-These challenge recorded decisions, so nothing has been changed:
-
-1. **Multi-user before v1?** PRODUCT_PLAN §1 (teammates P2), A2 and §11 rank 1, and D9 ("only the owner's row is active") all say one user. Problem 1 says 10–20 colleagues. The data model is ready, so the cost is invites, agent access, copy, privacy and per-user limits.
-2. **Agent access** (`agent_access`, D9's "Revisit if"): who sees which agent, and draft agents for their builder only.
-3. **Replace Ledger in M3 with a real agent's approval** (the documents agent filing into storage), per DELIVERY_PLAN §2–3.
-4. **Messages from outside the run** (the HR admin's reply): in v1, or after it? This extends D19/D22, and D30's Inbox theme.
-5. **A builder's view of each reply:** in v1, and for whom?
+1. **Colleagues use v1.** Invites by CLI, no admin screens. Reverses PRODUCT_PLAN §1 (teammates P2), A2 and §11 rank 1, and D9's single active user. The cost is invites, agent access, copy, privacy and per-user limits; HTML and table artifacts (cut list item 4) and replacing Ledger make room.
+2. **Agent access** (`agent_access`): an agent is visible to everyone or to named people; a new agent is visible only to its builders until released.
+3. **Ledger is replaced in M3** by a real agent's approval: the documents agent asking before it files. The P8 spike is unchanged.
+4. **Messages from outside the run** (the HR admin's reply) are designed in M3, and built in v1 only if the HR agent ships by 18 Dec.
+5. **A builder's details view of each reply** is built in M2, shown to that agent's builders.
 
 ## 6. Beyond chat (D30)
 
