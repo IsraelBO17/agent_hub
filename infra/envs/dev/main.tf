@@ -99,6 +99,8 @@ module "web" {
   repository = var.web_repository
   branch     = "main"
   domain     = local.app_domain
+  # qucoon's *.qucoon.com certificate, already validated by the cloud team (D25), as the API uses.
+  certificate_arn = var.api_certificate_arn
   environment_variables = {
     VITE_API_URL          = "https://${local.api_domain}"
     VITE_GOOGLE_CLIENT_ID = var.google_client_id

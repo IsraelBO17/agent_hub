@@ -34,6 +34,12 @@ variable "domain" {
   default     = ""
 }
 
+variable "certificate_arn" {
+  description = "An ACM certificate in us-east-1 that covers the domain (e.g. a wildcard). Empty: Amplify issues and manages its own."
+  type        = string
+  default     = ""
+}
+
 variable "content_security_policy" {
   description = "The Content-Security-Policy header for every response (web standard §19)."
   type        = string
@@ -87,30 +93,30 @@ resource "aws_amplify_app" "this" {
   }
 
   # Web standard §19 and §24: security headers everywhere, long caching for hashed assets, none for the page.
-  # Monorepo apps take the headers per app root, like the build spec.
-  custom_headers = <<-YAML
-    applications:
-      - appRoot: web
-        customHeaders:
-          - pattern: '**'
-            headers:
-              - key: Content-Security-Policy
-                value: "${var.content_security_policy}"
-              - key: Strict-Transport-Security
-                value: max-age=31536000; includeSubDomains
-              - key: X-Content-Type-Options
-                value: nosniff
-              - key: Referrer-Policy
-                value: strict-origin-when-cross-origin
-              - key: Permissions-Policy
-                value: camera=(), geolocation=(), microphone=(self), payment=(), usb=()
-              - key: Cache-Control
-                value: no-cache
-          - pattern: '/assets/**'
-            headers:
-              - key: Cache-Control
-                value: public, max-age=31536000, immutable
-  YAML
+  # Monorepo apps take the headers per app root, like the build spec. Written as JSON, the form Amplify stores,
+  # so plans don't show a change when there is none.
+  custom_headers = jsonencode({
+    applications = [{
+      appRoot = "web"
+      customHeaders = [
+        {
+          pattern = "**"
+          headers = [
+            { key = "Content-Security-Policy", value = var.content_security_policy },
+            { key = "Strict-Transport-Security", value = "max-age=31536000; includeSubDomains" },
+            { key = "X-Content-Type-Options", value = "nosniff" },
+            { key = "Referrer-Policy", value = "strict-origin-when-cross-origin" },
+            { key = "Permissions-Policy", value = "camera=(), geolocation=(), microphone=(self), payment=(), usb=()" },
+            { key = "Cache-Control", value = "no-cache" },
+          ]
+        },
+        {
+          pattern = "/assets/**"
+          headers = [{ key = "Cache-Control", value = "public, max-age=31536000, immutable" }]
+        },
+      ]
+    }]
+  })
 }
 
 resource "aws_amplify_branch" "this" {
@@ -123,7 +129,8 @@ resource "aws_amplify_branch" "this" {
 }
 
 # fleet.qucoon.com is a CNAME in the qucoon.com zone, which another account manages (D25), so Terraform doesn't
-# wait for verification: it outputs the records, and the zone's owner adds them.
+# wait for verification: it outputs the records, and the zone's owner adds them. With a custom certificate (a
+# wildcard the zone's owner already validated) only the app's CNAME is needed.
 resource "aws_amplify_domain_association" "this" {
   count                  = local.connected && var.domain != "" ? 1 : 0
   app_id                 = aws_amplify_app.this.id
@@ -132,7 +139,8 @@ resource "aws_amplify_domain_association" "this" {
   wait_for_verification  = false
 
   certificate_settings {
-    type = "AMPLIFY_MANAGED"
+    type                   = var.certificate_arn == "" ? "AMPLIFY_MANAGED" : "CUSTOM"
+    custom_certificate_arn = var.certificate_arn == "" ? null : var.certificate_arn
   }
 
   sub_domain {
@@ -159,7 +167,7 @@ output "branch_url" {
 locals {
   dns_raw = flatten([
     for d in aws_amplify_domain_association.this : concat(
-      [{ purpose = "the web app's certificate", parts = split(" ", trimspace(d.certificate_verification_dns_record)) }],
+      var.certificate_arn == "" ? [{ purpose = "the web app's certificate", parts = split(" ", trimspace(coalesce(d.certificate_verification_dns_record, ""))) }] : [],
       [for s in d.sub_domain : { purpose = "the web app", parts = split(" ", trimspace(s.dns_record)) }],
     )
   ])

@@ -60,7 +60,7 @@ Amplify builds `web/` from `main` on every push. The GitHub connection is made o
    read -rs GITHUB_TOKEN && AWS_PROFILE=ml_account aws amplify update-app --region us-east-1 --app-id "$(terraform -chdir=infra/envs/dev output -raw amplify_app_id)" --repository https://github.com/IsraelBO17/agent_hub --access-token "$GITHUB_TOKEN"; unset GITHUB_TOKEN
    ```
 4. Delete the token on GitHub. Set `web_repository` in `envs/dev/deploy.auto.tfvars`, plan, and apply: that creates the `main` branch and the `fleet.qucoon.com` domain association.
-5. Send the web app's records from `terraform -chdir=infra/envs/dev output dns_records_for_qucoon` (the certificate's validation CNAME and `fleet.qucoon.com`) to the `qucoon.com` owner. Until they exist, the app is on `web_branch_url`.
+5. Send the web app's records from `terraform -chdir=infra/envs/dev output dns_records_for_qucoon` (`fleet.qucoon.com` only: Amplify uses qucoon's `*.qucoon.com` certificate, so there is no validation record) to the `qucoon.com` owner. Until they exist, the app is on `web_branch_url`.
 
 ## Turning the API on (step 8)
 
