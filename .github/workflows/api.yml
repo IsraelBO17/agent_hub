@@ -1,12 +1,12 @@
 # The API's done gate (api-standard §20): `make check` in api/ against a real Postgres, plus the
-# contract lint. Runs when the API, its contract or this workflow changes.
+# contract lint. Runs when the API, its contract, an agent descriptor or this workflow changes.
 name: api
 on:
   pull_request:
-    paths: ["api/**", ".github/workflows/api.yml"]
+    paths: ["api/**", "agents/**", ".github/workflows/api.yml"]
   push:
     branches: [main]
-    paths: ["api/**", ".github/workflows/api.yml"]
+    paths: ["api/**", "agents/**", ".github/workflows/api.yml"]
 permissions:
   contents: read
 jobs:

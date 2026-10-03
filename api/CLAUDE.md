@@ -17,6 +17,7 @@ The one API behind Agent Hub's web app: auth, the agent registry, sessions and m
 | `make migration m="…"` | New numbered migration from the models; review it by hand |
 | `make run` / `make worker` | Run the API on :8000 / the job worker |
 | `make token` | A local access token for calling the API with curl |
+| `uv run hub …` | Operator commands against `DATABASE_URL`: `agents add <descriptor.yaml>`, `agents list`, `users invite <email>` (`make agent-add`, `make agents`, `make invite`) |
 | `make docs` | Swagger UI over the contract at http://localhost:8000/docs, with a local test user's token (local only) |
 | `make image` | Build the arm64 image tagged with the git SHA |
 
