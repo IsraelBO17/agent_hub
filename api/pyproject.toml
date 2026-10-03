@@ -1,6 +1,6 @@
 [project]
 name = "agent-hub-api"
-version = "0.5.0"
+version = "0.5.1"
 description = "Agent Hub API: one chat interface for many AI agents (FastAPI)."
 requires-python = ">=3.12,<3.13"
 dependencies = [

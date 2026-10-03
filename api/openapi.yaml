@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Agent Hub API
-  version: 0.5.0
+  version: 0.5.1
   summary: One chat interface for many AI agents. Browser ↔ API contract, plus the API → agent payload.
   description: |
     The contract between the Agent Hub web app and its FastAPI service (build plan step 5).
