@@ -19,13 +19,13 @@ The one API behind Agent Hub's web app: auth, the agent registry, sessions and m
 | `make token` | A local access token for calling the API with curl |
 | `make image` | Build the arm64 image tagged with the git SHA |
 
-Skills: `/new-api`, `/add-resource`, `/add-migration`, `/add-auth`, `/add-job`, `/add-stream`, `/add-integration`, `/deploy`, `/pre-merge` (each runs a recipe).
+Skills: `/add-resource`, `/add-migration`, `/add-auth`, `/add-job`, `/add-stream`, `/add-integration`, `/deploy`, `/pre-merge` (each runs a recipe).
 
 ## Layout
 `main.py` (`create_app()`, the only wiring) → `features/<name>/` (`router.py` → `service.py` → `repository.py`, plus `models.py`, `schemas.py`, `exceptions.py`, `public.py`, `jobs.py`) on top of `core/` (settings, db, errors, auth, middleware, logging, jobs). `serve.py` and `worker.py` are the process entrypoints. Agent Hub's tables are still in `db/models.py`; each feature moves its own tables into `features/<name>/models.py` when it is built. The template's `notes` example (in the `api-standard` repository) shows every pattern.
 
 ## Defaults (don't ask; use these unless the spec or profile says otherwise)
-FastAPI, Pydantic v2 (camelCase wire, snake_case Python), SQLAlchemy 2 async + psycopg 3, Alembic, Postgres. RFC 9457 problems with a stable `code`; validation `400 invalid_request`. `/v1` in the URL. Cursor pagination (`limit` ≤ 100). UUIDs, `timestamptz`, CHECK constraints for enumerations. Every query filters by owner; another owner's row is 404. Background work is a job enqueued in the same transaction. Local settings come from `.env.example` (a new required setting goes there). Streams are SSE. Tests against real Postgres. Terraform; arm64 images tagged with the git SHA. Ask the owner only what's genuinely specific to this service, in one batch, with a recommendation.
+FastAPI, Pydantic v2 (camelCase wire, snake_case Python), SQLAlchemy 2 async + psycopg 3, Alembic, Postgres. RFC 9457 problems with a stable `code`; validation `422 invalid_request` (the profile's choice). `/v1` in the URL. Cursor pagination (`limit` ≤ 100). UUIDs, `timestamptz`, CHECK constraints for enumerations. Every query filters by owner; another owner's row is 404. Background work is a job enqueued in the same transaction. Local settings come from `.env.example` (a new required setting goes there). Streams are SSE. Tests against real Postgres. Terraform; arm64 images tagged with the git SHA. Ask the owner only what's genuinely specific to this service, in one batch, with a recommendation.
 
 ## Never
 - Write code before its capability block in `SPEC.md` and its operation in `openapi.yaml` exist, or change behaviour without updating both.

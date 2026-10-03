@@ -41,7 +41,14 @@ QUERIES = [
 
 
 def _engine(*, prepared: bool, timeout_ms: int | None = None) -> AsyncEngine:
-    update: dict[str, Any] = {"database_url": URL, "db_prepared_statements": prepared}
+    # One client connection per concurrent session: PgBouncer then multiplexes them onto fewer
+    # server connections, which is where unsupported prepared statements would break.
+    update: dict[str, Any] = {
+        "database_url": URL,
+        "db_prepared_statements": prepared,
+        "db_pool_size": SESSIONS,
+        "db_max_overflow": 0,
+    }
     if timeout_ms is not None:
         update["db_statement_timeout_ms"] = timeout_ms
     settings = Settings.model_validate({**get_settings().model_dump(by_alias=True), **update})
@@ -63,6 +70,9 @@ async def engine(request: pytest.FixtureRequest) -> AsyncIterator[AsyncEngine]:
 
 
 async def _client(eng: AsyncEngine, n: int) -> None:
+    # Stagger the first connection: two dozen TLS handshakes at the same instant can time out on a
+    # slow link, which says nothing about prepared statements. The sessions still overlap.
+    await asyncio.sleep(n * 0.25)
     for round_ in range(ROUNDS):
         async with eng.connect() as conn:  # one transaction per round, as a request would
             for sql in QUERIES:

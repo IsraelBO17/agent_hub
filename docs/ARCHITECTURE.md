@@ -40,7 +40,8 @@ Each entry: the decision, why, and what would make us revisit it.
 ### D3. Database: Neon Postgres, us-east-1
 **Decision.** Neon Postgres in us-east-1. The app uses Neon's pooled connection string plus a small app-level pool (SQLAlchemy async). Migrations (Alembic) use the **direct** (unpooled) string, because Neon's pooler runs PgBouncer in transaction mode, which doesn't suit DDL and session-level features.
 **Why.** Relational data (sessions, messages, versions, approvals with audit) fits Postgres; Neon is serverless-priced and fast to create by hand.
-**Watch.** PgBouncer transaction mode and asyncpg prepared statements: confirm the driver settings in step 8 (for example `statement_cache_size=0` if Neon's pooler rejects them). Neon's resume after idle adds latency to the first query; keep the app pool's connect timeout generous and retry once.
+**Verified 2026-10-03 (issue #5).** The driver is psycopg 3 (3.3.6, bundled libpq 18), not asyncpg. Through Neon's pooled string (PgBouncer, transaction mode), 24 concurrent sessions repeating parameterised queries succeeded with server-side prepared statements **forced on** (`prepare_threshold=0`) and with them off: no prepared-statement errors in any run (`api/tests/integration/test_neon_pooler.py`, run with `POOLER_TEST_URL`). `SET LOCAL statement_timeout` from the engine's `begin` event applies through the pooler (a longer query was cancelled); the `options` startup parameter is not used, since poolers reject it. **Decision:** prepared statements work, and the app keeps them off (`DB_PREPARED_STATEMENTS=false`) until a measured need; turning them on is a setting. Local runs from outside AWS sometimes timed out opening many TLS connections at once; that is network, not the pooler.
+**Watch.** Neon's resume after idle adds latency to the first query; the app's connect timeout is 10 s with `pool_pre_ping`.
 **Revisit if.** Cold resume hurts the first reply noticeably (turn off scale-to-zero on the dev branch or move to RDS), or we need private networking to the database.
 
 ### D4. Postgres owns conversation history
@@ -249,7 +250,7 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | Neon resume delay after idle | Retry once on connect; consider disabling scale-to-zero on the primary branch |
 | Real AgentCore stream format unknown | Record real output in step 8 before writing the translator |
 | Approval pause/resume on AgentCore (P8) | Spike before building approvals |
-| Neon pooler vs. asyncpg prepared statements | Verify driver settings in step 8 |
+| Neon pooler vs. prepared statements | Resolved 2026-10-03 (D3): psycopg 3 works through the pooler with or without them; kept off |
 | Orphaned runs keep spending tokens after the user leaves (D11) | Per-run time cap; revisit if cost shows up |
 
 ## 7. Change log
@@ -276,3 +277,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-09-30 | Step 8 (issue #3): Research Analyst v0's AgentCore stream recorded (`api/tests/fixtures/agentcore/`); the agent sends plain JSON frames ending in `result`. Closing the response stream, and `StopRuntimeSession`, do not stop a run: Stop sends a `cancel` invocation on the same runtime session (`AgentCancel`), verified on the real runtime (SEND_MESSAGE "Verified"). |
 | 2026-10-03 | D28: UI primitives from shadcn/ui on Base UI (no Radix), restyled to the Pencil components; component map in `docs/UI_COMPONENTS.md`. D16 points to it. |
 | 2026-10-03 | API standard written (personal, project-neutral, private template `IsraelBO17/api-standard`); Agent Hub's values in `docs/API_PROFILE.md` (validation 422, Neon pooled/direct URLs, SSE timers, deploy settings). |
+| 2026-10-03 | D3 verified (issue #5): psycopg 3 works through Neon's pooler with prepared statements on or off; the app keeps them off. API shell built from the API standard (`api/`). |
