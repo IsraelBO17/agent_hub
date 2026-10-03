@@ -19,7 +19,7 @@ shadcn/ui supplies the structure and the accessible behaviour. The Pencil file d
 
 ### Tokens
 
-A script reads `variables` from `fleet_dev.pen` and writes `web/src/styles/tokens.css` (generated, never edited by hand). Every Pencil colour becomes a Tailwind colour under its own name. shadcn's semantic variables then point at those tokens:
+A script reads `variables` from `fleet_dev.pen` and writes `web/src/styles/tokens.css` (generated, never edited by hand). The file has variables only for colours and fonts, so sizes, radii and shadows come from `web/design/scale.json`, kept from the values below (WEB_PROFILE, Token pipeline). Every Pencil colour becomes a Tailwind colour under its own name. shadcn's semantic variables then point at those tokens:
 
 | shadcn variable | Pencil token | Note |
 |---|---|---|
@@ -35,7 +35,7 @@ A script reads `variables` from `fleet_dev.pen` and writes `web/src/styles/token
 | `--sidebar`, `--sidebar-accent`, `--sidebar-border` | `sidebar`, `hover`, `border` | |
 | `--chart-*` | *unused* | `<ChartBlock>` reads `chart-1`–`6` directly (CHART_SPEC) |
 
-- **Type scale:** reset Tailwind's sizes (`--text-*: initial`) and define only `text-12`, `13`, `14`, `15`, `20`, `28` and `40`, so no other size can be used. Line heights stay with each component (1.35–1.6 in the file). Fonts: `font-ui` Inter and `font-mono` JetBrains Mono; Roboto only inside the Google button.
+- **Type scale:** reset Tailwind's sizes (`--text-*: initial`) and define only `text-12`, `13`, `14`, `15`, `20`, `28` and `40`, so no other size can be used. `cn` must be told these names (`createCn` from `cn/config`), or it drops `text-13` next to a text colour (WEB_PROFILE, Type scale). Line heights stay with each component (1.35–1.6 in the file). Fonts: `font-ui` Inter and `font-mono` JetBrains Mono; Roboto only inside the Google button.
 - **Radii:** reset the scale the same way and define the steps the file uses: `rounded-4`, `5`, `6`, `7`, `8`, `9`, `10`, `12`, `14`, `16` and `rounded-full`. Most controls use 9, cards and callouts 10, menus 12, popovers and toasts 14, dialogs 16.
 - **Shadows** (from the components):
 

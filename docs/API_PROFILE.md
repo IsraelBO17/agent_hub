@@ -34,4 +34,4 @@ Agent Hub's API follows the [API Development Standard](https://github.com/Israel
 
 1. Work in `api/`, following `api/CLAUDE.md` (from the template) and the recipes in `api/docs/RECIPES.md`.
 2. Use these values wherever a recipe says "from the profile"; anything the profile and [`ARCHITECTURE.md`](ARCHITECTURE.md) don't settle is a question for the owner.
-3. A change that would contradict a decision (D1–D27, P1–P8) is proposed in `ARCHITECTURE.md` first; a gap in the standard is fixed in `api-standard` with a version bump, not worked around here.
+3. A change that would contradict a decision (D1–D29, P1–P8) is proposed in `ARCHITECTURE.md` first; a gap in the standard is fixed in `api-standard` with a version bump, not worked around here.

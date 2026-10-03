@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.5, D1–D28 and P1–P8 locked; §4 questions still open |
+| Status | v0.5, D1–D29 and P1–P8 locked; §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -113,7 +113,7 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Revisit if.** Secret count or cost grows; SSM Parameter Store SecureString is the cheaper fallback.
 
 ### D16. Front end: Vite single-page app
-**Decision.** React + TypeScript built with Vite, React Router for the routes in `PRODUCT_PLAN.md` §5, TanStack Query for server state, CSS variables generated from the Pencil tokens, UI primitives from shadcn/ui on Base UI (D28), Recharts behind `<ChartBlock>` (`CHART_SPEC.md`). Amplify serves it as static files with an SPA rewrite to `index.html`. All API calls go through one client module generated from, or typed against, the OpenAPI spec (step 5). Replaces "Next.js" in `PRODUCT_PLAN.md`.
+**Decision.** React + TypeScript built with Vite, React Router for the routes in `PRODUCT_PLAN.md` §5, TanStack Query for server state, CSS variables generated from the Pencil tokens, UI primitives from shadcn/ui on Base UI (D28), Recharts behind `<ChartBlock>` (`CHART_SPEC.md`). Amplify serves it as static files with an SPA rewrite to `index.html`. All API calls go through one client module generated from, or typed against, the OpenAPI spec (step 5). Replaces "Next.js" in `PRODUCT_PLAN.md`. Built to the owner's web standard; Agent Hub's values in [`WEB_PROFILE.md`](WEB_PROFILE.md) (D29).
 **Why.** A signed-in app with no SEO needs and a separate API gains nothing from server rendering; a static build is simpler to host, cache and reason about.
 **Revisit if.** Public share pages (`/s/:shareId`, P1) need link previews (Open Graph tags): then add a tiny server-rendered route for that page only, or have the API render its meta tags.
 
@@ -155,7 +155,7 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Revisit if.** A second client needs different shapes.
 
 ### D24. One repository, one folder per deployable part
-**Decision (2026-09-29, step 6).** `api/` (FastAPI, uv), `web/` (Vite SPA, npm), `infra/` (Terraform: `bootstrap/`, `modules/`, `envs/dev/`), `agents/` (one descriptor YAML per agent, inserted by the registry CLI), plus `design/` and `docs/`. No monorepo tooling (no workspaces, Nx or Turborepo): the three parts use three languages and share only the OpenAPI contract, which stays at `api/openapi.yaml` and is read by `web/` for its types. A root `Makefile` holds shortcuts only. Folders are created by the step that first fills them. Agent code lives in each agent's own repository, named `fleet-agent-<slug>` (confirmed by the owner 2026-09-30); this repo holds only descriptors (and the Scenario Agent, if it is built here). How agents are built: `docs/AGENT_PROFILE.md` (fleet's profile of the owner's [agent-standard](https://github.com/IsraelBO17/agent-standard)). How the API in `api/` is built: `docs/API_PROFILE.md` (fleet's profile of the owner's [api-standard](https://github.com/IsraelBO17/api-standard)). Amplify builds `web/` as a monorepo app root.
+**Decision (2026-09-29, step 6).** `api/` (FastAPI, uv), `web/` (Vite SPA, npm), `infra/` (Terraform: `bootstrap/`, `modules/`, `envs/dev/`), `agents/` (one descriptor YAML per agent, inserted by the registry CLI), plus `design/` and `docs/`. No monorepo tooling (no workspaces, Nx or Turborepo): the three parts use three languages and share only the OpenAPI contract, which stays at `api/openapi.yaml` and is read by `web/` for its types. A root `Makefile` holds shortcuts only. Folders are created by the step that first fills them. Agent code lives in each agent's own repository, named `fleet-agent-<slug>` (confirmed by the owner 2026-09-30); this repo holds only descriptors (and the Scenario Agent, if it is built here). How agents are built: `docs/AGENT_PROFILE.md` (fleet's profile of the owner's [agent-standard](https://github.com/IsraelBO17/agent-standard)). How the API in `api/` is built: `docs/API_PROFILE.md` (fleet's profile of the owner's [api-standard](https://github.com/IsraelBO17/api-standard)). How the web app in `web/` is built: `docs/WEB_PROFILE.md` (fleet's profile of the owner's [web-standard](https://github.com/IsraelBO17/web-standard)). Amplify builds `web/` as a monorepo app root.
 **Why.** The simplest layout that keeps "adding an agent touches only `agents/`" checkable in a pull request, and keeps each part deployable on its own.
 **Revisit if.** A second TypeScript package appears (then npm workspaces), or the contract gains another consumer (then move it to a top-level `contract/`).
 
@@ -194,6 +194,13 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 - **Add primitives in the issue that first needs them,** not all at once.
 **Why.** About 25 primitives get focus trapping, keyboard navigation, typeahead, ARIA and Escape handling without hand-writing them, which product principle 7 (keyboard-first) and the axe / keyboard-only e2e target need. shadcn copies the source into the repo, so matching the design is ordinary editing rather than overriding a library. Base UI rather than Radix: it is shadcn's default since July 2026, it is one package, and it has the Autocomplete and a Vaul-free Drawer that the design needs.
 **Revisit if.** The design needs a primitive that Base UI lacks and only a Radix package provides (build it from Base UI parts, or ask first), or restyling a component costs more than the behaviour it brings.
+
+### D29. The web app follows the owner's web standard; mocks are MSW
+**Decision (owner, 2026-10-03).** `web/` is built from the [`web-standard`](https://github.com/IsraelBO17/web-standard) template (1.0) and follows its standard; Agent Hub's values are in [`WEB_PROFILE.md`](WEB_PROFILE.md). Within D16 and D28 this means: TanStack Query owns server data, URL state through nuqs, forms with React Hook Form and zod, the client typed by `openapi-typescript` and `openapi-fetch` with the standard's SSE reader, ESLint layer rules, Vitest and Playwright with axe, and `make check` as the done gate.
+- **Mocks are MSW, at the network layer.** This replaces F14's `AgentApi` interface with two implementations (`PRODUCT_PLAN.md`): one HTTP client, and MSW answers it in mock mode, so the real client, error handling and SSE reader run on mock data too. The Scenario Agent's scripts become MSW scenarios chosen with `?scenario=`; F14's Playwright scenario suite runs them.
+- **Error reporting:** one `reportError` from the start; Sentry is switched on at M4, before v1.
+**Why.** One way to build every frontend, written for coding agents. Mocking the network instead of the interface tests the code that ships.
+**Revisit if.** A mock scenario can't be expressed as network responses (then add a test-only hook, not a second client).
 
 ---
 
@@ -282,3 +289,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-10-03 | D3 verified (issue #5): psycopg 3 works through Neon's pooler with prepared statements on or off; the app keeps them off. API shell built from the API standard (`api/`). |
 | 2026-10-03 | D25 amended: CNAMEs in the `qucoon.com` zone instead of a delegated zone (the zone had been deleted outside Terraform). The API deploys in two phases: certificate, then ALB and service. |
 | 2026-10-03 | D25: the API is `api-fleet.qucoon.com` on qucoon's wildcard `*.qucoon.com` certificate (cloud team's request; they deleted the dedicated certificate). One-phase deploy again. |
+| 2026-10-03 | Web standard written (personal, project-neutral, private template `IsraelBO17/web-standard`, 1.0); Agent Hub's values in `docs/WEB_PROFILE.md`. D29: `web/` follows it, and mocks are MSW (replaces F14's `AgentApi` interface). Session delete keeps its 10-second undo (owner, 2026-10-03), an exception to the standard's confirm-first rule recorded in the profile. |
