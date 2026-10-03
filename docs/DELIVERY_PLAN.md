@@ -157,7 +157,7 @@ Product metrics (sessions per week, first-render time, "nothing hangs", approval
 |---|---|---|---|
 | AgentCore's real stream doesn't fit the block model | M / H | Record in M1 before writing the translator | M1 |
 | Approval pause/resume doesn't work (P8) | M / H | Spike opens M3; fallback in D19 | M3 week 1 |
-| SSE drops through the ALB or on deploys | L / H | 300 s idle timeout, 15 s pings, 300 s drain; a 3-minute stream is an M1 exit test | M1 |
+| SSE drops through the ALB or on deploys | L / H | 300 s idle timeout, 15 s pings, 300 s drain; a 3-minute stream is an M1 exit test | ✅ M1, #10 (2026-10-03): 3 min 16 s through the ALB, and a reply across a deploy; browser check with #4 |
 | Schedule: 230 h of work, no slack | H / M | Vertical slices, cut list, weekly status | Every Friday |
 | Model spend from long or orphaned runs | M / M | 15-minute run cap, 3 concurrent runs, a model-spend alarm (to set) | M2 |
 | Solo builder: illness, other work | M / M | Each milestone ships something usable; the plan survives a week's loss by cutting | Every Friday |
