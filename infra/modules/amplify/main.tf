@@ -57,7 +57,7 @@ resource "aws_amplify_app" "this" {
           phases:
             preBuild:
               commands:
-                - nvm install "$(cat .nvmrc)"
+                - nvm install --skip-default-packages "$(cat .nvmrc)"
                 - nvm use "$(cat .nvmrc)"
                 - npm ci --cache .npm --prefer-offline
             build:
@@ -87,26 +87,29 @@ resource "aws_amplify_app" "this" {
   }
 
   # Web standard §19 and §24: security headers everywhere, long caching for hashed assets, none for the page.
+  # Monorepo apps take the headers per app root, like the build spec.
   custom_headers = <<-YAML
-    customHeaders:
-      - pattern: '**'
-        headers:
-          - key: Content-Security-Policy
-            value: "${var.content_security_policy}"
-          - key: Strict-Transport-Security
-            value: max-age=31536000; includeSubDomains
-          - key: X-Content-Type-Options
-            value: nosniff
-          - key: Referrer-Policy
-            value: strict-origin-when-cross-origin
-          - key: Permissions-Policy
-            value: camera=(), geolocation=(), microphone=(self), payment=(), usb=()
-          - key: Cache-Control
-            value: no-cache
-      - pattern: '/assets/**'
-        headers:
-          - key: Cache-Control
-            value: public, max-age=31536000, immutable
+    applications:
+      - appRoot: web
+        customHeaders:
+          - pattern: '**'
+            headers:
+              - key: Content-Security-Policy
+                value: "${var.content_security_policy}"
+              - key: Strict-Transport-Security
+                value: max-age=31536000; includeSubDomains
+              - key: X-Content-Type-Options
+                value: nosniff
+              - key: Referrer-Policy
+                value: strict-origin-when-cross-origin
+              - key: Permissions-Policy
+                value: camera=(), geolocation=(), microphone=(self), payment=(), usb=()
+              - key: Cache-Control
+                value: no-cache
+          - pattern: '/assets/**'
+            headers:
+              - key: Cache-Control
+                value: public, max-age=31536000, immutable
   YAML
 }
 
