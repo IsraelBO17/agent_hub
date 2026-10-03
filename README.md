@@ -40,6 +40,7 @@ Adding an agent touches only `agents/` (and the `agents` table), never `web/` or
 | Tables and enforced rules | [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) |
 | Scope and acceptance criteria | [`docs/PRODUCT_PLAN.md`](docs/PRODUCT_PLAN.md) |
 | Screens and components | [`design/README.md`](design/README.md), [`design/INDEX.md`](design/INDEX.md) |
+| Pencil components → shadcn/ui (Base UI) | [`docs/UI_COMPONENTS.md`](docs/UI_COMPONENTS.md) |
 
 ## Commands
 

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.4, D1–D27 and P1–P8 locked; §4 questions still open |
+| Status | v0.5, D1–D28 and P1–P8 locked; §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -112,7 +112,7 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Revisit if.** Secret count or cost grows; SSM Parameter Store SecureString is the cheaper fallback.
 
 ### D16. Front end: Vite single-page app
-**Decision.** React + TypeScript built with Vite, React Router for the routes in `PRODUCT_PLAN.md` §5, TanStack Query for server state, CSS variables generated from the Pencil tokens, Recharts behind `<ChartBlock>` (`CHART_SPEC.md`). Amplify serves it as static files with an SPA rewrite to `index.html`. All API calls go through one client module generated from, or typed against, the OpenAPI spec (step 5). Replaces "Next.js" in `PRODUCT_PLAN.md`.
+**Decision.** React + TypeScript built with Vite, React Router for the routes in `PRODUCT_PLAN.md` §5, TanStack Query for server state, CSS variables generated from the Pencil tokens, UI primitives from shadcn/ui on Base UI (D28), Recharts behind `<ChartBlock>` (`CHART_SPEC.md`). Amplify serves it as static files with an SPA rewrite to `index.html`. All API calls go through one client module generated from, or typed against, the OpenAPI spec (step 5). Replaces "Next.js" in `PRODUCT_PLAN.md`.
 **Why.** A signed-in app with no SEO needs and a separate API gains nothing from server rendering; a static build is simpler to host, cache and reason about.
 **Revisit if.** Public share pages (`/s/:shareId`, P1) need link previews (Open Graph tags): then add a tiny server-rendered route for that page only, or have the API render its meta tags.
 
@@ -184,6 +184,13 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 - **Model spend** (Bedrock, billed in this account) is attributed by invoking models through an **application inference profile tagged `Project=fleet`** in each fleet agent (step 8, issue #3).
 **Why.** An account-wide budget alarmed on other projects' spend ($289.68 in September before fleet existed), and a wildcard IAM grant would have let the API call other teams' agents.
 **Revisit if.** Fleet gets its own account: drop the tag filter and keep the explicit runtime list.
+
+### D28. UI primitives: shadcn/ui on Base UI, styled from the Pencil file
+**Decision (owner, 2026-10-03).** `web/` gets its UI primitives (button, input, menus, dialogs, tooltips, toasts, tabs and so on) from shadcn/ui, **Base UI implementation** (`@base-ui/react`), set up with `npx shadcn@latest init -t vite --base base` when `web/` is created. The generated files in `web/src/components/ui/` are our code: each is restyled to its Pencil component, and the Pencil file wins over shadcn's default look. App components in `web/src/components/application/` compose them. Tailwind's theme maps shadcn's semantic variables onto the Pencil tokens (D16). Map, setup and open design gaps: [`UI_COMPONENTS.md`](UI_COMPONENTS.md).
+- **No Radix,** directly or through a dependency. So no shadcn `command` (its `cmdk` pulls in `@radix-ui/react-dialog`): the ⌘K palette is Base UI Autocomplete inside the shadcn Dialog. Toasts use the Base UI `toast` component, and the Base UI `drawer` (no Vaul) gives the mobile sheets.
+- **Add primitives in the issue that first needs them,** not all at once.
+**Why.** About 25 primitives get focus trapping, keyboard navigation, typeahead, ARIA and Escape handling without hand-writing them, which product principle 7 (keyboard-first) and the axe / keyboard-only e2e target need. shadcn copies the source into the repo, so matching the design is ordinary editing rather than overriding a library. Base UI rather than Radix: it is shadcn's default since July 2026, it is one package, and it has the Autocomplete and a Vaul-free Drawer that the design needs.
+**Revisit if.** The design needs a primitive that Base UI lacks and only a Radix package provides (build it from Base UI parts, or ask first), or restyling a component costs more than the behaviour it brings.
 
 ---
 
@@ -267,3 +274,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-09-30 | Agent repos confirmed as `fleet-agent-<slug>`, one per agent (D24). P8 spike refined with Strands interrupts. Agent development standard written (personal, project-neutral). |
 | 2026-09-30 | The standard moved to its own template repository, `IsraelBO17/agent-standard` (private); Agent Hub keeps only its profile, `docs/AGENT_PROFILE.md`. |
 | 2026-09-30 | Step 8 (issue #3): Research Analyst v0's AgentCore stream recorded (`api/tests/fixtures/agentcore/`); the agent sends plain JSON frames ending in `result`. Closing the response stream, and `StopRuntimeSession`, do not stop a run: Stop sends a `cancel` invocation on the same runtime session (`AgentCancel`), verified on the real runtime (SEND_MESSAGE "Verified"). |
+| 2026-10-03 | D28: UI primitives from shadcn/ui on Base UI (no Radix), restyled to the Pencil components; component map in `docs/UI_COMPONENTS.md`. D16 points to it. |
