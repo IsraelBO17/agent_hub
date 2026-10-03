@@ -55,7 +55,8 @@ class Settings(BaseSettings):
     # The task's security group admits only the ALB, so its forwarded headers are trusted.
     forwarded_allow_ips: str = "*"
     shutdown_grace_seconds: int = 110  # below the ECS stop timeout of 120 s (P2)
-    stream_time_limit_seconds: int = 900
+    stream_time_limit_seconds: int = 900  # a reply's run cap (D11); an agent may override it
+    max_running_replies: int = 3  # per user (D23, too_many_runs)
     log_level: str = "INFO"
     log_json: bool = True
 
@@ -68,6 +69,7 @@ class Settings(BaseSettings):
 
     # AWS (D7, D12)
     aws_region: str = "us-east-1"
+    agentcore_connect_timeout_seconds: float = 10.0  # the read timeout is the run cap
     files_bucket: str
 
     @field_validator("database_url", "database_url_direct", mode="before")

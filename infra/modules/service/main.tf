@@ -134,9 +134,14 @@ data "aws_iam_policy_document" "task" {
     resources = ["${var.files_bucket_arn}/u/*"]
   }
   statement {
-    sid       = "InvokeAgents"
-    actions   = ["bedrock-agentcore:InvokeAgentRuntime", "bedrock-agentcore:StopRuntimeSession"]
-    resources = var.agent_runtime_arns
+    sid     = "InvokeAgents"
+    actions = ["bedrock-agentcore:InvokeAgentRuntime", "bedrock-agentcore:StopRuntimeSession"]
+    # Exact ARNs only (D27): each runtime, and its DEFAULT endpoint, which a call with
+    # qualifier=DEFAULT may also be authorised against.
+    resources = concat(
+      var.agent_runtime_arns,
+      [for arn in var.agent_runtime_arns : "${arn}/runtime-endpoint/DEFAULT"],
+    )
   }
 }
 

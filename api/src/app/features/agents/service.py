@@ -22,6 +22,7 @@ from app.features.agents.descriptor import (
 )
 from app.features.agents.exceptions import AgentNotFound
 from app.features.agents.models import Agent
+from app.features.agents.public import AgentStats, session_stats
 from app.features.agents.repository import AgentRepository
 from app.features.agents.schemas import AgentList, AgentOut, MyStats
 
@@ -44,7 +45,7 @@ def runtime_label(agent: Agent) -> str | None:
     return None
 
 
-def to_out(agent: Agent, stats: tuple[int, datetime | None]) -> AgentOut:
+def to_out(agent: Agent, stats: AgentStats) -> AgentOut:
     details = AgentDetails.model_validate(agent.details)
     if details.runtime_label is None:
         details.runtime_label = runtime_label(agent)
@@ -70,7 +71,7 @@ def to_out(agent: Agent, stats: tuple[int, datetime | None]) -> AgentOut:
         tools=[AgentTool.model_validate(t) for t in agent.tools],
         starters=[Starter.model_validate(s) for s in agent.starters],
         retired_at=agent.retired_at,
-        my_stats=MyStats(session_count=stats[0], last_active_at=stats[1]),
+        my_stats=MyStats(session_count=stats.session_count, last_active_at=stats.last_active_at),
     )
 
 
@@ -101,7 +102,7 @@ def columns_of(d: AgentDescriptor) -> dict[str, Any]:
     }
 
 
-NO_STATS: tuple[int, datetime | None] = (0, None)
+NO_STATS = AgentStats(session_count=0, last_active_at=None)
 
 
 class AgentService(BaseService):
@@ -113,14 +114,14 @@ class AgentService(BaseService):
     async def list_agents(self, user_id: uuid.UUID) -> AgentList:
         # Hidden agents (the Scenario Agent) are for testing: shown everywhere but production.
         agents = await self.agents.catalog(include_hidden=self.settings.env != "prod")
-        stats = await self.agents.stats(user_id, [a.id for a in agents])
+        stats = await session_stats()(self.session, user_id, [a.id for a in agents])
         return AgentList(items=[to_out(a, stats.get(a.id, NO_STATS)) for a in agents])
 
     async def get_agent(self, user_id: uuid.UUID, slug: str) -> AgentOut:
         agent = await self.agents.by_slug(slug)
         if agent is None:
             raise AgentNotFound()
-        stats = await self.agents.stats(user_id, [agent.id])
+        stats = await session_stats()(self.session, user_id, [agent.id])
         return to_out(agent, stats.get(agent.id, NO_STATS))
 
     async def register(self, descriptor: AgentDescriptor) -> Registered:

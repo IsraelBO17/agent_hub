@@ -107,6 +107,26 @@ def problem(
     return JSONResponse(body, status_code=status, headers=out_headers, media_type=PROBLEM_JSON)
 
 
+def problem_body(exc: ApiError, *, request_id: str | None = None) -> dict[str, Any]:
+    """The problem object for an error that isn't an HTTP response: one stored on a row or sent in
+    a stream event (it keeps the status it would have had). `request_id` defaults to the current
+    request's."""
+    body: dict[str, Any] = {
+        "type": _Config.errors_base_url + exc.code,
+        "title": exc.title,
+        "status": _Config.validation_status if exc.is_validation else exc.status,
+        "code": exc.code,
+        "requestId": request_id or request_id_var.get(),
+        "retryable": exc.retryable,
+    }
+    if exc.detail:
+        body["detail"] = exc.detail
+    if exc.retry_after is not None:
+        body["retryAfter"] = exc.retry_after
+    body.update(exc.extra)
+    return body
+
+
 def render(exc: ApiError) -> JSONResponse:
     status = _Config.validation_status if exc.is_validation else exc.status
     return problem(

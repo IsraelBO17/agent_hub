@@ -95,5 +95,5 @@ Errors use the common format in D23 (`code`, `requestId`, `retryable`, optional 
 
 ## Not verified yet
 
-- **SSE through the ALB with keep-alives.** Proven in step 8.
+- **SSE through the ALB with keep-alives.** Proven in step 8 (#10). Locally (issue #8, 2026-10-03): a real reply streams to `curl -N`; a client that hangs up after 2 s leaves the reply running to `complete`, and polling `GET /v1/messages/{id}` picks it up; SIGTERM mid-reply lets it finish, then the process exits.
 - **Resuming a Strands agent after an approval** by re-invoking it with the decision (D19). Spiked at the start of the approvals slice (P8).
