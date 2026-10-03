@@ -2,6 +2,7 @@
 // RequireAuth guards every screen but sign-in and the shared session (issue #6). HubLayout: the App Header, no
 // desktop sidebar. WorkspaceLayout: the sidebar. The shared session has no shell.
 import { createBrowserRouter } from 'react-router'
+import { AppShellSkeleton } from '@/components/layout/app-shell-skeleton'
 import { RequireAuth } from '@/modules/auth'
 import { HubLayout, RootError, RootLayout, WorkspaceLayout } from '@/modules/shell'
 
@@ -9,6 +10,7 @@ export const router = createBrowserRouter([
   {
     Component: RootLayout,
     ErrorBoundary: RootError,
+    HydrateFallback: AppShellSkeleton,
     children: [
       { path: 'sign-in', lazy: () => import('@/app/routes/sign-in') },
       { path: 's/:shareId', lazy: () => import('@/app/routes/shared-session') },
@@ -26,8 +28,7 @@ export const router = createBrowserRouter([
           {
             Component: WorkspaceLayout,
             children: [
-              { path: 'agents/:agentId', lazy: () => import('@/app/routes/new-session') },
-              { path: 'agents/:agentId/:sessionId', lazy: () => import('@/app/routes/session') },
+              { path: 'agents/:agentId/:sessionId?', lazy: () => import('@/app/routes/chat') },
               { path: 'artifacts', lazy: () => import('@/app/routes/artifacts') },
               { path: 'archived', lazy: () => import('@/app/routes/archived') },
               { path: 'settings', lazy: () => import('@/app/routes/settings') },

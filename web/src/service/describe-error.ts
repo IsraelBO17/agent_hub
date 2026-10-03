@@ -11,6 +11,16 @@ const byCode: Record<string, string> = {
   identity_provider_unavailable: "Google sign-in isn't answering right now. Try again in a moment.",
   not_invited: "This Google account doesn't have access to Agent Hub.",
   account_disabled: 'This account has been turned off.',
+  agent_not_found: "This agent doesn't exist.",
+  session_not_found: "This session doesn't exist, or it was deleted.",
+  run_in_progress: 'A reply is still running in this session. Wait for it, or stop it, then send.',
+  too_many_runs: 'Three replies are already running. Send again when one finishes.',
+  agent_unavailable: "The agent isn't available right now. Your message wasn't sent; try again in a moment.",
+  message_too_long: 'This message is too long. Keep it under 32,000 characters.',
+  empty_message: 'Type a message first.',
+  agent_error: 'The agent returned an error.',
+  run_time_limit: 'The reply took longer than 15 minutes, so it was stopped.',
+  run_interrupted: "The reply didn't finish.",
 }
 
 export interface ErrorDescription {

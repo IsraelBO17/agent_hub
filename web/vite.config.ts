@@ -7,6 +7,8 @@ import { defineConfig } from 'vite'
 // Standard §3, Appendix C1.
 export default defineConfig({
   plugins: [react(), tailwindcss(), msw()],
+  // Lazy-loaded, so Vite would find them mid-session and reload the page (losing a mock stream).
+  optimizeDeps: { include: ['react-markdown', 'remark-gfm'] },
   resolve: { tsconfigPaths: true },
   // No assets inlined as data: URLs: the CSP allows fonts and scripts only from 'self' (standard §19).
   build: { sourcemap: 'hidden', manifest: true, assetsInlineLimit: 0 },

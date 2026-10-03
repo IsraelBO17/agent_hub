@@ -7,10 +7,10 @@ test.describe('desktop', () => {
   test.skip(({ viewport }) => (viewport?.width ?? 0) < 1024, 'desktop only')
 
   test('the sidebar is 284 px, the chat column about 760, and the catalog has no sidebar', async ({ page }) => {
-    await page.goto('/agents/coding-agent/0b6a5f1e-2c1d-4e57-9d0b-7a1c9d3e4f21')
-    await expect(page.getByRole('heading', { level: 1, name: 'Session' })).toBeVisible()
+    await page.goto('/agents/coding-agent')
+    await expect(page.getByRole('heading', { level: 1, name: 'New session' })).toBeVisible()
     expect((await page.locator('[data-slot=sidebar-container]').boundingBox())?.width).toBeCloseTo(284, 0)
-    expect((await page.locator('#main > div.mx-auto').boundingBox())?.width).toBeCloseTo(760, 0)
+    expect((await page.locator('[data-page-body=chat]').boundingBox())?.width).toBeCloseTo(760, 0)
     await page.goto('/')
     await expect(page.getByRole('heading', { level: 1, name: 'Your agents' })).toBeVisible()
     await expect(page.locator('[data-slot=sidebar-container]')).toHaveCount(0)

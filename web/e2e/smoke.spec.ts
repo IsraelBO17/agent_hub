@@ -5,7 +5,7 @@ import { expectAccessible } from './axe.ts'
 const routes: { path: string; heading: string; apiStatus?: number }[] = [
   { path: '/', heading: 'Your agents' },
   { path: '/agents/coding-agent', heading: 'New session' },
-  { path: '/agents/coding-agent/0b6a5f1e-2c1d-4e57-9d0b-7a1c9d3e4f21', heading: 'Session' },
+  { path: '/agents/coding-agent/0b6a5f1e-2c1d-4e57-9d0b-7a1c9d3e4f21', heading: 'Session', apiStatus: 404 }, // the mocks have no such session
   { path: '/agents/coding-agent/about', heading: 'About this agent' },
   { path: '/artifacts', heading: 'Artifacts' },
   { path: '/archived', heading: 'Archived sessions' },

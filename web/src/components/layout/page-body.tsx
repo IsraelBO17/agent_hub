@@ -10,5 +10,5 @@ const kinds = {
 }
 
 export function PageBody({ kind, className, children }: { kind: keyof typeof kinds; className?: string; children: ReactNode }) {
-  return <div className={cn('flex flex-1 flex-col', kinds[kind], className)}>{children}</div>
+  return <div data-page-body={kind} className={cn('flex flex-1 flex-col', kinds[kind], className)}>{children}</div>
 }

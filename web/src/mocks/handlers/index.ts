@@ -2,5 +2,6 @@
 import type { RequestHandler } from 'msw'
 import { agentHandlers } from '@/mocks/handlers/agents'
 import { authHandlers } from '@/mocks/handlers/auth'
+import { chatHandlers } from '@/mocks/handlers/chat'
 
-export const handlers: RequestHandler[] = [...authHandlers, ...agentHandlers]
+export const handlers: RequestHandler[] = [...authHandlers, ...agentHandlers, ...chatHandlers()]
