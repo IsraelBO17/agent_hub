@@ -1,19 +1,20 @@
 import { expect, test } from '@playwright/test'
 import { expectAccessible } from './axe.ts'
 
-// The shell at the design's sizes (Pencil Sidebar hj5RV, Chat Header H0YWK; mobile drawer F10.5).
+// The shell at the design's sizes (Pencil Sidebar hj5RV, Chat Header H0YWK; mobile drawer F10.5). Sizes are
+// compared to the nearest pixel: layout can land a fraction off (316.00001 on CI's runner).
 test.describe('desktop', () => {
   test.skip(({ viewport }) => (viewport?.width ?? 0) < 1024, 'desktop only')
 
   test('the sidebar is 284 px, the chat column about 760, and the catalog has no sidebar', async ({ page }) => {
     await page.goto('/agents/coding-agent/0b6a5f1e-2c1d-4e57-9d0b-7a1c9d3e4f21')
     await expect(page.getByRole('heading', { level: 1, name: 'Session' })).toBeVisible()
-    expect((await page.locator('[data-slot=sidebar-container]').boundingBox())?.width).toBe(284)
-    expect((await page.locator('#main > div.mx-auto').boundingBox())?.width).toBe(760)
+    expect((await page.locator('[data-slot=sidebar-container]').boundingBox())?.width).toBeCloseTo(284, 0)
+    expect((await page.locator('#main > div.mx-auto').boundingBox())?.width).toBeCloseTo(760, 0)
     await page.goto('/')
     await expect(page.getByRole('heading', { level: 1, name: 'Your agents' })).toBeVisible()
     await expect(page.locator('[data-slot=sidebar-container]')).toHaveCount(0)
-    expect((await page.locator('header').first().boundingBox())?.height).toBe(64)
+    expect((await page.locator('header').first().boundingBox())?.height).toBeCloseTo(64, 0)
   })
 
   test('collapsing the sidebar leaves a way back', async ({ page }) => {
@@ -36,7 +37,7 @@ test.describe('mobile', () => {
     await page.getByRole('button', { name: 'Open navigation' }).click()
     const drawer = page.getByRole('dialog', { name: 'Navigation' })
     await expect(drawer).toBeVisible()
-    expect((await drawer.boundingBox())?.width).toBe(316)
+    expect((await drawer.boundingBox())?.width).toBeCloseTo(316, 0)
     await expectAccessible(page)
     await drawer.getByRole('link', { name: 'Archived' }).click()
     await expect(page.getByRole('heading', { level: 1, name: 'Archived sessions' })).toBeVisible()
