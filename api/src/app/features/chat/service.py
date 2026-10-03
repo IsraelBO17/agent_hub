@@ -1,7 +1,7 @@
 """Chat rules and transactions: one method per capability block in SPEC.md (feature: chat)."""
 
 import uuid
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
@@ -48,6 +48,7 @@ from app.features.chat.schemas import (
 TITLE_CHARS = 60  # D21
 HISTORY_TURNS = 20  # D18 defaults; an agent's settings may override them
 HISTORY_CHARS = 32_000
+TRUNCATED = "\n\n… [truncated]"  # ends a turn cut to fit the history budget (D18)
 
 
 @dataclass(frozen=True)
@@ -151,6 +152,33 @@ def flatten(message: MessageOut) -> str:
             call = block["toolCall"]
             parts.append(f"[tool {call['name']}: {call['summary'] or call['status']}]")
     return "\n\n".join(parts)
+
+
+def pick_history(
+    turns: Iterable[tuple[str, str]], max_turns: int, max_chars: int
+) -> list[dict[str, str]]:
+    """D18: earlier turns (role, text), newest first in, oldest first out, within the budget.
+
+    The turn that crosses the character budget goes in cut to the room left, keeping its
+    start and marked as truncated, and ends the history; so one oversize turn never empties
+    it, and the most recent earlier turn is always there. Empty turns are skipped.
+    """
+    picked: list[dict[str, str]] = []
+    used = 0
+    for role, text in turns:
+        if not text:
+            continue
+        if len(picked) >= max_turns:
+            break
+        room = max_chars - used
+        if len(text) > room:
+            if picked and room <= len(TRUNCATED):
+                break  # no room for any of it
+            picked.append({"role": role, "text": text[: max(room - len(TRUNCATED), 0)] + TRUNCATED})
+            break
+        picked.append({"role": role, "text": text})
+        used += len(text)
+    return picked[::-1]
 
 
 class ChatService(BaseService):
@@ -352,22 +380,16 @@ class ChatService(BaseService):
     async def _history(
         self, user_id: uuid.UUID, session_id: uuid.UUID, agent: agents.AgentForSend
     ) -> list[dict[str, str]]:
-        """D18: earlier turns, oldest first, within the agent's budget (turns and characters)."""
+        """D18: earlier turns, oldest first, within the agent's budget (turns and characters).
+
+        Read before the new user message is added: that goes as `input`, outside the budget.
+        """
         turns = agent.settings.get("historyTurns", HISTORY_TURNS)
         chars = agent.settings.get("historyChars", HISTORY_CHARS)
         rows = await self.repo.page(user_id, session_id, before=None, limit=int(turns) * 2)
         tools = await self.repo.tool_calls(user_id, tool_ids(rows))
-        picked: list[dict[str, str]] = []
-        used = 0
-        for row in rows:  # newest first
-            text = flatten(message_out(row, tools))
-            if not text:
-                continue
-            if len(picked) >= int(turns) or used + len(text) > int(chars):
-                break
-            picked.append({"role": row.role, "text": text})
-            used += len(text)
-        return picked[::-1]
+        texts = ((row.role, flatten(message_out(row, tools))) for row in rows)  # newest first
+        return pick_history(texts, int(turns), int(chars))
 
     async def _summary(self, chat: Session, ref: agents.AgentRef) -> SessionSummaryOut:
         count, running = await self.repo.session_counts(chat.id)
