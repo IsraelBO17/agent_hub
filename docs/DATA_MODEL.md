@@ -105,6 +105,8 @@ Checked against `design/INDEX.md`, the screen inventory and acceptance criteria 
 | "New" and unread states in the sidebar, same session in two tabs, toasts | Browser-only state; toasts come from diffing the polled sessions list (D22) |
 | Session and agent counts (messages, tool calls, tokens, sessions per agent) | Computed on read (`count(*)`, sum of `messages.usage`); add counters only if slow |
 | Computed agent health (F23, P1) | Needs a health-check history table; add it with F23 |
+| Session origin: who started it (`user`, `schedule`, `webhook`) | Added as `sessions.origin` with triggers (F29, D30). Until then nothing may assume a session's first message is a user's |
+| An agent's interaction mode (`chat`, `task`) | `capabilities.interaction` in the descriptor's JSON (D30); no column needed |
 | Export all data (F24, P1) | Output is a `files` row (`purpose = export`); how it runs is decided with F24, since long background jobs are out of v1 |
 | Telemetry | CloudWatch (`PRODUCT_PLAN.md` §6), not Postgres |
 

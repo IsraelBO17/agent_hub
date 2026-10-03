@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | v0.5, D1–D29 and P1–P8 locked; §4 questions still open |
+| Status | v0.5, D1–D30 and P1–P8 locked; §4 questions still open |
 | Date | 2026-09-29 |
 | Owner | Israel B. (approver) |
 | Scope | Back end, infrastructure, auth, data and the agent stream. Product scope stays in `PRODUCT_PLAN.md`. |
@@ -204,6 +204,13 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Why.** One way to build every frontend, written for coding agents. Mocking the network instead of the interface tests the code that ships.
 **Revisit if.** A mock scenario can't be expressed as network responses (then add a test-only hook, not a second client).
 
+### D30. Not only chat: two precautions now, task agents and triggers later
+**Decision (owner, 2026-10-03).** v1 stays chat-first, but nothing may lock out agents that aren't conversations: **task agents** (structured input in, a deliverable out), **triggered or background agents** (started by a schedule or an event, not a person), and an **Inbox** of runs that need the user. The unit underneath is already a *run* (an assistant message: streamed steps, artifacts, approvals, an end status), and D19 (an approval ends the run, the decision resumes it) and D22 (activity polling) already suit work that happens while nobody is watching. Two precautions apply from now on:
+1. **Reserve the interaction mode in the descriptor.** `capabilities.interaction`: `chat` (default) or `task`; only `chat` is built in v1. It lives in the descriptor's capabilities JSON, so no migration. Needs a small change before an agent can use it: the descriptor parser accepts it (it rejects unknown keys), `api/openapi.yaml` adds it to `AgentCapabilities` as an optional enum, and the web app branches on it (the chat composer for `chat`; "This agent's task mode isn't available yet" for `task`).
+2. **Don't assume a person started every session.** No API rule, query or screen may depend on a session's first message being from a user, or on every run having a user message before it. Sessions later gain `origin` (`user` | `schedule` | `webhook`), a small migration, together with triggers. Reviews (the API's `/pre-merge`, the web's checks) treat a "first message is the user's" assumption as a defect.
+**Why.** Both are almost free now and expensive to undo once the UI and API have hard-coded "a chat started by a person". The later work, task mode, triggers and an Inbox, is on the roadmap as one theme (`PRODUCT_PLAN.md` §4, "Beyond chat").
+**Revisit if.** A non-chat agent becomes urgent: then the theme moves forward in `DELIVERY_PLAN.md`.
+
 ---
 
 ## 2. Networking (confirmed by the owner, 2026-09-29, Q3)
@@ -298,3 +305,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-10-03 | Issue #10: D5 verified (3-minute replies through the ALB, pings keep the gaps at 15 s, no buffering), P2 verified (a deploy lets the in-flight reply finish on the old task; SIGTERM after the 300 s deregistration delay), D3 read latency measured (15–18 ms). Browser and phone checks wait for the web app (#4). |
 | 2026-10-03 | Issue #9 (API half): Stop per P4. The flag in Postgres is the signal (read on every save and every 2 s), with an in-process shortcut when the same task runs the reply; the run sends `AgentCancel` on the same runtime session and waits up to 5 s for the agent's last frames. A reply that finishes before the cancel lands stays `complete`. The run cap and a shutdown also send `AgentCancel`, so an unread agent doesn't run on. |
 | 2026-10-03 | D25: the web app on Amplify uses qucoon's `*.qucoon.com` certificate too (cloud team's request), so `fleet.qucoon.com` needs only its CNAME. |
+| 2026-10-03 | D30: v1 stays chat-first; `capabilities.interaction` (chat/task) reserved in the descriptor, and nothing may assume a person started a session. Task agents, triggers and an Inbox are a roadmap theme. |

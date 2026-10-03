@@ -150,6 +150,16 @@ This is the plan to build from. It makes decisions; where a decision rests on so
 | F26 | LangGraph adapter | One LangGraph agent works through the same contract with no UI changes (proves J1 across frameworks). |
 | F27 | Export session | Export a session as Markdown. PDF comes later. |
 
+### Beyond chat (P1–P2 theme; ARCHITECTURE D30)
+
+Agents that aren't conversations. The two precautions in D30 apply from v1; these features come after it, ordered by need.
+
+| ID | Feature | Acceptance criteria |
+|---|---|---|
+| F28 | Task agents | A descriptor with `capabilities.interaction: task` declares an input form (the F21 form schema). Its page shows the form instead of a composer; submitting starts a run; the result is an artifact or file, not a transcript. A task agent ships with 0 front-end commits. |
+| F29 | Triggers | A run can start from a schedule or a webhook with no user message. Sessions record `origin` (`user` / `schedule` / `webhook`). Triggered runs use the same limits, approvals (D19) and audit as chat runs; runs longer than the 15-minute cap go through the API's job table. |
+| F30 | Inbox | One place for runs that need the user: approvals waiting, results ready, failures. Fed by the same activity data as the sidebar (D22); unread counts in the navigation; each item opens its run in context. |
+
 ### P2
 Voice; artifact editing; version compare; code run console; HTML device switcher; Add / Edit agent UI; dark mode; passkey step-up; web push; message edit and branching; auto-summary continuation; background task toasts; guest live-chat demo mode with quotas; teams; onboarding.
 

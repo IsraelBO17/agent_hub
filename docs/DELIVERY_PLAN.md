@@ -100,6 +100,8 @@ Build steps 1–7 (Terraform written, not applied): decisions, diagrams, schema,
 ### After v1
 P1 features by usage (⌘K, share links, agent detail, artifacts library, forms, rich content), then the next agents (PRODUCT_PLAN §4, §10A).
 
+**Beyond chat** (ARCHITECTURE D30; PRODUCT_PLAN F28–F30): task agents, triggers and an Inbox, scheduled after v1 by need. Before then, during M1–M4, two precautions hold: `capabilities.interaction` (`chat` by default) is reserved in the descriptor, and no code assumes a person started a session. A non-chat agent becoming urgent moves this theme forward.
+
 ### If it runs late: cut in this order
 The schedule has no slack (≈ 230 h in ≈ 11.5 weeks). If a milestone slips by more than 3 working days, cut from the top of this list before moving the date:
 
