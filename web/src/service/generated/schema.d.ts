@@ -105,7 +105,7 @@ export interface paths {
         };
         /**
          * The catalog
-         * @description Listed, not retired agents, in catalog order. Not paginated; the registry is small. Hidden agents (the Scenario Agent) are included only in dev builds.
+         * @description Listed, not retired agents, in catalog order (the descriptor's `sortOrder`, then name). Not paginated; the registry is small. Hidden agents (the Scenario Agent) are included everywhere except production.
          */
         get: operations["listAgents"];
         put?: never;
@@ -125,7 +125,7 @@ export interface paths {
         };
         /**
          * One agent, including retired and hidden ones
-         * @description Retired agents are returned (with `retiredAt`) so their old sessions stay readable.
+         * @description Retired agents are returned (with `retiredAt`) so their old sessions stay readable. An unknown slug is `404 agent_not_found`; one that doesn't match the slug pattern is `422 invalid_request`.
          */
         get: operations["getAgent"];
         put?: never;
@@ -403,7 +403,7 @@ export interface paths {
          * Stop a streaming reply
          * @description Sets a cancel flag; the task running the reply stops it within about 2 s, keeps the partial blocks and marks it
          *     `stopped`, and the open stream ends with `run.stopped` (SEND_MESSAGE rule 7). Stopping a reply that already
-         *     ended returns 202 with its current status.
+         *     ended returns 202 with its current status. Idempotent. The run stops the agent with `AgentCancel`.
          */
         post: operations["stopReply"];
         delete?: never;
@@ -1898,9 +1898,10 @@ export interface components {
                 "application/problem+json": components["schemas"]["Problem"];
             };
         };
-        /** @description `agent_unavailable`: the agent is marked offline. Keep the draft and poll the agent (D22). Nothing was saved. */
+        /** @description `agent_unavailable`: the agent is marked offline. Keep the draft and poll the agent (D22). Or `shutting_down`: the API is draining for a deploy; send again after `retryAfter` (P2). Nothing was saved. */
         AgentUnavailable: {
             headers: {
+                "Retry-After": components["headers"]["RetryAfter"];
                 "X-Request-Id": components["headers"]["XRequestId"];
                 [name: string]: unknown;
             };
@@ -2267,6 +2268,7 @@ export interface operations {
             };
             401: components["responses"]["Unauthorized"];
             404: components["responses"]["NotFound"];
+            422: components["responses"]["Invalid"];
         };
     };
     createSessionAndSend: {
@@ -2497,6 +2499,7 @@ export interface operations {
             };
             401: components["responses"]["Unauthorized"];
             404: components["responses"]["NotFound"];
+            422: components["responses"]["Invalid"];
         };
     };
     sendMessage: {
@@ -2718,6 +2721,7 @@ export interface operations {
             };
             401: components["responses"]["Unauthorized"];
             404: components["responses"]["NotFound"];
+            422: components["responses"]["Invalid"];
         };
     };
     stopReply: {
@@ -2747,6 +2751,7 @@ export interface operations {
             };
             401: components["responses"]["Unauthorized"];
             404: components["responses"]["NotFound"];
+            422: components["responses"]["Invalid"];
         };
     };
     retryReply: {
