@@ -31,6 +31,13 @@ export const seedAgents = (): Agent[] => [
   agent({ slug: 'research-analyst', name: 'Research Analyst', icon: 'book-open-text', color: 'purple', stage: 'beta',
     description: 'Reads the web pages you give it and answers your questions from what they say, with links to its sources.',
     tagline: 'Answers from the pages you share', greeting: 'What should I read for you?',
+    disclaimer: 'It only reads the pages you link, and those pages can be wrong or out of date.',
+    starters: [
+      { title: 'Summarise a page', description: 'Five bullet points, with a link to the page', prompt: 'Summarise this page in five bullet points: ' },
+      { title: 'Compare two pages', description: 'Where they agree and where they differ', prompt: 'Compare what these two pages say about ' },
+      { title: 'Check a claim', description: 'Does the source actually say it?', prompt: 'Does this page support the claim that ' },
+      { title: 'Pull out the numbers', description: 'Key figures, with context', prompt: 'List the key figures on this page, with context: ' },
+    ],
     myStats: { sessionCount: 22, lastActiveAt: hoursAgo(5) } }),
   agent({ slug: 'coding-agent', name: 'Coding Agent', icon: 'code-xml', color: 'blue',
     description: 'Reads repositories, proposes patches and runs the test suite in an isolated sandbox.', tagline: 'Patches, tests and code review',

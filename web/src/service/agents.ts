@@ -21,9 +21,11 @@ export const agentsQuery = () =>
     staleTime,
   })
 
+/** One agent; checked every 30 s while it is offline, so the composer opens when it's back (D22). */
 export const agentQuery = (slug: string) =>
   queryOptions({
     queryKey: agentKeys.detail(slug),
     queryFn: async ({ signal }) => toDomainAgent(await unwrap(api.GET('/v1/agents/{slug}', { params: { path: { slug } }, signal }))),
     staleTime,
+    refetchInterval: (query) => (query.state.data?.status === 'offline' ? 30_000 : false),
   })

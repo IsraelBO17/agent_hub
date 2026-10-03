@@ -109,6 +109,8 @@ Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taki
 | Recent Session Row, Capability Row, Source Row, Detail Row, Info Row (`V8961f`, `V6Dax`, `q7ISXo`, `wGPRe`, `NEFiE`) | `item`, or plain markup (`<dl>` for Detail and Info rows) |
 | Suggestion Pill (`wULfL`), Jump to Latest (`R2yN9`) | `button`, variants `pill` and `float` |
 | Message Footer / Stopped, / Still replying, / Still working (`XebGB`, `SjJKc`, `K5UJmM`) | Custom + `button` |
+
+**Built in #8 and #9** (web/docs/decisions.md): Composer (Send, Stop generating, Shift + Enter hint, disclaimer; the mobile layout puts Send beside the input; attach and voice wait), Starter Prompt, User Message, Agent Message, Thinking Row and Tool Call Chip / Detail (disclosure buttons, not `collapsible`), Typing Indicator, Inline Error and / Warning (no Retry yet), Message Footer / Stopped and / Still working, Jump to Latest, and the "Session expired" dialog (`N8ysh`, on `dialog`). Message Actions, Version Pager and the Code Block's highlighting and Copy are later issues.
 | Session row on mobile (F11.16, F11.17) | `context-menu` for long-press (Base UI opens it on long-press); swipe-to-delete is a custom gesture. |
 
 ## 4. Stays custom (no primitive fits)

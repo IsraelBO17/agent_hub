@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { NewSessionPage } from '@/modules/chat'
+import { ChatRoute } from '@/modules/chat'
 import { renderRoute } from '@/test/render-route'
 import { SidebarProvider } from '@/components/ui/sidebar'
 
-const page = (slug: string) => renderRoute(<SidebarProvider><NewSessionPage /></SidebarProvider>, { path: '/agents/:agentId', url: `/agents/${slug}` })
+const page = (slug: string) => renderRoute(<SidebarProvider><ChatRoute /></SidebarProvider>, { path: '/agents/:agentId/:sessionId?', url: `/agents/${slug}` })
 
 describe('an agent in the URL', () => {
   it('shows the agent in the chat header', async () => {

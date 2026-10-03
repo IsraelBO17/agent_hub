@@ -22,3 +22,14 @@ export function formatDay(date: Date, now: Date = new Date()): string {
   const sameYear = date.getFullYear() === now.getFullYear()
   return new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric', ...(sameYear ? {} : { year: 'numeric' }), ...(timeZone ? { timeZone } : {}) }).format(date)
 }
+
+/** A time of day, e.g. "10:42". */
+export function formatTime(date: Date): string {
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'short', ...(timeZone ? { timeZone } : {}) }).format(date)
+}
+
+/** A duration as "m:ss", e.g. "1:05". */
+export function formatDuration(ms: number): string {
+  const seconds = Math.floor(ms / 1000)
+  return `${String(Math.floor(seconds / 60))}:${String(seconds % 60).padStart(2, '0')}`
+}

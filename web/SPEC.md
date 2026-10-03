@@ -43,7 +43,7 @@ One per screen. The code follows the block; when a screen changes, its block cha
 - **HubLayout** (`/`, `/agents/:agentId/about`, `*`): the App Header (`fqLch`, 64 px: brand, account) and no desktop sidebar; content padded 48 × 120. On mobile the header is the 52 px Top Bar with the menu, which opens the sessions drawer.
 - **WorkspaceLayout** (`/agents/:agentId`, `/agents/:agentId/:sessionId`, `/artifacts`, `/archived`, `/settings`): the Sidebar (`hj5RV`, 284 px), collapsible on desktop; on mobile it is the drawer (F10.5, 316 px, over the scrim). Agent pages have the Chat Header (`H0YWK`, 60 px; 52 px on mobile) and the chat column (760 px); the others pad their content 36 × 48 and show a bar only for the menu (mobile, or a collapsed sidebar).
 - **Sidebar contents:** brand and collapse; the Agent Switcher; New session (the current agent's new session, or the catalog when no agent is in the URL); Search (disabled, "Soon": the ⌘K palette is P1); the session list; the footer with the user and links to All agents, Artifacts, Archived and Settings.
-- **data:** none in #4. The Agent Switcher, the session list, the user and the Chat Header's agent show their loading skeletons, the designed loading state, until #6 (user), #7 (agents) and #8 (sessions) load them.
+- **data:** the user (#6) and agents (#7). The session list needs `GET /v1/sessions` (M2); until then the sidebar says "Your sessions will appear here".
 - **states:** sidebar expanded / collapsed (desktop); drawer open / closed (mobile). Keyboard: skip link first; focus moves to the page's h1 after navigation; a collapsed sidebar is inert.
 - **open questions:** none.
 
@@ -58,7 +58,7 @@ One per screen. The code follows the block; when a screen changes, its block cha
 ### shell: the session (issue #6)
 - **On load:** `POST /v1/auth/refresh` once (the cookie), then `GET /v1/me`. Until that settles, protected routes show the shell's skeleton.
 - **Protected:** every route except `/sign-in` and `/s/:shareId`. Signed out → `/sign-in?next=<path and search>`.
-- **Requests:** `Authorization: Bearer`; on a `401`, one refresh (shared by concurrent requests), then the request once more. A failed refresh ends the session: the cache is cleared and the user goes to sign-in with `next` (the in-place "Session expired" dialog that keeps a draft, `N8ysh`, comes with the composer in #8).
+- **Requests:** `Authorization: Bearer`; on a `401`, one refresh (shared by concurrent requests), then the request once more. A failed refresh ends the session: the "Session expired" dialog (`N8ysh`) opens over the page and keeps the draft (#8); "Sign in again" goes to sign-in with `next`. A load without a session goes straight to sign-in.
 - **User:** initials and name in the sidebar footer and the App Header (no Google photo: the CSP allows images from `self` only).
 - **Sign out** (Settings → Account, `RHrDH`): `POST /v1/auth/logout`, the cache cleared, other tabs signed out too (`BroadcastChannel`), then `/sign-in?signed-out`.
 
@@ -75,11 +75,16 @@ One per screen. The code follows the block; when a screen changes, its block cha
 - **Switcher** (`RZF5q`; menu `uBRCZ`, F8.2; mobile sheet F11.10 `wE4kz`): the current agent is the URL's, else the user's default, else the most recently used, else the first. Picking another opens its new session; offline agents can't be picked. The list loads on first use. Its search field waits for P1.
 - **Chat Header:** the URL's agent from `GET /v1/agents/{slug}` (avatar, name, status). An unknown slug shows "Agent not found" (`V97EP`) with Browse agents and Go back.
 
-### screen: New session (`/agents/:agentId`), Session (`/agents/:agentId/:sessionId`)
-- **purpose:** start a session with an agent; chat in a session.
-- **design:** `uBRCZ`, `wtDYF`; mobile F11.2 `HgtnP`, F11.5 `DNypg`. Header: `Chat Header` `H0YWK`.
-- **data:** none yet (#7 agents, #8 sessions, messages and the stream).
-- **states:** placeholder: the Chat Header (agent skeleton, then "New session" or "Session" as the h1) and an empty state in the chat column.
+### screen: New session (`/agents/:agentId`), Session (`/agents/:agentId/:sessionId`) (issues #8, #9)
+- **purpose:** start a session with an agent by sending the first message; chat in a session and watch the reply stream.
+- **design:** new session `uBRCZ` (hero, starters `Starter Prompt` `fkUCB`, composer); session `wtDYF`; mobile F11.2 `HgtnP`, F11.5 `DNypg`. Header `Chat Header` `H0YWK`; `User Message` `EfHME`; `Agent Message` `BsXl7`; `Thinking Row` `Fg95V`; `Tool Call Chip` `Hbhy0` and detail `pkhri`; `Typing Indicator` `eFeRx`; `Composer` `K6k66O` (mobile `OUcXN`), `Composer Disclaimer` `QTWM6`; inline error `Sl1FL`; Jump to latest `R2yN9`; Session expired `N8ysh`.
+- **one screen:** both URLs render the same chat page, so a reply keeps streaming when the first message turns `/agents/:agentId` into `/agents/:agentId/:sessionId` (replace, not push).
+- **data:** the agent (`GET /v1/agents/{slug}`; polled every 30 s while it is offline). The transcript `GET /v1/sessions/{id}/messages` (50 a page, newest first; older pages as the user scrolls up). Send: the first message `POST /v1/agents/{slug}/sessions`, later ones `POST /v1/sessions/{id}/messages`, each with a new `clientMessageId`, read as a stream (SEND_MESSAGE); a JSON reply is a replay of an earlier send. A reply already running on load, or whose stream stalled (45 s) or dropped, is followed with `GET /v1/messages/{id}` every 2 s until it ends. Stop: `POST /v1/messages/{id}/stop`. The title is the session's (from `run.started`), else the first message's text (there is no `GET /v1/sessions/{id}` yet).
+- **actions:** type and send (Enter; Shift + Enter for a new line); a starter fills the composer; Stop (button or Esc) while a reply runs; open a thinking row or a tool call to see the reasoning, or the tool's input and output; Jump to latest when scrolled up.
+- **states:** new (the agent's greeting, description and starters; the composer focused); loading (message skeletons); transcript; sending (the user's message appears once saved, then the typing dots); streaming (blocks as they arrive; Stop instead of Send); "Still working · m:ss" after 60 s without events; stopped ("Stopped"); interrupted ("Interrupted"); failed (inline "Couldn't generate a reply", the error and its reference; no Retry until the API has it, #9); refused (`409 run_in_progress`, `429 too_many_runs`, `503 agent_unavailable`, `422 message_too_long`: a note above the composer, the draft kept); agent offline (the composer disabled with "{agent} is offline"); session not found (the not-found page); an unknown block type ("This content can't be shown yet").
+- **drafts:** kept per agent and session in `sessionStorage` (the text only, cleared on send and on sign-out), so a reload or an expired session doesn't lose them.
+- **session expired:** when a refresh fails mid-use, the "Session expired" dialog (`N8ysh`) opens over the page, the draft is kept, and "Sign in again" goes to `/sign-in?next=<this page>`.
+- **not built:** the session list (needs `GET /v1/sessions`, M2: the sidebar says "Your sessions will appear here"), message actions (copy, feedback, regenerate, edit), Retry (#9 needs an API endpoint), code highlighting and Copy (the Code Block, M2), artifacts, approvals.
 - **open questions:** none.
 
 ### screen: Settings (`/settings`)

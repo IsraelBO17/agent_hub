@@ -22,6 +22,9 @@ export interface Agent {
   /** Offline agents can't start a session (degraded ones can). */
   available: boolean
   defaultGreeting: string | null
+  starters: { title: string; description: string | null; prompt: string }[]
+  /** Shown under the composer after "{name} can make mistakes." */
+  disclaimer: string | null
 }
 
 const frameworkNames: Record<string, string> = { strands: 'Strands', langgraph: 'LangGraph' }
@@ -46,6 +49,8 @@ export function toDomainAgent(a: AgentWire): Agent {
     lastActiveAt: date(a.myStats.lastActiveAt),
     available: a.status !== 'offline',
     defaultGreeting: a.greeting,
+    starters: a.starters.map((s) => ({ title: s.title, description: s.description ?? null, prompt: s.prompt })),
+    disclaimer: a.disclaimer,
   }
 }
 
