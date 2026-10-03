@@ -31,7 +31,7 @@ A script reads `variables` from `fleet_dev.pen` and writes `web/src/styles/token
 | `--accent` / `--accent-foreground` | `hover` / `text-primary` | **Name clash:** shadcn's `accent` is the hover fill of menu items. Pencil's `accent` is the brand green and maps to `--primary`. |
 | `--destructive` | `danger` | |
 | `--border`, `--input` | `border` | Checkbox and radio rings use `control-border` directly |
-| `--ring` | *not designed* | See §5 |
+| `--ring` | `focus-ring` | A 2 px ring with a 2 px offset (gap), drawn with the `Focus Ring` component and shown on the "States · Focus" board. Same value as `accent` |
 | `--sidebar`, `--sidebar-accent`, `--sidebar-border` | `sidebar`, `hover`, `border` | |
 | `--chart-*` | *unused* | `<ChartBlock>` reads `chart-1`–`6` directly (CHART_SPEC) |
 
@@ -41,11 +41,11 @@ A script reads `variables` from `fleet_dev.pen` and writes `web/src/styles/token
 
 | Token | Value | Used by |
 |---|---|---|
-| `shadow-control` | `0 1px 2px #0000000F` | Segmented Item (Agent Switcher uses `#0000000A`, see §5) |
+| `shadow-control` | `0 1px 2px #0000000F` | Segmented Item, Agent Switcher |
 | `shadow-raised` | `0 4px 16px #1B1A170D` | Composer |
 | `shadow-float` | `0 4px 12px #1B1A171A` | Jump to Latest |
 | `shadow-popover` | `0 12px 32px #1B1A171F, 0 1px 3px #1B1A170F` | Menu Panel, Toast, Feedback Popover, Source Preview |
-| `shadow-dialog` | `0 24px 60px #1B1A1733, 0 2px 6px #1B1A170F` | Dialog |
+| `shadow-dialog` | `0 24px 60px #1B1A1733, 0 2px 6px #1B1A170F` | Dialog, Confirm Dialog |
 | `shadow-palette` | `0 24px 60px #1B1A1740` | Command Palette |
 
 Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taking the right one for each overlay from its screen.
@@ -54,7 +54,8 @@ Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taki
 
 | Pencil component (ID) | shadcn (Base UI) | Match |
 |---|---|---|
-| Button / Primary, / Secondary, / Danger (`H0OSN`, `XBZK2`, `HsXdL`) | `button`, variants `primary`, `secondary`, `danger` (renamed from shadcn's names) | 8×14, gap 7, 13 px; weight 600 primary and danger, 500 secondary; radius 9 (Danger 8, §5); icon 14. Add a `sm` size (6×12): instances use it in toasts, popovers and banners. |
+| Focus Ring (`Tx1AB`), board "States · Focus" | Each primitive's `focus-visible` style, restyled to this | Every focusable control shows it when focused by keyboard: 2 px `focus-ring`, 2 px gap, radius = the control's radius + 4 (pills stay round). Rows inside menus, the palette and lists (Menu Item, Agent Menu Item, Palette Row, …) take their highlight fill instead (`hover` in menus, `sidebar` in the palette), no ring. |
+| Button / Primary, / Secondary, / Danger (`H0OSN`, `XBZK2`, `HsXdL`) | `button`, variants `primary`, `secondary`, `danger` (renamed from shadcn's names) | 8×14, gap 7, 13 px; weight 600 primary and danger, 500 secondary; radius 9 for all three; icon 14. Add a `sm` size (6×12): instances use it in toasts, popovers and banners. |
 | Icon Button (`btfe4`) | `button`, sizes `icon` 32, `icon-sm` 30, `icon-xs` 28, `icon-2xs` 24 | Radius 8 (6 at 24), icon 16 `text-secondary`. Always has `aria-label` and a Tooltip. |
 | Tooltip (`fkIAs`) | `tooltip` | Fill `text-primary`, text `bg` 12/500, 5×8, radius 6; shortcut in mono `offline`. No arrow (none drawn). |
 | Kbd (`rjWo1`) | `kbd` | Height 20, 0×6, radius 5, `surface` + `border`, 12 mono `text-secondary`. |
@@ -71,7 +72,7 @@ Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taki
 | Menu Panel + Menu Item (`QRlRa`, `koWWb`) | `dropdown-menu`; the same styles for `context-menu` | Panel 220, radius 12, padding 5, gap 1, `shadow-popover`. Item 7×9, radius 6, gap 9, icon 14, label 13, trailing 12 (`Soon` = disabled item). |
 | Agent Menu Item (`UauTJ`) | `dropdown-menu` radio item | 288 wide, 7×8, radius 8, avatar, 14/600, status dot 6, check 14 `accent`. |
 | Dialog (`dQMxZ`) | `dialog` | 480 wide, radius 16, `shadow-dialog`. Header 18/18/6/22, title 15/600, subtitle 13 (line height 1.5), close Icon Button 30. Body 14/22/18/22, gap 14. Footer `bg` with a top border, 14×22, gap 8. |
-| Confirm Dialog (`i3B1e`) | `alert-dialog` | 400 wide, radius 14, padding 20, gap 14 (differs from Dialog, §5). "Delete all" (F9.2) adds an `input` for typing DELETE. |
+| Confirm Dialog (`i3B1e`) | `alert-dialog` | 400 wide, radius 16, `shadow-dialog`, padding 20, gap 14 (a compact layout without the Dialog's header and footer bands). "Delete all" (F9.2) adds an `input` for typing DELETE. |
 | Toast (`IjtkQ`) | `toast` (Base UI; not `sonner`) | 380 wide, radius 14, padding 14, gap 12; 32 px round icon on `accent-soft`; title 14/600, body 13; `sm` buttons; close 15. Task complete, deleted with undo (F7.7), approval waiting (`r5Gru`). |
 | Feedback Popover (`meKbs`) | `popover` + `textarea` | 380 wide, radius 14, padding 16, gap 14. Comment box 84 tall, radius 10, `bg` fill. |
 | Citation Chip + Source Preview (`q3C9LM`, `Ypu1g`) | `hover-card` (Base UI Preview Card) | Chip: height 18, radius 5, `surface-muted`, 12/600 mono. Card: 340 wide, radius 12, padding 14. Must also open from the keyboard and on tap; if Preview Card can't, use `popover`. |
@@ -123,9 +124,9 @@ Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taki
 
 ## 5. Gaps to settle in the design, not in code
 
-1. **No focus state is drawn anywhere.** Keyboard-first (principle 7) and the axe target need a visible focus ring on every control. A proposal to draw in Pencil: a 2 px `accent` ring with a 2 px offset, used as `--ring`.
+1. ~~**No focus state is drawn anywhere.**~~ **Settled 2026-10-03:** a `focus-ring` colour variable (same value as `accent`, used as `--ring`) and a `Focus Ring` component (`Tx1AB`): 2 px ring, 2 px gap, radius = the control's + 4, pills stay round. The "States · Focus" board shows every focusable control focused; rows in menus, the palette and lists use their highlight fill instead of a ring.
 2. **Hover, pressed and disabled are drawn only on "Chat Interaction Details"** (`Q6kwA2`). For other controls, decide the state in Pencil first; don't invent it in code.
-3. **Button / Danger has radius 8; Primary and Secondary have 9.** Settle on one value.
-4. **Confirm Dialog differs from Dialog:** 400 vs 480 wide, radius 14 vs 16, one shadow vs two, and no header or footer bands. Keep it as a separate look, or make it a Dialog?
-5. **Near-duplicate values:** the control shadow is `#0000000F` on Segmented Item and `#0000000A` on Agent Switcher; Command Palette has its own single shadow. Merge them, or keep them distinct?
+3. ~~**Button / Danger has radius 8; Primary and Secondary have 9.**~~ **Settled 2026-10-03:** Danger is 9, like Primary and Secondary.
+4. ~~**Confirm Dialog differs from Dialog.**~~ **Settled 2026-10-03:** it keeps its compact layout (400 wide, padding 20, gap 14, no header or footer bands) but takes the Dialog's radius 16 and its two shadows (`shadow-dialog`).
+5. ~~**Near-duplicate values.**~~ **Settled 2026-10-03:** Agent Switcher uses Segmented Item's shadow (`0 1px 2px #0000000F`), so there is one `shadow-control`. Command Palette keeps its own `shadow-palette`.
 6. **Mobile tap targets** must be 44 px (F15), but icon buttons are 24–32 px. Enlarge the hit area on touch, not the drawn size.
