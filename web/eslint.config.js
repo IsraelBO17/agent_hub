@@ -23,7 +23,7 @@ const iconBan = { name: 'lucide-react', message: 'Import icons from @/components
 // Files `npx shadcn add` wrote. They stay close to upstream, so they skip the stylistic rules below.
 // Add each new one here (recipe 4). App composites in components/ui are not listed: they're held to every rule.
 const vendored = [
-  'src/components/ui/{alert-dialog,button,card,dialog,field,input,label,separator,sheet,sidebar,skeleton,textarea,tooltip}.tsx',
+  'src/components/ui/{alert-dialog,button,card,dialog,field,input,label,separator,sheet,sidebar,skeleton,textarea,tooltip,dropdown-menu,drawer}.tsx',
   'src/hooks/use-mobile.ts',
 ]
 

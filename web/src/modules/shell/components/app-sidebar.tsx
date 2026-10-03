@@ -2,7 +2,7 @@
 // sessions, and the footer. The same contents are the mobile sessions drawer (F10.5).
 import { SidebarToggle } from '@/components/layout/sidebar-toggle'
 import { SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar'
-import { AgentSwitcherSkeleton } from '@/modules/shell/components/agent-switcher-skeleton'
+import { AgentSwitcher } from '@/modules/shell/components/agent-switcher'
 import { Brand } from '@/modules/shell/components/brand'
 import { SessionListSkeleton } from '@/modules/shell/components/session-list-skeleton'
 import { SidebarFooterLinks } from '@/modules/shell/components/sidebar-footer-links'
@@ -17,7 +17,7 @@ export function AppSidebar() {
           <Brand size="sidebar" />
           <SidebarToggle kind="collapse" />
         </div>
-        <AgentSwitcherSkeleton />
+        <AgentSwitcher />
         <SidebarNav />
       </SidebarHeader>
       <SidebarContent className="px-3.5 py-2.5">
