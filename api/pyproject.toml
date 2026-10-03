@@ -1,6 +1,6 @@
 [project]
 name = "agent-hub-api"
-version = "0.1.0"
+version = "0.2.0"
 description = "Agent Hub API: one chat interface for many AI agents (FastAPI)."
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -11,14 +11,15 @@ dependencies = [
     "sqlalchemy[asyncio]>=2.1.1",
     "psycopg[binary]>=3.3.6",
     "alembic>=1.20.0",
-    "pyjwt>=2.10.1",
+    "pyjwt[crypto]>=2.10.1",
+    "httpx>=0.28.1",
+    "pyyaml>=6.0.2",
 ]
 
 [dependency-groups]
 dev = [
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
-    "httpx>=0.28.1",
     "asgi-lifespan>=2.1.0",
     "schemathesis>=4.28.0",
     "openapi-spec-validator>=0.7.1",

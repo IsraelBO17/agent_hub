@@ -282,3 +282,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-10-03 | D3 verified (issue #5): psycopg 3 works through Neon's pooler with prepared statements on or off; the app keeps them off. API shell built from the API standard (`api/`). |
 | 2026-10-03 | D25 amended: CNAMEs in the `qucoon.com` zone instead of a delegated zone (the zone had been deleted outside Terraform). The API deploys in two phases: certificate, then ALB and service. |
 | 2026-10-03 | D25: the API is `api-fleet.qucoon.com` on qucoon's wildcard `*.qucoon.com` certificate (cloud team's request; they deleted the dedicated certificate). One-phase deploy again. |
+| 2026-10-03 | Issue #6 (API half): Google sign-in, rotating refresh sessions, `/v1/me`; invites by email activate on first sign-in (D9); `identity_provider_unavailable` (503) added to the contract. |

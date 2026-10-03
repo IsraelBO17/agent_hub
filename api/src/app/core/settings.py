@@ -35,7 +35,12 @@ class Settings(BaseSettings):
     access_token_ttl_seconds: int = 900
     token_issuer: str = "https://api-fleet.qucoon.com"  # noqa: S105  (a name, not a secret)
     token_audience: str = "https://api-fleet.qucoon.com"  # noqa: S105
+    refresh_token_ttl_days: int = 30
     google_client_id: str  # D8; not secret (also ships to the web app)
+    google_certs_url: str = "https://www.googleapis.com/oauth2/v3/certs"
+    google_issuers: list[str] = ["https://accounts.google.com", "accounts.google.com"]
+    google_keys_cache_seconds: int = 3600  # used when Google sends no Cache-Control max-age
+    google_timeout_seconds: float = 5.0
 
     # HTTP (§8, §15)
     app_origin: str | None = None  # the web app (APP_ORIGIN); always an allowed CORS origin

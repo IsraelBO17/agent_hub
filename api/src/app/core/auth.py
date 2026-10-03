@@ -14,7 +14,7 @@ import jwt
 from fastapi import Depends, Header
 
 from app.core.context import user_id_var
-from app.core.errors import Forbidden, Unauthenticated
+from app.core.errors import Forbidden, TokenExpired, Unauthenticated
 from app.core.settings import Settings, get_settings
 
 log = logging.getLogger(__name__)
@@ -52,6 +52,8 @@ def verify_access_token(settings: Settings, token: str) -> Principal:
             options={"require": _REQUIRED},
         )
         return Principal(uuid.UUID(claims["sub"]), frozenset(claims.get("roles", [])))
+    except jwt.ExpiredSignatureError as exc:
+        raise TokenExpired() from exc
     except (jwt.PyJWTError, ValueError, KeyError) as exc:
         log.info(
             "token_rejected", extra={"reason": type(exc).__name__}

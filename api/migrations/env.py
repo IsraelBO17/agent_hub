@@ -15,6 +15,7 @@ from app.core.settings import get_settings
 MODEL_MODULES = [
     "app.core.jobs.models",
     "app.db.models",  # every Agent Hub table until each feature moves its tables into its package
+    "app.features.auth.models",
 ]
 for module in MODEL_MODULES:
     importlib.import_module(module)
