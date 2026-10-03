@@ -1,5 +1,5 @@
 {
-  "version": "2.19",
+  "version": "2.20",
   "children": [
     {
       "type": "frame",
@@ -1398,7 +1398,7 @@
           "y": 84,
           "name": "Description",
           "fill": "$text-secondary",
-          "content": "Buttons, icons, badges and small atoms used everywhere · 12 components",
+          "content": "Buttons, icons, badges and small atoms used everywhere · 13 components",
           "fontFamily": "$font-ui",
           "fontSize": 15,
           "fontWeight": "normal"
@@ -1543,6 +1543,18 @@
           "name": "Component Label",
           "fill": "$text-tertiary",
           "content": "Resize Handle",
+          "fontFamily": "$font-mono",
+          "fontSize": 12,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "D6lKG",
+          "x": 56,
+          "y": 260,
+          "name": "Component Label",
+          "fill": "$text-tertiary",
+          "content": "Focus Ring",
           "fontFamily": "$font-mono",
           "fontSize": 12,
           "fontWeight": "normal"
@@ -2009,7 +2021,7 @@
       "name": "Button / Danger",
       "reusable": true,
       "fill": "$danger",
-      "cornerRadius": 8,
+      "cornerRadius": 9,
       "gap": 7,
       "padding": [
         8,
@@ -2490,19 +2502,31 @@
       "reusable": true,
       "width": 400,
       "fill": "$surface",
-      "cornerRadius": 14,
+      "cornerRadius": 16,
       "stroke": "$border",
       "strokeWidth": 1,
-      "effect": {
-        "type": "shadow",
-        "shadowType": "outer",
-        "color": "#1B1A171F",
-        "offset": {
-          "x": 0,
-          "y": 12
+      "effect": [
+        {
+          "type": "shadow",
+          "shadowType": "outer",
+          "color": "#1B1A1733",
+          "offset": {
+            "x": 0,
+            "y": 24
+          },
+          "blur": 60
         },
-        "blur": 32
-      },
+        {
+          "type": "shadow",
+          "shadowType": "outer",
+          "color": "#1B1A170F",
+          "offset": {
+            "x": 0,
+            "y": 2
+          },
+          "blur": 6
+        }
+      ],
       "layout": "vertical",
       "gap": 14,
       "padding": 20,
@@ -3559,7 +3583,7 @@
       "effect": {
         "type": "shadow",
         "shadowType": "outer",
-        "color": "#0000000A",
+        "color": "#0000000F",
         "offset": {
           "x": 0,
           "y": 1
@@ -4835,7 +4859,7 @@
         "type": "image",
         "enabled": true,
         "url": "https://images.unsplash.com/photo-1655277317692-e3ebeb4ec0d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2Mjg1MjJ8&ixlib=rb-4.1.0&q=80&w=1080",
-        "mode": "fill"
+        "mode": "cover"
       },
       "cornerRadius": 10,
       "stroke": "$border",
@@ -13487,7 +13511,7 @@
                                     "type": "image",
                                     "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1790009335467-537bdd2163ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2Mjg2NTl8&ixlib=rb-4.1.0&q=80&w=1080",
-                                    "mode": "fill"
+                                    "mode": "cover"
                                   }
                                 },
                                 {
@@ -14087,7 +14111,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "https://images.unsplash.com/photo-1522335579687-9c718c5184d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2Mjg2OTd8&ixlib=rb-4.1.0&q=80&w=1080",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "descendants": {
                             "IbCJq": {
@@ -15535,7 +15559,7 @@
                                     "type": "image",
                                     "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1631669969504-f35518bf96ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2Mjg3NTd8&ixlib=rb-4.1.0&q=80&w=1080",
-                                    "mode": "fill"
+                                    "mode": "cover"
                                   },
                                   "cornerRadius": 12
                                 },
@@ -15555,7 +15579,7 @@
                                     "type": "image",
                                     "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1579165466991-467135ad3110?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2Mjg3NTd8&ixlib=rb-4.1.0&q=80&w=1080",
-                                    "mode": "fill"
+                                    "mode": "cover"
                                   },
                                   "cornerRadius": 12
                                 },
@@ -15575,7 +15599,7 @@
                                     "type": "image",
                                     "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1626148750586-df6e1b0bebf2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2Mjg3NTd8&ixlib=rb-4.1.0&q=80&w=1080",
-                                    "mode": "fill"
+                                    "mode": "cover"
                                   },
                                   "cornerRadius": 12,
                                   "layout": "none",
@@ -29965,7 +29989,7 @@
                                     "type": "image",
                                     "enabled": true,
                                     "url": "generated.png",
-                                    "mode": "fill"
+                                    "mode": "cover"
                                   },
                                   "cornerRadius": 14,
                                   "layout": "none",
@@ -30192,7 +30216,7 @@
                                             "type": "image",
                                             "enabled": true,
                                             "url": "generated-1.png",
-                                            "mode": "fill"
+                                            "mode": "cover"
                                           },
                                           "cornerRadius": 12,
                                           "layout": "none",
@@ -30235,7 +30259,7 @@
                                             "type": "image",
                                             "enabled": true,
                                             "url": "generated-4.png",
-                                            "mode": "fill"
+                                            "mode": "cover"
                                           },
                                           "cornerRadius": 12,
                                           "stroke": "$accent",
@@ -30288,7 +30312,7 @@
                                             "type": "image",
                                             "enabled": true,
                                             "url": "generated-2.png",
-                                            "mode": "fill"
+                                            "mode": "cover"
                                           },
                                           "cornerRadius": 12,
                                           "layout": "none",
@@ -30331,7 +30355,7 @@
                                             "type": "image",
                                             "enabled": true,
                                             "url": "generated-3.png",
-                                            "mode": "fill"
+                                            "mode": "cover"
                                           },
                                           "cornerRadius": 12,
                                           "layout": "none",
@@ -30644,7 +30668,7 @@
                         "type": "image",
                         "enabled": true,
                         "url": "generated-4.png",
-                        "mode": "fill"
+                        "mode": "cover"
                       },
                       "cornerRadius": 8
                     },
@@ -30762,7 +30786,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "generated-1.png",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "cornerRadius": 8
                         },
@@ -30776,7 +30800,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "generated-4.png",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "cornerRadius": 8,
                           "stroke": "$surface",
@@ -30793,7 +30817,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "generated-2.png",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "cornerRadius": 8
                         },
@@ -30808,7 +30832,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "generated-3.png",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "cornerRadius": 8
                         }
@@ -30926,7 +30950,7 @@
                                 "type": "image",
                                 "enabled": true,
                                 "url": "https://images.unsplash.com/photo-1635831233800-abaae2910c39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2Mjk5Nzl8&ixlib=rb-4.1.0&q=80&w=1080",
-                                "mode": "fill"
+                                "mode": "cover"
                               },
                               "cornerRadius": 14,
                               "stroke": "$border",
@@ -31268,7 +31292,7 @@
                                 "type": "image",
                                 "enabled": true,
                                 "url": "https://images.unsplash.com/photo-1774554026958-56661feb3f04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2Mjk5Nzl8&ixlib=rb-4.1.0&q=80&w=1080",
-                                "mode": "fill"
+                                "mode": "cover"
                               },
                               "cornerRadius": 14,
                               "stroke": "$border",
@@ -42495,7 +42519,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "generated-1.png",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "layout": "none",
                           "children": [
@@ -43747,7 +43771,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "generated-2.png",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "layout": "none",
                           "children": [
@@ -84268,7 +84292,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "generated-1.png",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "layout": "none",
                           "children": [
@@ -85520,7 +85544,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "generated-2.png",
-                            "mode": "fill"
+                            "mode": "cover"
                           },
                           "layout": "none",
                           "children": [
@@ -102412,7 +102436,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "https://images.unsplash.com/photo-1696006985806-b3a3af77235c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2MzMxNzV8&ixlib=rb-4.1.0&q=80&w=1080",
-                            "mode": "fill"
+                            "mode": "cover"
                           }
                         },
                         {
@@ -102818,7 +102842,7 @@
                             "type": "image",
                             "enabled": true,
                             "url": "https://images.unsplash.com/photo-1696006985806-b3a3af77235c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2MzMxNzV8&ixlib=rb-4.1.0&q=80&w=1080",
-                            "mode": "fill"
+                            "mode": "cover"
                           }
                         },
                         {
@@ -103138,7 +103162,7 @@
                                 "type": "image",
                                 "enabled": true,
                                 "url": "https://images.unsplash.com/photo-1696006985806-b3a3af77235c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2MzMxNzV8&ixlib=rb-4.1.0&q=80&w=1080",
-                                "mode": "fill"
+                                "mode": "cover"
                               },
                               "cornerRadius": 12
                             },
@@ -103573,7 +103597,7 @@
                                 "type": "image",
                                 "enabled": true,
                                 "url": "https://images.unsplash.com/photo-1696006985806-b3a3af77235c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2MzMxNzV8&ixlib=rb-4.1.0&q=80&w=1080",
-                                "mode": "fill"
+                                "mode": "cover"
                               },
                               "cornerRadius": 12
                             },
@@ -104014,7 +104038,7 @@
                                 "type": "image",
                                 "enabled": true,
                                 "url": "https://images.unsplash.com/photo-1696006985806-b3a3af77235c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2MzMxNzV8&ixlib=rb-4.1.0&q=80&w=1080",
-                                "mode": "fill"
+                                "mode": "cover"
                               },
                               "cornerRadius": 12
                             },
@@ -104987,7 +105011,7 @@
                                 "type": "image",
                                 "enabled": true,
                                 "url": "https://images.unsplash.com/photo-1696006985806-b3a3af77235c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTA2MzMxNzV8&ixlib=rb-4.1.0&q=80&w=1080",
-                                "mode": "fill"
+                                "mode": "cover"
                               },
                               "cornerRadius": 12
                             },
@@ -146109,6 +146133,1587 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "Tx1AB",
+      "x": 56,
+      "y": -6954,
+      "name": "Focus Ring",
+      "reusable": true,
+      "cornerRadius": 13,
+      "stroke": "$focus-ring",
+      "strokeWidth": 2,
+      "strokeAlignment": "inner",
+      "padding": 4,
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "l33x5J",
+          "name": "Control",
+          "slot": [
+            "H0OSN",
+            "XBZK2",
+            "HsXdL",
+            "btfe4",
+            "Wjnvx",
+            "ZWD7y",
+            "llhcq",
+            "W0HHV",
+            "c3s8Su",
+            "wULfL",
+            "K1CWuA",
+            "CxmKK",
+            "HXUoW",
+            "MoK3u",
+            "SEJaD",
+            "VZuIf"
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "o2O4rb",
+              "type": "ref",
+              "ref": "H0OSN",
+              "name": "Button / Primary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Crc4x",
+      "x": 4720,
+      "y": -7238,
+      "name": "States · Focus",
+      "width": 2280,
+      "fill": "$sidebar",
+      "layout": "vertical",
+      "gap": 56,
+      "padding": 56,
+      "children": [
+        {
+          "type": "frame",
+          "id": "J1RE8",
+          "name": "Heading",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "u5eifX",
+              "name": "Title",
+              "fill": "$text-primary",
+              "content": "States · Focus",
+              "fontFamily": "$font-ui",
+              "fontSize": 28,
+              "fontWeight": "600",
+              "letterSpacing": -0.5
+            },
+            {
+              "type": "text",
+              "id": "DUNRI",
+              "name": "Subtitle",
+              "fill": "$text-secondary",
+              "content": "Keyboard focus for every control: a 2 px $focus-ring ring with a 2 px gap (the Focus Ring component). Rows inside menus, the palette and lists show focus with their highlight fill instead.",
+              "fontFamily": "$font-ui",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QnM8D",
+          "name": "Section 1 Focus ring",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "children": [
+            {
+              "id": "u5nQzZ",
+              "type": "ref",
+              "ref": "o1lqG",
+              "name": "Section Heading",
+              "descendants": {
+                "ukre5": {
+                  "content": "1"
+                },
+                "ldesz": {
+                  "content": "Focus ring"
+                },
+                "ryiGq": {
+                  "content": "Ring radius = the control's radius + 4; pills stay 999. The ring sits outside the control and never moves the layout."
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "VNT9F",
+              "name": "Row Actions",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xEOAG",
+                  "name": "Button / Primary",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "lVAhs",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 13,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "rCkqS",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "SzbZi",
+                              "type": "ref",
+                              "ref": "H0OSN",
+                              "name": "Button / Primary"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tnIzH",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "s6ps0",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Button / Primary",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "p5egZa",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 9 → ring 13",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vAZup",
+                  "name": "Button / Secondary",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "wa6df",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 13,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "fbd7m",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "R8Tj1r",
+                              "type": "ref",
+                              "ref": "XBZK2",
+                              "name": "Button / Secondary"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Kt3r2",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "arodF",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Button / Secondary",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "QTJ1o",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 9 → ring 13",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XLJLh",
+                  "name": "Button / Danger",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "t3OiVz",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 13,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "QCPw1",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "KBaYa",
+                              "type": "ref",
+                              "ref": "HsXdL",
+                              "name": "Button / Danger"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "s9KDVu",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "u4Ska",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Button / Danger",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "P5jg7G",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 9 → ring 13",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "a0chEA",
+                  "name": "Icon Button",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "P44FX",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "J92eY",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "y7788h",
+                              "type": "ref",
+                              "ref": "btfe4",
+                              "name": "Icon Button"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VTSZb",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "u3o2fc",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Icon Button",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "L1Xcnj",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 8 → ring 12",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "i744GA",
+                  "name": "Segmented Item",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "Olq3D",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 11,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "zPVPP",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "ojKwE",
+                              "type": "ref",
+                              "ref": "K1CWuA",
+                              "name": "Segmented Item"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rjOzG",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bO2qC",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Segmented Item",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "h82Ep",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 7 → ring 11",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pUb2M",
+                  "name": "Panel Tab",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "bVmkY",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 4,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "hlC1O",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "Gqi1v",
+                              "type": "ref",
+                              "ref": "HXUoW",
+                              "name": "Panel Tab"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nlHZf",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "sYNBi",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Panel Tab",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Fuoat",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 0 → ring 4",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "G8ceJI",
+              "name": "Row Inputs",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "I3xpY",
+                  "name": "Search Field",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "tAllW",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 13,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "QdUVp",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "wakwn",
+                              "type": "ref",
+                              "ref": "Wjnvx",
+                              "name": "Search Field"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "IyGuC",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "t7aeu",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Search Field",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "FmKwG",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 9 → ring 13",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DZNbJ",
+                  "name": "Form Field · input",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "X0Prp",
+                      "type": "ref",
+                      "ref": "s2kV7R",
+                      "name": "Form Field",
+                      "descendants": {
+                        "fLgqb": {
+                          "id": "wIMb8",
+                          "type": "ref",
+                          "ref": "Tx1AB",
+                          "name": "Focus Ring",
+                          "cornerRadius": 13,
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "OINSd",
+                              "name": "Control",
+                              "width": "fill_container",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "YqxZB",
+                                  "name": "Input",
+                                  "width": "fill_container",
+                                  "height": 38,
+                                  "fill": "$surface",
+                                  "cornerRadius": 9,
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "gap": 8,
+                                  "padding": [
+                                    0,
+                                    12
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "FBvS3",
+                                      "x": 0,
+                                      "y": 0,
+                                      "name": "Leading Icon",
+                                      "enabled": false,
+                                      "width": 15,
+                                      "height": 15,
+                                      "icon": "calendar",
+                                      "library": "lucide",
+                                      "fill": "$text-tertiary"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "OdTnK",
+                                      "name": "Value",
+                                      "fill": "$text-tertiary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Placeholder",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 14,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "icon",
+                                      "id": "e5owY",
+                                      "x": 0,
+                                      "y": 0,
+                                      "name": "Trailing Icon",
+                                      "enabled": false,
+                                      "width": 15,
+                                      "height": 15,
+                                      "icon": "chevron-down",
+                                      "library": "lucide",
+                                      "fill": "$text-tertiary"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "y9CEf",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YGLul",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Form Field · input",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Q6ivba",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 9 → ring 13",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qx6oY",
+                  "name": "Select Button",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "IGGkm",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 13,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "EmF32",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "W5G00",
+                              "type": "ref",
+                              "ref": "ZWD7y",
+                              "name": "Select Button"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rLeEG",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "U8ZF2",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Select Button",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "AXohy",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 9 → ring 13",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uhNlq",
+                  "name": "Checkbox",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "Fto69",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "B5ul1",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "HUE8U",
+                              "type": "ref",
+                              "ref": "llhcq",
+                              "name": "Checkbox"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RuHbH",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "oMD91",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Checkbox",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GhXBE",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 4 → ring 8",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QXHme",
+                  "name": "Toggle Row · switch",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "zIuNI",
+                      "type": "ref",
+                      "ref": "sQir5",
+                      "name": "Toggle Row",
+                      "descendants": {
+                        "f8Rg7": {
+                          "id": "cm5qI",
+                          "type": "ref",
+                          "ref": "Tx1AB",
+                          "name": "Focus Ring",
+                          "cornerRadius": 999,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "pdzHP",
+                              "name": "Control",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "a54w4",
+                                  "name": "Switch",
+                                  "width": 36,
+                                  "height": 20,
+                                  "fill": "$accent",
+                                  "cornerRadius": 999,
+                                  "padding": 2,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ellipse",
+                                      "id": "uww8r",
+                                      "name": "Knob",
+                                      "fill": "$surface",
+                                      "width": 16,
+                                      "height": 16
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CYJ5o",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Lnuvn",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Toggle Row · switch",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "p2PU8J",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "pill → ring 999",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "u6bszK",
+              "name": "Row Chips and options",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "g8SNyc",
+                  "name": "Filter Chip",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "R74T3M",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 999,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "hr9uA",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "jskC1",
+                              "type": "ref",
+                              "ref": "W0HHV",
+                              "name": "Filter Chip"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BdGCE",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "l46gC",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Filter Chip",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "E9L1t",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "pill → ring 999",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XBVuZ",
+                  "name": "Reason Chip",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "CcrVm",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 999,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "b9BeS",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "wEiyC",
+                              "type": "ref",
+                              "ref": "c3s8Su",
+                              "name": "Reason Chip"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JtoPd",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "QkR8Y",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Reason Chip",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "MkTy1",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "pill → ring 999",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "h4g9sn",
+                  "name": "Suggestion Pill",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "M9J0Xb",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 999,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ZYBti",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "ni3sl",
+                              "type": "ref",
+                              "ref": "wULfL",
+                              "name": "Suggestion Pill"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "McuTL",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "z0hEb",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Suggestion Pill",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Z0rqZ",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "pill → ring 999",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L7Ck5U",
+                  "name": "Choice Option",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "mzIQf",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 14,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "hvBfX",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "WDbUr",
+                              "type": "ref",
+                              "ref": "CxmKK",
+                              "name": "Choice Option"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "a3sM7o",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "yjpb9",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Choice Option",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Wd2Va",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 10 → ring 14",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "MgztG",
+              "name": "Row Navigation and cards",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Qsm27",
+                  "name": "Sidebar Nav Item",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "GeeMe",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 13,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "wZAjM",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "MOb2X",
+                              "type": "ref",
+                              "ref": "MoK3u",
+                              "name": "Sidebar Nav Item"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QVveq",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "EIAbF",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Sidebar Nav Item",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "JfVGr",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 9 → ring 13",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YMRhu",
+                  "name": "Session Item",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "x5Vqd",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "cql3p",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "pPKNs",
+                              "type": "ref",
+                              "ref": "SEJaD",
+                              "name": "Session Item"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N8SCp",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "nEYql",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Session Item",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "aKpjr",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 8 → ring 12",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "b6sGM",
+                  "name": "Agent Card",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "FaHUE",
+                      "type": "ref",
+                      "ref": "Tx1AB",
+                      "name": "Focus Ring",
+                      "cornerRadius": 18,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "P0LjkC",
+                          "name": "Control",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "C9qYjn",
+                              "type": "ref",
+                              "ref": "VZuIf",
+                              "name": "Agent Card"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "U1iZvT",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XRNYe",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Agent Card",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "HkSQk",
+                          "name": "Radius",
+                          "fill": "$text-tertiary",
+                          "content": "radius 14 → ring 18",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kE3gE",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "j2urV",
+          "name": "Section 2 Rows in menus and lists",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "children": [
+            {
+              "id": "jvVmL",
+              "type": "ref",
+              "ref": "o1lqG",
+              "name": "Section Heading",
+              "descendants": {
+                "ukre5": {
+                  "content": "2"
+                },
+                "ldesz": {
+                  "content": "Rows in menus, the palette and lists"
+                },
+                "ryiGq": {
+                  "content": "No ring: the focused (keyboard-highlighted) row takes its highlight fill, as Command Palette already draws."
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "qMLvA",
+              "name": "Row Highlighted rows",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "o4FSj",
+                  "name": "Menu Item",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "A12ib9",
+                      "name": "Panel",
+                      "fill": "$surface",
+                      "cornerRadius": 12,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": 5,
+                      "children": [
+                        {
+                          "id": "RbFR6",
+                          "type": "ref",
+                          "ref": "koWWb",
+                          "name": "Menu Item · focused",
+                          "fill": "$hover"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CWp2z",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "dJqY8",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Menu Item",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "mikTA",
+                          "name": "Rule",
+                          "fill": "$text-tertiary",
+                          "content": "focus = $hover fill, no ring",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "p9qOPD",
+                  "name": "Agent Menu Item",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CBzXz",
+                      "name": "Panel",
+                      "fill": "$surface",
+                      "cornerRadius": 12,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": 5,
+                      "children": [
+                        {
+                          "id": "AcnS3",
+                          "type": "ref",
+                          "ref": "UauTJ",
+                          "name": "Agent Menu Item · focused",
+                          "fill": "$hover"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "gp3m5",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bwS5n",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Agent Menu Item",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "U127bl",
+                          "name": "Rule",
+                          "fill": "$text-tertiary",
+                          "content": "focus = $hover fill, no ring",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "taZrH",
+                  "name": "Palette Row",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "AibgD",
+                      "name": "Panel",
+                      "fill": "$surface",
+                      "cornerRadius": 12,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": 5,
+                      "children": [
+                        {
+                          "id": "H6HdGm",
+                          "type": "ref",
+                          "ref": "QrHIB",
+                          "name": "Palette Row · focused",
+                          "fill": "$sidebar"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HpOHU",
+                      "name": "Caption",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "iPThi",
+                          "name": "Name",
+                          "fill": "$text-primary",
+                          "content": "Palette Row",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "J0wgJT",
+                          "name": "Rule",
+                          "fill": "$text-tertiary",
+                          "content": "focus = $sidebar fill, no ring",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "Ns7FY",
+      "x": 4720,
+      "y": -7500,
+      "name": "Board note",
+      "width": 560,
+      "height": 110,
+      "content": "Focus: every focusable control gets the Focus Ring component when focused by keyboard: a 2 px $focus-ring ring (= $accent, shadcn --ring) with a 2 px gap; ring radius = the control's radius + 4, pills stay 999. Rows inside menus, the palette and lists don't get a ring: their focus is the highlight fill ($hover in menus, $sidebar in the palette)."
     }
   ],
   "variables": {
@@ -146475,6 +148080,10 @@
     "font-google": {
       "type": "string",
       "value": "Roboto"
+    },
+    "focus-ring": {
+      "type": "color",
+      "value": "#1F5C4A"
     }
   },
   "fileToken": "42ed8c3d-f685-4ad4-848f-ca92bb609058"

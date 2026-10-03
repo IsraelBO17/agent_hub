@@ -26,6 +26,7 @@ Find a node by searching for its ID from `INDEX.md`, for example `"id": "PBQLh"`
 | Area | Where (y) |
 |---|---|
 | Component library, 8 labelled groups | −7,240 to −200 |
+| "States · Focus" board, right of the component library (x 4,720), with its board note | −7,500 to ~−6,100 |
 | Core screens and interaction boards | 0 to ~5,450 |
 | Artifact screens and boards | 5,600 to ~13,400 |
 | Sessions screens and board | 13,800 |

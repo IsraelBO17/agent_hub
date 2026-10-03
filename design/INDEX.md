@@ -2,9 +2,9 @@
 
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
-- Top-level frames: 292
-- Reusable components: 102 (2895 references, nested ones included)
-- Reference screens and boards: 66
+- Top-level frames: 295
+- Reusable components: 103 (2937 references, nested ones included)
+- Reference screens and boards: 68
 - Flow screens: 93
 
 Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID>"`).
@@ -104,6 +104,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | `google-border` | color | `#747775` |
 | `google-text` | color | `#1F1F1F` |
 | `font-google` | string | `Roboto` |
+| `focus-ring` | color | `#1F5C4A` |
 
 ## Components
 
@@ -111,13 +112,13 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Button / Primary | `H0OSN` | auto×auto |  | 35 |
-| Button / Secondary | `XBZK2` | auto×auto |  | 101 |
-| Button / Danger | `HsXdL` | auto×auto |  | 6 |
-| Icon Button | `btfe4` | 32×32 |  | 97 |
+| Button / Primary | `H0OSN` | auto×auto |  | 37 |
+| Button / Secondary | `XBZK2` | auto×auto |  | 102 |
+| Button / Danger | `HsXdL` | auto×auto |  | 7 |
+| Icon Button | `btfe4` | 32×32 |  | 98 |
 | Kbd | `rjWo1` | auto×20 |  | 124 |
 | Tooltip | `fkIAs` | auto×auto |  | 3 |
-| Checkbox | `llhcq` | 16×16 |  | 18 |
+| Checkbox | `llhcq` | 16×16 |  | 19 |
 | Status Badge | `JQ0rx` | auto×auto |  | 18 |
 | Agent Avatar | `vCJQN` | 26×26 |  | 94 |
 | Inline Code | `Uzd9M` | auto×auto |  | 2 |
@@ -126,30 +127,31 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Stage Tag | `nC6tf` | auto×auto |  | 5 |
 | Google Button | `hveC0` | auto×40 |  | 6 |
 | Google Button / Loading | `Y8uI7x` | auto×40 |  | 1 |
+| Focus Ring | `Tx1AB` | auto×auto | `Control` (l33x5J): Button / Primary / Button / Secondary / Button / Danger / Icon Button / Search Field / Select Button / Checkbox / Filter Chip / Reason Chip / Suggestion Pill / Segmented Item / Choice Option / Panel Tab / Sidebar Nav Item / Session Item / Agent Card | 18 |
 
 ### 2 Inputs & Selection
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Search Field | `Wjnvx` | 240×auto |  | 17 |
-| Select Button | `ZWD7y` | auto×auto |  | 16 |
-| Segmented Item | `K1CWuA` | auto×auto |  | 14 |
-| Filter Chip | `W0HHV` | auto×auto |  | 19 |
-| Reason Chip | `c3s8Su` | auto×auto |  | 33 |
-| Suggestion Pill | `wULfL` | auto×auto |  | 15 |
-| Form Field | `s2kV7R` | 300×auto |  | 33 |
-| Toggle Row | `sQir5` | 300×auto |  | 21 |
-| Choice Option | `CxmKK` | 420×auto |  | 29 |
+| Search Field | `Wjnvx` | 240×auto |  | 18 |
+| Select Button | `ZWD7y` | auto×auto |  | 17 |
+| Segmented Item | `K1CWuA` | auto×auto |  | 15 |
+| Filter Chip | `W0HHV` | auto×auto |  | 20 |
+| Reason Chip | `c3s8Su` | auto×auto |  | 34 |
+| Suggestion Pill | `wULfL` | auto×auto |  | 16 |
+| Form Field | `s2kV7R` | 300×auto |  | 34 |
+| Toggle Row | `sQir5` | 300×auto |  | 22 |
+| Choice Option | `CxmKK` | 420×auto |  | 30 |
 | Stepper | `sV1X6` | 516×auto |  | 9 |
 
 ### 3 Menus & Overlays
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Menu Item | `koWWb` | 180×auto |  | 74 |
+| Menu Item | `koWWb` | 180×auto |  | 75 |
 | Menu Panel | `QRlRa` | 220×auto | `Items` (p97XhG): Menu Item | 18 |
-| Agent Menu Item | `UauTJ` | 288×auto |  | 21 |
-| Palette Row | `QrHIB` | 600×auto |  | 39 |
+| Agent Menu Item | `UauTJ` | 288×auto |  | 22 |
+| Palette Row | `QrHIB` | 600×auto |  | 40 |
 | Command Palette | `ZHC9i` | 640×auto | `Results` (NF5Vl): Palette Row | 5 |
 | Dialog | `dQMxZ` | 480×auto | `Body` (sYTH9) | 22 |
 | Confirm Dialog (Delete all only) | `i3B1e` | 400×auto |  | 0 |
@@ -166,13 +168,13 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 68 |
 | Sidebar Brand | `T8TdZq` | 256×auto |  | 1 |
 | Agent Switcher | `RZF5q` | 256×auto |  | 1 |
-| Sidebar Nav Item | `MoK3u` | 256×auto |  | 29 |
+| Sidebar Nav Item | `MoK3u` | 256×auto |  | 30 |
 | Sidebar Footer | `CpCSr` | 284×auto |  | 1 |
-| Session Item | `SEJaD` | 248×auto |  | 330 |
+| Session Item | `SEJaD` | 248×auto |  | 331 |
 | Session Group Label | `rQVuA` | auto×auto |  | 161 |
 | Mobile Status Bar | `CLJUJ` | 390×44 |  | 44 |
 | Home Indicator | `mSdhx` | 390×28 |  | 16 |
-| Section Heading | `o1lqG` | auto×auto |  | 32 |
+| Section Heading | `o1lqG` | auto×auto |  | 34 |
 | Tile Label | `Vu7nt` | auto×auto |  | 113 |
 
 ### 5 Composer & Messages
@@ -226,7 +228,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Download File | `s5qDxc` | 420×auto |  | 7 |
 | Artifact Card | `SMBup` | 440×auto |  | 37 |
 | Artifact Toolbar | `AwpSJ` | 720×52 | `Extra` (nkW3V) | 16 |
-| Panel Tab | `HXUoW` | auto×auto |  | 6 |
+| Panel Tab | `HXUoW` | auto×auto |  | 7 |
 | Version Row | `Z4Hd3` | 260×auto |  | 19 |
 | Library Tile | `JCduD` | 260×auto |  | 30 |
 | Artifact Card / Generating | `Apcke` | 440×auto |  | 3 |
@@ -238,7 +240,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Approval Card | `m1FtM` | 520×auto |  | 14 |
 | Permission Prompt | `YwhPJ` | 560×auto |  | 3 |
 | Detail Row | `wGPRe` | 400×auto |  | 53 |
-| Agent Card | `VZuIf` | 392×auto |  | 35 |
+| Agent Card | `VZuIf` | 392×auto |  | 36 |
 | Capability Row | `V6Dax` | 560×auto |  | 27 |
 | Approval Card / Cancelled | `G4yJz` | 520×auto |  | 1 |
 | Approval Card / Deny reason | `J6Ep4h` | 520×auto |  | 1 |
@@ -256,6 +258,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Frame | ID | Size |
 |---|---|---|
+| Board note | `Ns7FY` | 560×110 |
+| States · Focus | `Crc4x` | 2280×auto |
 | Catalog — / | `PBQLh` | 1440×1024 |
 | Chat — /agents/coding-agent/:sessionId | `wtDYF` | 1440×1024 |
 | New Session — /agents/health-assistant | `uBRCZ` | 1440×1024 |

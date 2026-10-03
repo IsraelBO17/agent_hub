@@ -18,6 +18,78 @@ Agent Hub's API was specified before this template existed, so the spec lives in
 ## 4. Features and their rules
 Capability blocks are added here by the issue that builds each feature (#6 auth, #7 agents, #8 send and stream, #9 Stop). Issue #5 (the shell) adds no operation that writes: only `GET /v1/health`, which is liveness only and never touches the database.
 
+### Feature: auth (issue #6; F13, D8, D9, D25)
+Owns `users` and `refresh_tokens`. Every other feature reads the signed-in user through `CurrentUser` (the access token), never through these tables.
+
+Shared rules:
+- **Origin check:** every `/v1/auth/*` endpoint rejects a missing `Origin`, or one not in the allowed origins, with `403 origin_not_allowed`. The cookie is `SameSite=Strict`; this is the second guard (D8).
+- **Access token:** a JWT signed with `SESSION_SIGNING_KEY` (HS256, pinned), `sub` = user id, about 15 minutes. Expired → `401 token_expired` (the client refreshes and repeats); any other fault → `401 token_invalid`.
+- **Refresh token:** 32 random bytes, stored only as a SHA-256 hash. Cookie `ah_refresh=<token>; HttpOnly; Secure; SameSite=Strict; Path=/v1/auth; Max-Age=2592000`, host-only on `api-fleet.qucoon.com`. Every sign-in starts a **family**; each refresh rotates within it.
+
+#### capability: `sign_in_with_google` → `AuthService.sign_in()` (POST /v1/auth/google)
+- **intent:** turn a Google ID token into an Agent Hub session.
+- **actor / authz:** anyone; only invited or active users get a session (D9).
+- **inputs:** `idToken` (string); the `Origin` header; user agent and client IP for the token row.
+- **rejections:**
+  - `Origin` missing or not allowed → `403 origin_not_allowed`
+  - body invalid → `422 invalid_request`
+  - ID token fails verification: bad signature, `aud` ≠ `GOOGLE_CLIENT_ID`, `iss` not Google, expired, or `email_verified` not true → `401 invalid_google_token`
+  - Google's key set can't be fetched → `503 identity_provider_unavailable` (retryable)
+  - no user with this Google `sub`, and no `invited` user with this email → `403 not_invited`, with `email` in the problem
+  - user `disabled` → `403 account_disabled`
+- **effect:**
+  - Find the user by Google `sub`. Failing that, find the `invited` user by email (case-insensitive) and activate it: set `google_sub`, `status = active`.
+  - Refresh `name`, `avatar_url` and `last_login_at` from the token.
+  - Insert a refresh token in a new family.
+  - Return `{accessToken, expiresAt, user: Me}` and set the cookie.
+- **cross-feature:** none.
+- **transaction:** Google's token is verified **before** the transaction (an outside call never runs inside one); the user update and the token insert are one commit.
+- **side effects:** none (no job).
+- **idempotency:** each sign-in is a new session; a retried request just makes a second family.
+- **audit:** `last_login_at`, plus the token row's user agent and IP.
+- **invariants:** an `active` user always has a `google_sub` (database CHECK); a Google `sub` maps to at most one user.
+
+#### capability: `refresh_session` → `AuthService.refresh()` (POST /v1/auth/refresh)
+- **intent:** keep a signed-in browser signed in without Google.
+- **actor / authz:** whoever holds the refresh cookie.
+- **inputs:** the `ah_refresh` cookie; `Origin`.
+- **rejections:**
+  - `Origin` missing or not allowed → `403 origin_not_allowed`
+  - no cookie, unknown token, expired, or revoked → `401 session_expired`
+  - token already **rotated** (reuse) → revoke the whole family (committed), then `401 session_expired`
+  - user `disabled` → revoke the family, then `403 account_disabled`
+- **effect:** mark the token rotated and insert its successor in the same family, with a fresh 30 days; return `{accessToken, expiresAt}` and set the new cookie.
+- **transaction:** rotation is one commit. A revocation that must survive the error commits first, and the error is raised after the transaction (standard §11.2).
+- **cross-feature:** none. **side effects:** none.
+- **idempotency:** not idempotent by design. A second use of the same token is reuse, which signs the family out: that's the theft signal (D8).
+- **audit:** the rotated and revoked timestamps on the rows.
+- **invariants:** at most one live (not rotated, not revoked) token per family.
+
+#### capability: `sign_out` → `AuthService.sign_out()` (POST /v1/auth/logout)
+- **intent:** sign out on this device.
+- **inputs:** the `ah_refresh` cookie, if any; `Origin`.
+- **rejections:** `Origin` missing or not allowed → `403 origin_not_allowed`. Nothing else: a missing, unknown or expired cookie still returns `204`.
+- **effect:** revoke the cookie's family if the token is known; clear the cookie (`Max-Age=0`); return `204`.
+- **cross-feature:** none. **transaction:** one commit. **side effects:** none.
+- **idempotency:** yes; repeating it returns `204`.
+- **audit:** `revoked_at`. **invariants:** as refresh.
+
+#### capability: `get_me` → `AuthService.me()` (GET /v1/me)
+- **intent:** who is signed in, for the shell and Settings.
+- **actor / authz:** a valid access token.
+- **rejections:** `401 token_expired` or `token_invalid`; a token whose user no longer exists or is disabled → `401 token_invalid`.
+- **effect:** returns `Me`. `preferences` default to `{defaultAgentSlug: null, reopenLastSession: false}` when unset.
+- **transaction:** read only. **cross-feature, side effects, idempotency, audit:** none / yes. **invariants:** none.
+
+(`PATCH /v1/me` is P1 and not part of this issue.)
+
+#### operation: `invite_user` → `app.cli users invite <email>` (operator only, no HTTP)
+- **intent:** let a person sign in; v1 has one user, the owner (D9).
+- **effect:** insert `users(email, status = invited, invited_at = now())`. An email that already exists is reported and left unchanged.
+- **run:** `make -C api invite email=<address>` against the database in `DATABASE_URL_DIRECT`; for dev, Neon's direct URL from Secrets Manager.
+
+**Decided with the owner (2026-10-03):** the owner is invited by email and activated on first sign-in; an unreachable Google key set is `503 identity_provider_unavailable` (added to the contract); this pass builds the API half, and the web screens follow the web shell (#4).
+
 ## 5–8. Non-functional needs, integrations, background work, deployment
 See the profile and ARCHITECTURE: one user in v1 (D9), AgentCore runtimes by exact ARN (D27), Neon Postgres (D3), ECS Fargate behind an ALB (D2), the worker inside the API task (P7).
 

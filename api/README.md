@@ -37,6 +37,8 @@ make api-migrate && make api-run
 
 A local access token for curl: `make -C api token`.
 
+**Swagger UI (local only):** `make -C api docs` serves the contract at `http://localhost:8000/docs`, pointed at your local API, and prints an access token for an active local test user: click **Authorize** and paste it. Everything except `POST /v1/auth/google` works there (that needs a real Google ID token for our client ID). The test user is refused on any non-local database.
+
 ## Changing the schema
 
 1. Edit the models.
