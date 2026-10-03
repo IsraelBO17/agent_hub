@@ -1,47 +1,46 @@
 /*
- * shadcn's variables, pointed at the generated design tokens (standard §8.1). Hand-kept: `var()` only,
- * never a raw value. Dark mode needs nothing here: tokens.css flips the design tokens under `.dark`.
- * When a design token and a shadcn variable share a name but not a meaning, the design wins and the
- * project profile records the clash. Here the design's chart colours are used as shadcn's chart colours,
- * so `--color-chart-*` is not re-mapped below (it would point at itself).
+ * shadcn's variables, pointed at the generated design tokens (standard §8.1; UI_COMPONENTS §1). Hand-kept:
+ * `var()` only, never a raw value. Light theme only (PRODUCT_PLAN §9 item 12): no `.dark` block.
+ *
+ * Name clashes (WEB_PROFILE, shadcn mapping): the design's `accent` is the brand green and maps to shadcn's
+ * `--primary`; shadcn's `--accent` (a menu item's hover fill) maps to the design's `hover`. The design's
+ * `accent`, `border` and `sidebar` colours keep their own meaning as Tailwind colours (`bg-accent` is green),
+ * so `@theme inline` below doesn't redefine `--color-accent`, `--color-border` or `--color-sidebar`;
+ * primitives use `bg-hover` where shadcn writes `bg-accent`.
  */
 :root {
-  --background: var(--color-surface);
+  --background: var(--color-bg);
   --foreground: var(--color-text-primary);
-  --card: var(--color-surface-raised);
+  --card: var(--color-surface);
   --card-foreground: var(--color-text-primary);
-  --popover: var(--color-surface-raised);
+  --popover: var(--color-surface);
   --popover-foreground: var(--color-text-primary);
-  --primary: var(--color-brand);
-  --primary-foreground: var(--color-on-brand);
-  --secondary: var(--color-surface-muted);
+  --primary: var(--color-accent);
+  --primary-foreground: var(--color-on-accent);
+  --secondary: var(--color-surface);
   --secondary-foreground: var(--color-text-primary);
   --muted: var(--color-surface-muted);
-  --muted-foreground: var(--color-text-secondary);
+  --muted-foreground: var(--color-text-tertiary);
   --accent: var(--color-hover);
   --accent-foreground: var(--color-text-primary);
   --destructive: var(--color-danger);
-  --border: var(--color-line);
-  --input: var(--color-line);
-  --ring: var(--color-brand);
-  --chart-1: var(--color-chart-1);
-  --chart-2: var(--color-chart-2);
-  --chart-3: var(--color-chart-3);
-  --chart-4: var(--color-chart-4);
-  --chart-5: var(--color-chart-5);
-  --radius: var(--radius-base);
-  --sidebar: var(--color-surface-muted);
+  --border: var(--color-border);
+  --input: var(--color-border);
+  --ring: var(--color-focus-ring);
+  --radius: var(--radius-9);
+  --sidebar: var(--color-sidebar);
   --sidebar-foreground: var(--color-text-primary);
-  --sidebar-primary: var(--color-brand);
-  --sidebar-primary-foreground: var(--color-on-brand);
+  --sidebar-primary: var(--color-accent);
+  --sidebar-primary-foreground: var(--color-on-accent);
   --sidebar-accent: var(--color-hover);
   --sidebar-accent-foreground: var(--color-text-primary);
-  --sidebar-border: var(--color-line);
-  --sidebar-ring: var(--color-brand);
+  --sidebar-border: var(--color-border);
+  --sidebar-ring: var(--color-focus-ring);
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-ui);
+  --font-heading: var(--font-ui);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -54,13 +53,10 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
@@ -68,9 +64,15 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
+  /* shadcn's radius and shadow names, aliased onto the design's scales until each primitive is restyled. */
+  --radius-sm: var(--radius-6);
+  --radius-md: var(--radius-8);
+  --radius-lg: var(--radius-9);
+  --radius-xl: var(--radius-12);
+  --radius-2xl: var(--radius-16);
+  --shadow-xs: var(--shadow-control);
+  --shadow-sm: var(--shadow-control);
+  --shadow-md: var(--shadow-popover);
+  --shadow-lg: var(--shadow-popover);
+  --shadow-xl: var(--shadow-dialog);
 }

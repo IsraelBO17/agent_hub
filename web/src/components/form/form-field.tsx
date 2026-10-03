@@ -27,7 +27,7 @@ export function FormField({ label, hint, required, error, children }: Props) {
     <Field data-invalid={error ? true : undefined}>
       <FieldLabel htmlFor={id}>
         {label}
-        {required ? <span aria-hidden className="text-destructive">*</span> : null}
+        {required ? <span aria-hidden className="font-normal text-danger">*</span> : null}
       </FieldLabel>
       {children({
         id,

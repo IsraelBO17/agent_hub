@@ -7,7 +7,7 @@
 | Version | 0.1.0 |
 | Stage | Build (M1) |
 | Project profile | [`../docs/WEB_PROFILE.md`](../docs/WEB_PROFILE.md) |
-| Standard | Web Development Standard 1.0 |
+| Standard | Web Development Standard 1.1 |
 
 Agent Hub's web app was specified before this template existed, so the spec lives in the planning documents rather than in this file. This file indexes them, maps the routes to their design frames, and holds the screen blocks for screens as they are built (standard §5, Appendix A).
 
@@ -39,23 +39,31 @@ Navigation (PRODUCT_PLAN §5, design `Sidebar` `hj5RV`): brand and collapse; Age
 ## 3. Screen blocks
 One per screen. The code follows the block; when a screen changes, its block changes first. Issue #4 builds every route above as a placeholder inside the shell; the issue in the table's last column replaces the placeholder with the real screen and rewrites its block.
 
+### shell: layouts and navigation (issue #4)
+- **HubLayout** (`/`, `/agents/:agentId/about`, `*`): the App Header (`fqLch`, 64 px: brand, account) and no desktop sidebar; content padded 48 × 120. On mobile the header is the 52 px Top Bar with the menu, which opens the sessions drawer.
+- **WorkspaceLayout** (`/agents/:agentId`, `/agents/:agentId/:sessionId`, `/artifacts`, `/archived`, `/settings`): the Sidebar (`hj5RV`, 284 px), collapsible on desktop; on mobile it is the drawer (F10.5, 316 px, over the scrim). Agent pages have the Chat Header (`H0YWK`, 60 px; 52 px on mobile) and the chat column (760 px); the others pad their content 36 × 48 and show a bar only for the menu (mobile, or a collapsed sidebar).
+- **Sidebar contents:** brand and collapse; the Agent Switcher; New session (the current agent's new session, or the catalog when no agent is in the URL); Search (disabled, "Soon": the ⌘K palette is P1); the session list; the footer with the user and links to All agents, Artifacts, Archived and Settings.
+- **data:** none in #4. The Agent Switcher, the session list, the user and the Chat Header's agent show their loading skeletons, the designed loading state, until #6 (user), #7 (agents) and #8 (sessions) load them.
+- **states:** sidebar expanded / collapsed (desktop); drawer open / closed (mobile). Keyboard: skip link first; focus moves to the page's h1 after navigation; a collapsed sidebar is inert.
+- **open questions:** none.
+
 ### screen: Catalog (`/`)
 - **purpose:** see every agent and continue where you left off.
 - **design:** `PBQLh`; mobile F10.1 `UK1JP`.
 - **data:** none yet (#7: `GET /v1/agents`).
-- **states:** placeholder: the page title and the shell. #7 adds loading, empty (`j8NhJ`), error (`Jchi9`) and success.
+- **states:** placeholder: "Your agents" and an empty state. #7 adds loading, empty (`j8NhJ`), error (`Jchi9`) and success.
 - **open questions:** none.
 
 ### screen: New session (`/agents/:agentId`), Session (`/agents/:agentId/:sessionId`)
 - **purpose:** start a session with an agent; chat in a session.
 - **design:** `uBRCZ`, `wtDYF`; mobile F11.2 `HgtnP`, F11.5 `DNypg`. Header: `Chat Header` `H0YWK`.
 - **data:** none yet (#7 agents, #8 sessions, messages and the stream).
-- **states:** placeholder: the page title, the ids from the URL, and the chat column (about 760 px).
+- **states:** placeholder: the Chat Header (agent skeleton, then "New session" or "Session" as the h1) and an empty state in the chat column.
 - **open questions:** none.
 
 ### screen: Agent detail, Artifacts library, Archived sessions, Settings, Shared session (P1)
 - **purpose:** PRODUCT_PLAN §5.
-- **design:** see §2.
+- **design:** see §2. Agent detail sits in HubLayout; the shared session has no shell (public).
 - **data:** none until each is built.
 - **states:** placeholder: the page title and "Coming later".
 - **open questions:** none.

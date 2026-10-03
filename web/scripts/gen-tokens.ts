@@ -1,21 +1,26 @@
-// `make tokens`: design variables → src/styles/tokens.css (standard §8.1). `--check` fails if the file is stale.
+// `make tokens`: design variables → src/styles/tokens.css and src/lib/token-names.ts (standard §8.1).
+// `--check` fails if either file is stale.
 import { readFileSync, writeFileSync } from 'node:fs'
-import { readDesign } from './tokens/read-design.ts'
-import { writeCss } from './tokens/write-css.ts'
+import { readSources, sources } from './tokens/read-design.ts'
+import { writeCss, writeNames } from './tokens/write-css.ts'
 
-const source = 'design/tokens.json'
-const target = 'src/styles/tokens.css'
-
-const css = writeCss(readDesign(JSON.parse(readFileSync(source, 'utf8')) as Record<string, unknown>), source)
+const set = readSources((path) => readFileSync(path, 'utf8'))
+const outputs: [string, string][] = [
+  ['src/styles/tokens.css', writeCss(set, sources)],
+  ['src/lib/token-names.ts', writeNames(set, sources)],
+]
 
 if (process.argv.includes('--check')) {
-  let current = ''
-  try { current = readFileSync(target, 'utf8') } catch { /* missing counts as stale */ }
-  if (current !== css) {
-    process.stderr.write(`${target} is out of date. Run \`make tokens\`.\n`)
+  const stale = outputs.filter(([target, text]) => {
+    try { return readFileSync(target, 'utf8') !== text } catch { return true }
+  })
+  if (stale.length > 0) {
+    process.stderr.write(`${stale.map(([t]) => t).join(' and ')} out of date. Run \`make tokens\`.\n`)
     process.exit(1)
   }
 } else {
-  writeFileSync(target, css)
-  process.stdout.write(`Wrote ${target}\n`)
+  for (const [target, text] of outputs) {
+    writeFileSync(target, text)
+    process.stdout.write(`Wrote ${target}\n`)
+  }
 }

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft, written before `web/` exists. Update it as components are built. |
+| Status | In use since issue #4 (`web/` exists, tokens generated). Update it as components are built. |
 | Date | 2026-10-03 |
 | Decision | ARCHITECTURE D28 (shadcn/ui, Base UI implementation, no Radix) |
 | Source of truth for looks | [`design/fleet_dev.pen`](../design/fleet_dev.pen); IDs below are from [`design/INDEX.md`](../design/INDEX.md) |
@@ -11,11 +11,12 @@ shadcn/ui supplies the structure and the accessible behaviour. The Pencil file d
 
 ## 1. Setup, when `web/` is created
 
-- **Init:** `npx shadcn@latest init -t vite --base base` (shadcn CLI 4.x, `@base-ui/react` 1.x). Icons: lucide (shadcn's default, and the design's).
+- **Init:** done by the `web-standard` template (`components.json`, style `base-nova`: shadcn on Base UI). Icons: lucide (shadcn's default, and the design's). After `npx shadcn@latest add`, change the file's `import { cn } from "cn"` to `@/lib/utils` (WEB_PROFILE, Type scale).
 - **Folders:** `web/src/components/ui/` holds the generated primitives, restyled in place. `web/src/components/application/` holds the app components that compose them (§3, §4).
 - **Add primitives in the issue that first needs them** (`npx shadcn@latest add <name>`), then restyle that file to its Pencil component before it's used.
-- **No Radix.** Don't add shadcn `command` (its `cmdk` dependency pulls in `@radix-ui/react-dialog`). Add a CI check once `web/` exists: `npm ls --all | grep @radix-ui` must find nothing.
-- **Light theme only.** No dark tokens or screens exist (PRODUCT_PLAN §9 item 12), so drop the `.dark` block that shadcn generates.
+- **No Radix.** Don't add shadcn `command` (its `cmdk` dependency pulls in `@radix-ui/react-dialog`). `make check` in `web/` fails if `npm ls --all` finds any `@radix-ui` package.
+- **Light theme only.** No dark tokens or screens exist (PRODUCT_PLAN §9 item 12): `theme.css` has no `.dark` block, and `.dark` is never set, so the primitives' `dark:` styles never apply.
+- **Restyled in #4** (every primitive `web/` has): Button (variants `primary`, `secondary`, `danger`, `ghost`; icon sizes), Tooltip (no arrow), Sidebar (widths), Sheet (scrim), Card (Content Card `l5WJH`), Dialog (with a `DialogBody` part), Confirm Dialog, Form Field (Field, Label, Input, Textarea), Empty State, Page Heading. The rest of §2 is added by the issue that first needs it. Disabled (50 %) and invalid (`danger` border) stand in until those states are drawn (§5 item 2).
 
 ### Tokens
 

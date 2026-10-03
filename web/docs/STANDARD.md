@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Owner | Boluwatife Israel |
-| Version | 1.0 (2026-10-03): first version |
+| Version | 1.1 (2026-10-03): monorepo setup (recipe 1, step 0; `CONTRACT` in the Makefile); mock response helpers outlive the example; tokens from several sources, with shadows and the radius and shadow scales owned by the design; `cn` told the design's size names; `make check` rejects font sizes outside the type scale; the axe helper skips endless animations. 1.0 (2026-10-03): first version |
 | Applies to | Every web frontend I build, for any project |
 | Default stack | **React 19, TypeScript, Vite, React Router, TanStack Query, shadcn/ui on Tailwind, npm** (§3). Anything else is a documented exception. |
 | Structure | §1–25 are the standard. §26 explains **profiles**: one per project, kept in that project's repository. Appendices hold templates and reference code. |
@@ -97,7 +97,7 @@ Each screen gets a **screen block** in `SPEC.md` before its code: route, purpose
 
 ## 6. Repository
 
-- One repository per app, created from the **web-standard** template, named by the profile (for example `<project>-web`). When the app lives inside a product monorepo, the template's contents go in that repository's web folder.
+- One repository per app, created from the **web-standard** template, named by the profile (for example `<project>-web`). When the app lives inside a product monorepo, the template's contents go in that repository's web folder, and what must sit at the repository root moves there (recipe 1, step 0): the CI workflow (run in the folder, filtered to its paths), the Dependabot entry, and any root shortcuts. The `Makefile`'s `CONTRACT` points at the contract wherever it lives.
 
 ```
 <app>/
@@ -110,7 +110,7 @@ Each screen gets a **screen block** in `SPEC.md` before its code: route, purpose
 ├── .claude/skills/         Claude Code skills that run the recipes (§6.1)
 ├── .github/                workflows/ci.yml, dependabot.yml
 ├── design/                 The design tool's exported variables (tokens.json), when the design file isn't in this repository
-├── contract/openapi.yaml   The API contract, unless the profile points elsewhere
+├── contract/openapi.yaml   The API contract, unless the profile points elsewhere (`CONTRACT` in the Makefile)
 ├── scripts/                gen-tokens.ts (+ tokens/ adapter), check-tokens.ts, check-bundle.ts, check-audit.ts
 ├── e2e/                    Playwright specs
 ├── public/                 Static files served as is
@@ -125,10 +125,10 @@ Each screen gets a **screen block** in `SPEC.md` before its code: route, purpose
     ├── models/             Domain types and toDomain mappers
     ├── store/              Zustand stores (rare)
     ├── provider/           App-wide providers and the query client (auth wiring, toasts, tooltips)
-    ├── lib/                Third-party setup (monitoring, `cn`)
+    ├── lib/                Third-party setup (monitoring, `cn`), token-names.ts (generated)
     ├── utils/              Pure helpers (formatDate, formatMoney)
     ├── hooks/              Domain-free hooks
-    ├── mocks/              MSW handlers/, data/, scenarios/
+    ├── mocks/              MSW handlers/ (index.ts lists them), data/, scenarios/, responses.ts (problem, sse, event)
     ├── styles/             tokens.css (generated), theme.css (shadcn mapping), globals.css
     └── test/               Vitest setup and render helpers
 ```
@@ -211,15 +211,16 @@ modules/<feature>/
 
 ### 8.1 Tokens
 - The design tool is the source. Its variables are exported (or read directly from the design file) and **generated** into `src/styles/tokens.css` by `scripts/gen-tokens.ts` (`make tokens`). The generated file starts with a "generated, do not edit" header and is committed. Hand-copying a value from the design is never allowed.
-- The generator writes Tailwind 4 `@theme static` variables (`--color-*`, `--font-*`, `--radius-*`, `--text-*`; `static` keeps tokens that only `theme.css` uses) and `--layout-*` sizes, keeping the design's token names. Where the design has a dark mode, it writes the dark values under the dark selector; one style, and the scheme flips it.
-- **Type scale.** Tailwind's default font sizes are removed (`--text-*: initial`) and only the design's scale is defined, each size with its line height. Arbitrary sizes (`text-[17px]`) are rejected by `make check` (§23).
+- The generator writes Tailwind 4 `@theme static` variables (`--color-*`, `--font-*`, `--radius-*`, `--shadow-*`, `--text-*`; `static` keeps tokens that only `theme.css` uses) and `--layout-*` sizes, keeping the design's token names. It reads every source the adapter lists (the design tool's variables, and a profile-named file for what the tool has no variables for). Where the design has a dark mode, it writes the dark values under the dark selector; one style, and the scheme flips it.
+- **Scales the design owns.** Tailwind's default type scale is always removed; its radius and shadow scales are removed when the design defines its own. `theme.css` aliases shadcn's names onto the design's, so vendored primitives keep working until restyled.
+- **Type scale.** Tailwind's default font sizes are removed (`--text-*: initial`) and only the design's scale is defined, each size with its line height. Arbitrary sizes (`text-[17px]`) and sizes the scale doesn't define are rejected by `make check` (§23).
 - **shadcn mapping.** shadcn components read their own variables (`--background`, `--primary`, `--accent`, `--ring`, `--sidebar-*`, …). `src/styles/theme.css` sets each one to a design token, `var(--…)` only, never a raw value. When a design token and a shadcn variable share a name but not a meaning, the design's meaning wins, the shadcn variable is pointed at the right token, and the profile records the clash.
 - Include the status palette and the chart colours as tokens. Agent-authored or user-authored content (an uploaded document, a generated page) is not themed and isn't subject to this rule.
 
 ### 8.2 Styling
 - **Precedence, in order:** (1) tokens and the shadcn variant (`cva`) for how a kind of component looks app-wide; (2) a composite component in `components/ui` for a reusable app-specific piece; (3) inline Tailwind classes for genuine one-offs. A repeated inline style is not a one-off; promote it.
 - Never hardcode a hex, pixel size or font name in a component. If a token is missing, add it in the design and regenerate.
-- Compose classes with `cn` (from `@/lib/utils`). Keep the type scale's Tailwind names (`text-xs`, `text-sm`, …) so `cn` merges them correctly.
+- Compose classes with `cn` (from `@/lib/utils`, never straight from the `cn` package). It is built with `createCn` and told the design's size names (`src/lib/token-names.ts`, generated), so a numeric size like 13 merges correctly next to a text colour.
 
 ### 8.3 Components
 - Primitives come from shadcn (`npx shadcn@latest add <name>`), never written from memory. Vendored files stay close to upstream; customise through tokens, variants and `className`, and note each change at the top of the file (`// Customised: …`). Never keep a second copy of a primitive. If a primitive depends on a Next.js-only package (shadcn's Sonner wrapper reads `next-themes`), replace that dependency.
@@ -422,7 +423,7 @@ modules/<feature>/
 
 **Vendored files.** The files `npx shadcn add` writes are listed in `eslint.config.js` (`vendored`) and `scripts/check-tokens.ts` (`skip`): they keep their upstream shape and skip the stylistic type-aware rules. App composites beside them in `components/ui` are held to every rule.
 
-**Token check.** `scripts/check-tokens.ts` fails on hex colours, `rgb(`/`oklch(` literals, arbitrary font sizes (`text-[…]`) and arbitrary pixel values (`-[…px]`) in `src/`, outside generated files, mocks, tests and vendored files. `scripts/gen-tokens.ts --check` fails when `tokens.css` is stale.
+**Token check.** `scripts/check-tokens.ts` fails on hex colours, `rgb(`/`oklch(` literals, arbitrary font sizes (`text-[…]`) and arbitrary pixel values (`-[…px]`) in `src/`, outside generated files, mocks, tests and vendored files; and on a font-size class the type scale doesn't define, vendored files included. `scripts/gen-tokens.ts --check` fails when `tokens.css` or `token-names.ts` is stale.
 
 **Compatibility notes** (2026-10): `eslint-plugin-react` and `eslint-plugin-jsx-a11y` don't yet declare ESLint 10; the template installs them with `overrides` (`"eslint": "$eslint"`) and wraps `eslint-plugin-react` in `fixupPluginRules` from `@eslint/compat`. `openapi-typescript` declares TypeScript 5 only; the template overrides its peer to the installed TypeScript. MSW 3's Node interceptor trips an undici assertion when a test cancels a mocked response body mid-read; `vite.config.ts` ignores exactly that error (`test.onUnhandledError`), and every other unhandled error still fails the run. Remove each workaround when the package catches up.
 
@@ -436,7 +437,7 @@ modules/<feature>/
 
 ## 25. CI, versioning and release
 
-- CI (GitHub Actions) runs on every pull request and on `main`: `npm ci`, then `make check` (types, lint, token check, unit and component tests, contract drift, build, bundle budget, audit), then `make e2e` (Playwright with axe, in mock mode). Third-party actions are pinned by commit SHA with the version in a comment; `permissions: contents: read`. Playwright reports and traces are uploaded on failure.
+- CI (GitHub Actions) runs on every pull request and on `main` (in a monorepo: in the app's folder, on changes to it or the contract): `npm ci`, then `make check` (types, lint, token check, unit and component tests, contract drift, build, bundle budget, audit), then `make e2e` (Playwright with axe, in mock mode). Third-party actions are pinned by commit SHA with the version in a comment; `permissions: contents: read`. Playwright reports and traces are uploaded on failure.
 - Dependabot opens weekly updates for npm and GitHub Actions.
 - The app's version (semver) is in `package.json`; `CHANGELOG.md` gets one line per release. The build stamps the git SHA as the release (`VITE_RELEASE`).
 
@@ -513,7 +514,7 @@ export default defineConfig({
 ```
 
 ### C2. Tokens (§8.1)
-`scripts/gen-tokens.ts` reads the design's variables through an adapter (`scripts/tokens/read-design.ts`, DTCG JSON by default) and writes `src/styles/tokens.css`:
+`scripts/gen-tokens.ts` reads the design's variables through an adapter (`scripts/tokens/read-design.ts`, DTCG JSON by default; it lists its `sources` and builds the token set in `readSources`) and writes `src/styles/tokens.css` and `src/lib/token-names.ts`:
 ```css
 /* Generated by scripts/gen-tokens.ts from design/tokens.json. Do not edit: change the design and run `make tokens`. */
 @theme static {
@@ -524,6 +525,8 @@ export default defineConfig({
   …
   --color-brand: #2f54d1;
   …
+  --radius-*: initial;
+  --radius-base: 0.625rem;
 }
 
 .dark {
@@ -540,6 +543,13 @@ export default defineConfig({
   --radius: var(--radius-base);
   …
 }
+```
+```ts
+// src/lib/utils.ts
+import { createCn } from 'cn/config'
+import { fontSizes, radii, shadows } from '@/lib/token-names'
+
+export const cn = createCn({ extend: { theme: { text: [...fontSizes], radius: [...radii], shadow: [...shadows] } } })
 ```
 
 ### C3. Route table, and the auth guard recipe 8 adds (§9, §14)
@@ -940,19 +950,13 @@ export async function readSse(body: ReadableStream<Uint8Array>,
 
 ### C7. Mocks and boot (§11.5)
 ```ts
-// src/mocks/handlers/notes.ts
-// MSW handlers for the notes contract (standard §11.5): an in-memory store, problem details on errors,
-// and a streamed summary.
-import { http, HttpResponse } from 'msw/http'
+// src/mocks/responses.ts
+// Response helpers every handler uses (standard §11.5): problem details on errors, and SSE streams.
+import { HttpResponse } from 'msw/http'
 import { delay } from 'msw/utils/delay'
-import { seedNotes } from '@/mocks/data/notes'
-import type { Note, NoteInput, NotePage, Problem } from '@/service/generated/schema'
+import type { Problem } from '@/service/generated/schema'
 
-const PAGE_SIZE = 20
-let notes = seedNotes()
-export const resetNotes = (next: Note[] = seedNotes()) => { notes = next }
-
-export const problem = (status: number, code: string, title: string, extra: Partial<Problem> = {}) =>
+export const problem = (status: number, code: Problem['code'], title: string, extra: Partial<Problem> = {}) =>
   HttpResponse.json<Problem>({ type: 'about:blank', status, code, title, requestId: `req_${code}`, retryable: status >= 500, ...extra },
     { status, headers: { 'content-type': 'application/problem+json' } })
 
@@ -971,11 +975,31 @@ export const sse = (frames: string[], gapMs = 60) =>
     { headers: { 'content-type': 'text/event-stream', 'cache-control': 'no-cache' } },
   )
 export const event = (id: number, type: string, data: unknown) => `id: ${String(id)}\nevent: ${type}\ndata: ${JSON.stringify(data)}\n\n`
+```
+```ts
+// src/mocks/handlers/notes.ts (excerpt)
+import { http, HttpResponse } from 'msw/http'
+import { seedNotes } from '@/mocks/data/notes'
+import { event, problem, sse } from '@/mocks/responses'
+import type { Note, NoteInput, NotePage } from '@/service/generated/schema'
 
-const summaryOf = (note: Note) => `**${note.title}**: ${note.body.split(/\s+/).slice(0, 12).join(' ')}…`
+let notes = seedNotes()
+export const resetNotes = (next: Note[] = seedNotes()) => { notes = next }
 
 export const noteHandlers = [
-…
+  http.get('*/v1/notes/:noteId', ({ params }) => {
+    const note = notes.find((n) => n.id === params.noteId)
+    return note ? HttpResponse.json(note) : problem(404, 'not_found', 'Note not found')
+  }),
+  …
+]
+```
+```ts
+// src/mocks/handlers/index.ts
+import type { RequestHandler } from 'msw'
+import { noteHandlers } from '@/mocks/handlers/notes'
+
+export const handlers: RequestHandler[] = [...noteHandlers]
 ```
 ```tsx
 // src/main.tsx

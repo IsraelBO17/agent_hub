@@ -735,6 +735,7 @@ export interface components {
          *     - `payload_too_large` [413] the request body is over the limit (files go to S3 directly, D7)
          *     - `too_many_runs` [429] three replies already running for this user
          *     - `agent_unavailable` [503, event] agent offline, or AgentCore unreachable
+         *     - `identity_provider_unavailable` [503] Google's signing keys couldn't be fetched during sign-in; retry
          *     - `shutting_down` [503] the API task is draining for a deploy; retry (`retryAfter`) (P2)
          *     - `agent_error` [event] the agent failed mid-run
          *     - `rate_limited` [event] AgentCore or the model throttled the call (`retryAfter`)
@@ -743,7 +744,7 @@ export interface components {
          *     - `internal_error` [500, event]
          * @enum {string}
          */
-        ErrorCode: "invalid_request" | "empty_message" | "message_too_long" | "too_many_files" | "file_too_large" | "file_type_not_allowed" | "attachments_not_supported" | "upload_mismatch" | "confirmation_required" | "token_invalid" | "token_expired" | "invalid_google_token" | "session_expired" | "origin_not_allowed" | "not_invited" | "account_disabled" | "forbidden" | "agent_not_found" | "session_not_found" | "message_not_found" | "approval_not_found" | "file_not_found" | "artifact_not_found" | "share_not_found" | "not_found" | "method_not_allowed" | "conflict" | "run_in_progress" | "agent_retired" | "not_retryable" | "approval_not_pending" | "question_not_open" | "idempotency_conflict" | "file_not_ready" | "file_attached" | "payload_too_large" | "too_many_runs" | "agent_unavailable" | "shutting_down" | "agent_error" | "rate_limited" | "run_time_limit" | "run_interrupted" | "internal_error";
+        ErrorCode: "invalid_request" | "empty_message" | "message_too_long" | "too_many_files" | "file_too_large" | "file_type_not_allowed" | "attachments_not_supported" | "upload_mismatch" | "confirmation_required" | "token_invalid" | "token_expired" | "invalid_google_token" | "session_expired" | "origin_not_allowed" | "not_invited" | "account_disabled" | "forbidden" | "agent_not_found" | "session_not_found" | "message_not_found" | "approval_not_found" | "file_not_found" | "artifact_not_found" | "share_not_found" | "not_found" | "method_not_allowed" | "conflict" | "run_in_progress" | "agent_retired" | "not_retryable" | "approval_not_pending" | "question_not_open" | "idempotency_conflict" | "file_not_ready" | "file_attached" | "payload_too_large" | "too_many_runs" | "agent_unavailable" | "identity_provider_unavailable" | "shutting_down" | "agent_error" | "rate_limited" | "run_time_limit" | "run_interrupted" | "internal_error";
         /** @description RFC 9457 problem details with Agent Hub extensions. */
         Problem: {
             /**
@@ -2109,6 +2110,16 @@ export interface operations {
                 };
             };
             422: components["responses"]["Invalid"];
+            /** @description `identity_provider_unavailable`: Google's signing keys couldn't be fetched; retry (`retryAfter`). */
+            503: {
+                headers: {
+                    "X-Request-Id": components["headers"]["XRequestId"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
         };
     };
     refreshSession: {
@@ -2154,6 +2165,7 @@ export interface operations {
                 };
                 content?: never;
             };
+            403: components["responses"]["Forbidden"];
         };
     };
     getMe: {

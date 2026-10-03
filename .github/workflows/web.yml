@@ -1,12 +1,12 @@
 # The web app's done gate (web standard §25): `make check`, then the browser suite in mock mode, in web/.
-# Runs when the web app, the contract it reads or this workflow changes.
+# Runs when the web app, the contract or design file it reads, or this workflow changes.
 name: web
 on:
   pull_request:
-    paths: ["web/**", "api/openapi.yaml", ".github/workflows/web.yml"]
+    paths: ["web/**", "api/openapi.yaml", "design/fleet_dev.pen", ".github/workflows/web.yml"]
   push:
     branches: [main]
-    paths: ["web/**", "api/openapi.yaml", ".github/workflows/web.yml"]
+    paths: ["web/**", "api/openapi.yaml", "design/fleet_dev.pen", ".github/workflows/web.yml"]
 permissions:
   contents: read
 concurrency:

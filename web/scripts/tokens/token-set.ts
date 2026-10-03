@@ -8,6 +8,8 @@ export interface TokenSet {
   fontFamilies: { name: string; stack: string[] }[]
   fontSizes: FontSizeToken[]
   radii: { name: string; value: string }[]
+  /** Box shadows as CSS values (`0 1px 2px #0000000f`, several separated by commas). */
+  shadows: { name: string; value: string }[]
   /** Layout sizes (sidebar width, content width, …), written as plain custom properties. */
   layout: { name: string; value: string }[]
 }

@@ -3,7 +3,14 @@ import { expectAccessible } from './axe.ts'
 
 // Every route loads, by deep link, with no console errors and no blocking accessibility issues.
 const routes: { path: string; heading: string; apiStatus?: number }[] = [
-  { path: '/', heading: 'All agents' },
+  { path: '/', heading: 'Your agents' },
+  { path: '/agents/coding-agent', heading: 'New session' },
+  { path: '/agents/coding-agent/0b6a5f1e-2c1d-4e57-9d0b-7a1c9d3e4f21', heading: 'Session' },
+  { path: '/agents/coding-agent/about', heading: 'About this agent' },
+  { path: '/artifacts', heading: 'Artifacts' },
+  { path: '/archived', heading: 'Archived sessions' },
+  { path: '/settings', heading: 'Settings' },
+  { path: '/s/share-1', heading: 'Shared session' },
   { path: '/no-such-page', heading: 'Page not found' },
 ]
 
@@ -22,7 +29,7 @@ for (const { path, heading, apiStatus } of routes) {
 
 test('the skip link is the first stop and jumps to the content', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { level: 1, name: 'All agents' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Your agents' })).toBeVisible()
   await page.keyboard.press('Tab')
   const skip = page.getByRole('link', { name: 'Skip to content' })
   await expect(skip).toBeFocused()

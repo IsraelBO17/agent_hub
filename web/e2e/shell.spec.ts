@@ -1,0 +1,54 @@
+import { expect, test } from '@playwright/test'
+import { expectAccessible } from './axe.ts'
+
+// The shell at the design's sizes (Pencil Sidebar hj5RV, Chat Header H0YWK; mobile drawer F10.5).
+test.describe('desktop', () => {
+  test.skip(({ viewport }) => (viewport?.width ?? 0) < 1024, 'desktop only')
+
+  test('the sidebar is 284 px, the chat column about 760, and the catalog has no sidebar', async ({ page }) => {
+    await page.goto('/agents/coding-agent/0b6a5f1e-2c1d-4e57-9d0b-7a1c9d3e4f21')
+    await expect(page.getByRole('heading', { level: 1, name: 'Session' })).toBeVisible()
+    expect((await page.locator('[data-slot=sidebar-container]').boundingBox())?.width).toBe(284)
+    expect((await page.locator('#main > div.mx-auto').boundingBox())?.width).toBe(760)
+    await page.goto('/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Your agents' })).toBeVisible()
+    await expect(page.locator('[data-slot=sidebar-container]')).toHaveCount(0)
+    expect((await page.locator('header').first().boundingBox())?.height).toBe(64)
+  })
+
+  test('collapsing the sidebar leaves a way back', async ({ page }) => {
+    await page.goto('/archived')
+    const sidebar = page.locator('[data-slot=sidebar-container]')
+    await page.getByRole('button', { name: 'Collapse sidebar' }).click()
+    await expect(sidebar).toHaveAttribute('inert')
+    await page.getByRole('button', { name: 'Open navigation' }).click()
+    await expect(sidebar).not.toHaveAttribute('inert')
+    await expect(page.getByRole('button', { name: 'Open navigation' })).toHaveCount(0)
+  })
+})
+
+test.describe('mobile', () => {
+  test.skip(({ viewport }) => (viewport?.width ?? 0) >= 768, 'mobile only')
+
+  test('the menu opens the drawer, and a link in it navigates and closes it', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Your agents' })).toBeVisible()
+    await page.getByRole('button', { name: 'Open navigation' }).click()
+    const drawer = page.getByRole('dialog', { name: 'Navigation' })
+    await expect(drawer).toBeVisible()
+    expect((await drawer.boundingBox())?.width).toBe(316)
+    await expectAccessible(page)
+    await drawer.getByRole('link', { name: 'Archived' }).click()
+    await expect(page.getByRole('heading', { level: 1, name: 'Archived sessions' })).toBeVisible()
+    await expect(drawer).toBeHidden()
+  })
+
+  test('no page scrolls sideways at 360 px', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 780 })
+    for (const path of ['/', '/agents/coding-agent', '/archived', '/no-such-page']) {
+      await page.goto(path)
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360)
+    }
+  })
+})

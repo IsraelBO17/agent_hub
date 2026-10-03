@@ -1,4 +1,5 @@
-// The confirmation for every destructive action (standard §8.5). Controlled by its owner's mutation:
+// Design: Confirm Dialog (i3B1e), used for Delete all only (session delete uses undo; profile Exceptions).
+// The confirmation for every irreversible action (standard §8.5). Controlled by its owner's mutation:
 // it stays open with a spinner while `pending`, shows `error` and stays open on failure, and the owner
 // closes it on success.
 import {
@@ -26,10 +27,10 @@ export function ConfirmDialog({ open, onOpenChange, title, description, confirmL
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
-        {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+        {error ? <p role="alert" className="text-13 text-danger">{error}</p> : null}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
-          <Button variant="destructive" disabled={pending} aria-busy={pending} onClick={onConfirm}>
+          <Button variant="danger" disabled={pending} aria-busy={pending} onClick={onConfirm}>
             {pending ? <Icon icon={Loader2} className="animate-spin" /> : null}
             {confirmLabel}
           </Button>

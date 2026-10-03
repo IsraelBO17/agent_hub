@@ -11,4 +11,4 @@ export function Icon({ icon: Glyph, size = 'sm', label, className }: { icon: Luc
   return label ? <Glyph role="img" aria-hidden={false} aria-label={label} className={cn(sizes[size], className)} /> : <Glyph className={cn(sizes[size], className)} />
 }
 
-export { AlertCircle, FileText, LayoutGrid, Loader2, Lock, SearchX } from 'lucide-react'
+export { AlertCircle, Archive, FileText, LayoutGrid, Loader2, Lock, Menu, Orbit, PanelLeft, Search, SearchX, Settings, Shapes, SquarePen } from 'lucide-react'

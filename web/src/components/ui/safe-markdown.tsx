@@ -12,7 +12,7 @@ const components: Components = {
 
 export function SafeMarkdown({ children }: { children: string }) {
   return (
-    <div className="space-y-3 text-base leading-relaxed [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6">
+    <div className="space-y-3 text-15 leading-relaxed [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6">
       <Markdown remarkPlugins={[remarkGfm]} components={components} skipHtml>
         {children}
       </Markdown>

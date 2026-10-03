@@ -14,7 +14,7 @@ One signed-in chat interface for many AI agents ([`../docs/PRODUCT_PLAN.md`](../
 | `make check` | Types, lint, token check, unit and component tests, contract drift, no Radix, build, bundle budget, audit. **Must pass before you say anything is done.** |
 | `make e2e` | Playwright with axe, in mock mode, at 1440, 768 and 390 px. Must pass when a screen changed |
 | `make dev` | The app on :5173 (copy `.env.example` to `.env.local`; mocks on by default) |
-| `make tokens` | Regenerate `src/styles/tokens.css` from the design (still the template's example `design/tokens.json`; issue #4 switches it to `../design/fleet_dev.pen`) |
+| `make tokens` | Regenerate `src/styles/tokens.css` and `src/lib/token-names.ts` from `../design/fleet_dev.pen` and `design/scale.json` |
 | `make api` | Regenerate `src/service/generated/` from the contract (`../api/openapi.yaml`) |
 | `make fmt` | Fix what ESLint can fix |
 
@@ -26,7 +26,7 @@ Skills: `/new-web-app`, `/sync-tokens`, `/add-page`, `/add-component`, `/add-api
 ## Defaults (don't ask; use these unless the spec or profile says otherwise)
 TanStack Query for server data, with `queryOptions` in `service/` and `staleTime` per resource; URL state through nuqs; forms with React Hook Form, zod and `components/form`; shadcn primitives added with `npx shadcn@latest add`; icons through `components/ui/icon`; every view with loading, empty, error and success states; `ConfirmDialog` for irreversible actions (session delete uses undo instead, a profile exception); mocks first with MSW; Markdown through `SafeMarkdown`; dates through `utils/format-date`; tests next to the code; decisions appended to `docs/decisions.md`. Ask the owner only what's genuinely specific to this app, in one batch, each question with your recommendation.
 
-Agent Hub's exceptions and extra rules (profile): toasts from Base UI `toast`, not Sonner; mobile sheets from Base UI `drawer`; nothing from `@radix-ui` (`make check` fails); type scale `text-12`…`text-40` only; agent colours only for agent identity; light theme only.
+Agent Hub's exceptions and extra rules (profile): toasts from Base UI `toast`, not Sonner; mobile sheets from Base UI `drawer`; nothing from `@radix-ui` (`make check` fails); type scale `text-12`…`text-40`, radii `rounded-4`…`16`, shadows `shadow-control`…`palette` (shadcn's names are aliases until a primitive is restyled); agent colours only for agent identity; light theme only. Design colours keep their names: `bg-accent` is the brand green, and a menu row's hover is `bg-hover`. Focus is the global 2 px `focus-ring` outline; menu, palette and list rows turn it off and use their highlight fill. A primitive is restyled to its Pencil component (`// Design:` header) in the issue that first uses it.
 
 ## Never
 - Write code before `SPEC.md` is approved, or change a screen without updating its screen block.
