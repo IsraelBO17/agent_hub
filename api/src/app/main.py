@@ -28,8 +28,15 @@ from app.core.middleware import (
     SecurityHeadersMiddleware,
 )
 from app.core.settings import get_settings
+from app.features.agents import public as agents_public
+from app.features.agents import router as agents_router
 from app.features.auth import router as auth_router
 from app.features.auth.google import GoogleVerifier
+from app.features.chat import jobs as chat_jobs  # noqa: F401  (registers the sweep)
+from app.features.chat import public as chat_public
+from app.features.chat import router as chat_router
+from app.features.chat import runs as chat_runs
+from app.features.chat.agentcore import AgentCoreClient, Credentials
 
 CONTRACT = Path(
     "openapi.yaml"
@@ -53,15 +60,29 @@ def create_app() -> FastAPI:
             issuers=settings.google_issuers,
             cache_seconds=settings.google_keys_cache_seconds,
         )
+        # AgentCore streams can be silent for minutes (thinking, tools): the read timeout is the
+        # run cap; connecting has its own short limit.
+        agentcore_http = httpx.AsyncClient(
+            timeout=httpx.Timeout(
+                settings.stream_time_limit_seconds,
+                connect=settings.agentcore_connect_timeout_seconds,
+            )
+        )
+        app.state.agentcore = AgentCoreClient(
+            agentcore_http, region=settings.aws_region, credentials=Credentials()
+        )
         worker: asyncio.Task[None] | None = None
         if settings.run_worker_in_api:  # small services: no separate worker task (standard §13)
             worker = asyncio.create_task(work_loop(db.sessions, settings, shutting_down))
         yield
         shutting_down.set()
+        # Runs end themselves within the drain window (P2); give them time to save.
+        await chat_runs.wait_for_runs(settings.shutdown_grace_seconds + 5)
         if worker is not None:
             with contextlib.suppress(asyncio.CancelledError):
                 await worker
         await google_http.aclose()
+        await agentcore_http.aclose()
         await db.engine.dispose()
 
     app = FastAPI(
@@ -98,6 +119,10 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(auth_router.auth)
     app.include_router(auth_router.me_router)
+    app.include_router(agents_router.router)
+    app.include_router(chat_router.router)
+    # myStats: sessions belong to chat, which depends on agents, so the hook is wired here.
+    agents_public.provide_session_stats(chat_public.session_stats)
 
     if settings.docs_enabled:  # local only: `make docs` (core/docs.py)
         install_docs(app, CONTRACT, settings.service_name)

@@ -1,6 +1,6 @@
 # Commands for people and coding agents (standard §6.1). `make check` is the "done" gate.
 .DEFAULT_GOAL := help
-.PHONY: help check fmt lint types test migrate migration downgrade db-up db-down db-reset run worker audit image token invite docs
+.PHONY: help check fmt lint types test migrate migration downgrade db-up db-down db-reset run worker audit image token invite agent-add agents docs
 
 # The local database: the same container as the root Makefile's `make db-up`. Settings come from
 # .env.example (then .env).
@@ -65,11 +65,17 @@ audit: ## Known vulnerabilities in the locked dependencies
 
 docs: ## Swagger UI over the contract at http://localhost:8000/docs (local only); prints a test token
 	@echo "Swagger UI: http://localhost:8000/docs   (Authorize with the token below)"
-	@uv run python -m app.cli users local-token $(or $(email),local-tester@example.com)
+	@uv run hub users local-token $(or $(email),local-tester@example.com)
 	DOCS_ENABLED=true CORS_ORIGINS='["http://localhost:8000"]' uv run python -m app.serve
 
 invite: ## Let an email sign in (D9): make invite email=<address> (uses DATABASE_URL)
-	uv run python -m app.cli users invite "$(email)"
+	uv run hub users invite "$(email)"
+
+agent-add: ## Register or update an agent (D6): make agent-add file=../agents/<slug>.yaml (uses DATABASE_URL)
+	uv run hub agents add "$(file)"
+
+agents: ## List the agent registry (uses DATABASE_URL)
+	uv run hub agents list
 
 token: ## Print a local access token: make token [user=<uuid>]
 	@uv run python -c "import sys, uuid; from app.core.auth import issue_access_token; \

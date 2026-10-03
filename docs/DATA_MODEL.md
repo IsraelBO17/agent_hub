@@ -3,7 +3,7 @@
 Step 4 of the build plan, amended by the alignment review (build step 4b, migration `0002`). The API shapes built on these tables are in [`api/openapi.yaml`](../api/openapi.yaml). Postgres (Neon), 12 tables.
 
 - ER diagram: [`diagrams/er.mmd`](diagrams/er.mmd) ([PNG](diagrams/er.png)), key columns only.
-- Source of truth: [`api/app/db/models.py`](../api/app/db/models.py) (SQLAlchemy 2). Migrations: [`api/migrations/`](../api/migrations) (Alembic), generated from the models and reviewed by hand.
+- Source of truth: the SQLAlchemy 2 models: [`api/src/app/db/models.py`](../api/src/app/db/models.py) for tables whose feature isn't built yet, and `api/src/app/features/<name>/models.py` for the rest (`auth`: `users`, `refresh_tokens`; `agents`: `agents`; `chat`: `sessions`, `messages`, `tool_calls`). Migrations: [`api/migrations/`](../api/migrations) (Alembic), generated from the models and reviewed by hand.
 - Behaviour tests: [`api/tests/test_schema.py`](../api/tests/test_schema.py). How to run: [`api/README.md`](../api/README.md).
 
 ## Conventions
@@ -26,7 +26,7 @@ Step 4 of the build plan, amended by the alignment review (build step 4b, migrat
 | `sessions` | One conversation with one agent | `title` set from the first message at creation (D21); `pinned_at`, `archived_at`, `deleted_at` (undo window); `last_message_at` orders the sidebar |
 | `messages` | One turn each | `blocks` is the ordered transcript (P6); `status` streaming / awaiting_approval / complete / stopped / failed / interrupted (D19); `seq` orders the session; `client_message_id` makes sends idempotent per user; `heartbeat_at` and `cancel_requested_at` let any task find dead runs and honour Stop (P1, P4); `reply_to_id` links a reply to its user message (Retry now, Regenerate in P1) |
 | `files` | Every S3 object (D7) | Uploads can exist before their session (lazy session creation, F03), so `session_id` and `message_id` are nullable until send |
-| `tool_calls` | Tools the agent ran | Keyed by the agent's `tool_use_id`; big outputs go to a file |
+| `tool_calls` | Tools the agent ran | Keyed by the agent's `tool_use_id`; `input` is stored as `{"value": …}` and `output` as `{"value": …, "error": …}` (JSONB holds any value; the contract's `ToolCall.error` lives inside `output`), each truncated to 16 KB; big outputs go to a file |
 | `approval_requests` | Human-in-the-loop decisions (F10) | One per tool call; the card renders `arguments` validated by the API; the row is the audit record |
 | `artifacts` | Documents, code, HTML, tables | `artifact_key` is the agent's own id, so the agent's later update finds the artifact |
 | `artifact_versions` | Every version | Small bodies inline in `content`, large ones in S3 via `file_id`; `status = incomplete` for a stream that dropped mid-artifact |

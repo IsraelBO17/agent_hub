@@ -54,7 +54,7 @@ stopped / failed / interrupted ──► streaming   Retry
 | Client stall detection | 45 s with no bytes | Browser | Three missed pings means the connection is gone; switch to polling |
 | "Still working" note | 60 s with no events (pings don't count) | Browser | Reassures during long tool calls; not an error |
 | Stale heartbeat | 60 s | API sweep, every minute and on startup | Marks runs of a dead task `interrupted` (P1) |
-| Stop pickup | ≤ 2 s | Running task | Checks `cancel_requested_at` at each checkpoint and keep-alive tick |
+| Stop pickup | ≤ 2 s | Running task | Reads `cancel_requested_at` on every save and every 2 s otherwise; a Stop on the same task is immediate. Then `AgentCancel`, and up to 5 s for the agent's last frames |
 | ALB idle timeout | 300 s | Terraform | Explicit, well above the ping interval (D5) |
 | ALB deregistration delay | 300 s | Terraform | Lets streams finish during a deploy (P2) |
 | Container stop timeout | 120 s (ECS max) | Task definition | Time to finish open streams after SIGTERM (P2) |
@@ -91,9 +91,9 @@ Errors use the common format in D23 (`code`, `requestId`, `retryable`, optional 
 ## Verified (2026-09-30, Research Analyst v0 on AgentCore, issue #3)
 
 - **What AgentCore actually streams:** recorded for a plain answer, thinking, a tool call, a tool error and an invalid payload in [`api/tests/fixtures/agentcore/`](../api/tests/fixtures/agentcore/README.md). HTTP 200 SSE of `data: <json>` frames only: Bedrock ConverseStream events unchanged, finished `message`s (tool calls and results), and a final `result` with the stop reason and tokens. Agent errors also arrive as HTTP 200, as one `error` frame. No keep-alives: the stream is silent while the model thinks (4 s in the recording) or a tool runs. The translator (#8) is written against these.
-- **Closing the AgentCore response stream does not stop the run**, and neither does `StopRuntimeSession`: in both probes the agent kept fetching pages seconds later. So a Strands agent stops on a second invocation **on the same runtime session**: `{"cancel": {"messageId": "<assistant message id>"}}` (`AgentCancel` in `openapi.yaml`). It answers `{"cancel": {"messageId", "cancelled": true | false}}` and the running reply ends with `{"result": {"stopReason": "cancelled"}}`. Verified on Research Analyst's runtime: stopped between tool calls (0.67 s), during the final answer (0.64 s) and inside a 10 s fetch (1.9 s); recorded as `cancelled-mid-fetch` and `cancel-reply`.
+- **Closing the AgentCore response stream does not stop the run**, and neither does `StopRuntimeSession`: in both probes the agent kept fetching pages seconds later. So a Strands agent stops on a second invocation **on the same runtime session**: `{"cancel": {"messageId": "<assistant message id>"}}` (`AgentCancel` in `openapi.yaml`). It answers `{"cancel": {"messageId", "cancelled": true | false}}` and the running reply ends with `{"result": {"stopReason": "cancelled"}}`. Verified on Research Analyst's runtime: stopped between tool calls (0.67 s), during the final answer (0.64 s) and inside a 10 s fetch (1.9 s); recorded as `cancelled-mid-fetch` and `cancel-reply`. Through the API (issue #9, 2026-10-03): two API processes on one database; a reply running on one was stopped by a request to the other during a 10 s fetch: `run.stopped` 2.0 s after the Stop, the agent confirmed `cancelled: true`, and the partial reply (thinking, the cancelled tool, usage) was saved `stopped`.
 
 ## Not verified yet
 
-- **SSE through the ALB with keep-alives.** Proven in step 8.
+- **SSE through the ALB with keep-alives.** Proven in step 8 (#10). Locally (issue #8, 2026-10-03): a real reply streams to `curl -N`; a client that hangs up after 2 s leaves the reply running to `complete`, and polling `GET /v1/messages/{id}` picks it up; SIGTERM mid-reply lets it finish, then the process exits.
 - **Resuming a Strands agent after an approval** by re-invoking it with the decision (D19). Spiked at the start of the approvals slice (P8).

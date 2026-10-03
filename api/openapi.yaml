@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Agent Hub API
-  version: 0.2.0
+  version: 0.5.0
   summary: One chat interface for many AI agents. Browser ↔ API contract, plus the API → agent payload.
   description: |
     The contract between the Agent Hub web app and its FastAPI service (build plan step 5).
@@ -294,7 +294,7 @@ paths:
       tags: [Agents]
       operationId: listAgents
       summary: The catalog
-      description: Listed, not retired agents, in catalog order. Not paginated; the registry is small. Hidden agents (the Scenario Agent) are included only in dev builds.
+      description: Listed, not retired agents, in catalog order (the descriptor's `sortOrder`, then name). Not paginated; the registry is small. Hidden agents (the Scenario Agent) are included everywhere except production.
       x-scope: v1
       responses:
         '200':
@@ -320,7 +320,7 @@ paths:
       tags: [Agents]
       operationId: getAgent
       summary: One agent, including retired and hidden ones
-      description: Retired agents are returned (with `retiredAt`) so their old sessions stay readable.
+      description: Retired agents are returned (with `retiredAt`) so their old sessions stay readable. An unknown slug is `404 agent_not_found`; one that doesn't match the slug pattern is `422 invalid_request`.
       x-scope: v1
       parameters:
         - $ref: '#/components/parameters/AgentSlug'
@@ -338,6 +338,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
 
   /v1/agents/{slug}/sessions:
     post:
@@ -592,6 +594,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
     post:
       tags: [Messages]
       operationId: sendMessage
@@ -819,6 +823,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
 
   /v1/messages/{messageId}/stop:
     parameters:
@@ -830,7 +836,7 @@ paths:
       description: |
         Sets a cancel flag; the task running the reply stops it within about 2 s, keeps the partial blocks and marks it
         `stopped`, and the open stream ends with `run.stopped` (SEND_MESSAGE rule 7). Stopping a reply that already
-        ended returns 202 with its current status.
+        ended returns 202 with its current status. Idempotent. The run stops the agent with `AgentCancel`.
       x-scope: v1
       responses:
         '202':
@@ -852,6 +858,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
 
   /v1/messages/{messageId}/retry:
     parameters:
@@ -1504,8 +1512,10 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
     AgentUnavailable:
-      description: '`agent_unavailable`: the agent is marked offline. Keep the draft and poll the agent (D22). Nothing was saved.'
+      description: '`agent_unavailable`: the agent is marked offline. Keep the draft and poll the agent (D22). Or `shutting_down`: the API is draining for a deploy; send again after `retryAfter` (P2). Nothing was saved.'
       headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
         X-Request-Id:
           $ref: '#/components/headers/XRequestId'
       content:

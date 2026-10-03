@@ -7,7 +7,7 @@ DB_PORT ?= 55432
 export DATABASE_URL_DIRECT ?= postgresql://postgres:dev@localhost:$(DB_PORT)/agent_hub
 
 .DEFAULT_GOAL := help
-.PHONY: help db-up db-down api-migrate api-check api-test api-run contract-lint design-index infra-validate infra-plan-bootstrap infra-init infra-plan web-install web-dev web-check web-e2e web-tokens web-api
+.PHONY: help db-up db-down api-migrate api-check api-test api-run agent-add agents contract-lint design-index infra-validate infra-plan-bootstrap infra-init infra-plan web-install web-dev web-check web-e2e web-tokens web-api
 
 help: ## List targets
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-22s %s\n", $$1, $$2}'
@@ -32,6 +32,12 @@ api-test: ## The API's done gate: lint, types, migrations, tests, audit (recreat
 
 api-run: ## Run the API locally on :8000
 	$(MAKE) -C api run
+
+agent-add: ## Register or update an agent from its descriptor: make agent-add file=agents/<slug>.yaml
+	$(MAKE) -C api agent-add file="$(abspath $(file))"
+
+agents: ## List the agent registry
+	$(MAKE) -C api agents
 
 contract-lint: ## Lint the OpenAPI contract
 	cd api && npx -y @redocly/cli@2.56.1 lint openapi.yaml

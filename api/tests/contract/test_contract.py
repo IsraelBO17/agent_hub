@@ -4,6 +4,7 @@ Exceptions, each with a reason, are in schemathesis.toml."""
 
 import uuid
 from collections.abc import AsyncIterator, Iterator
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -15,11 +16,34 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.auth import issue_access_token
 from app.core.db import get_session
 from app.core.settings import get_settings
+from app.features.agents.descriptor import load_descriptor
+from app.features.agents.service import AgentService
 from tests.contract_routes import implemented, labels
+
+AGENTS = Path(__file__).resolve().parents[3] / "agents"
+
+# Sends start a run: its own task, writing through its own sessions, outside this test's
+# rolled-back transaction, and calling AgentCore. tests/integration/test_chat.py covers them,
+# checking every response and stream event against these same schemas (tests/support/contract.py).
+_SENDS = "a send starts a run outside the test transaction; covered by test_chat.py"
+STREAMS = {
+    "POST /v1/agents/{slug}/sessions": _SENDS,
+    "POST /v1/sessions/{sessionId}/messages": _SENDS,
+}
 
 
 @pytest.fixture
-def api_schema(app: object, fastapi_app: FastAPI, session: AsyncSession) -> Iterator[object]:
+async def registered_agents(session: AsyncSession) -> None:
+    """The repository's agent descriptors, so agent responses are checked with real data (the
+    slug parameter's example is one of them). On the rolled-back session."""
+    for path in sorted(AGENTS.glob("*.yaml")):
+        await AgentService(session, get_settings()).register(load_descriptor(path))
+
+
+@pytest.fixture
+def api_schema(
+    app: object, fastapi_app: FastAPI, session: AsyncSession, registered_agents: None
+) -> Iterator[object]:
     """In process, on the rolled-back session, so generated writes don't outlive the test."""
 
     async def _session() -> AsyncIterator[AsyncSession]:
@@ -27,9 +51,23 @@ def api_schema(app: object, fastapi_app: FastAPI, session: AsyncSession) -> Iter
 
     fastapi_app.dependency_overrides[get_session] = _session
     schema = schemathesis.openapi.from_path("openapi.yaml")
-    schema.app = app  # the path prefix comes from servers[0].url
+    schema.app = _requests_only(app)  # the path prefix comes from servers[0].url
     yield schema
     fastapi_app.dependency_overrides.clear()
+
+
+def _requests_only(app: Any) -> Any:
+    """The `app` fixture already runs the lifespan. Schemathesis would start a second one on its
+    own event loop: a second job worker on the shared `shutting_down` event, a re-pointed database
+    and, when it stops, `shutting_down` set for every later test (a flaky "bound to a different
+    event loop"). Refusing the lifespan scope before receiving is how an app says it has none."""
+
+    async def asgi(scope: dict[str, Any], receive: Any, send: Any) -> None:
+        if scope["type"] == "lifespan":
+            raise RuntimeError("the lifespan is run by the app fixture")
+        await app(scope, receive, send)
+
+    return asgi
 
 
 schema = schemathesis.pytest.from_fixture("api_schema")
@@ -46,5 +84,7 @@ def test_app_matches_contract(case: schemathesis.Case[Any], fastapi_app: FastAPI
     if case.operation.label not in labels(implemented(fastapi_app)):
         # Documented but not built yet: the contract is written first (standard §4).
         pytest.skip(f"{case.operation.label} is not implemented yet")
+    if case.operation.label in STREAMS:
+        pytest.skip(STREAMS[case.operation.label])
     token = issue_access_token(get_settings(), uuid.uuid4())
     case.call_and_validate(headers={"Authorization": f"Bearer {token}"})

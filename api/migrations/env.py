@@ -16,6 +16,8 @@ MODEL_MODULES = [
     "app.core.jobs.models",
     "app.db.models",  # every Agent Hub table until each feature moves its tables into its package
     "app.features.auth.models",
+    "app.features.agents.models",
+    "app.features.chat.models",
 ]
 for module in MODEL_MODULES:
     importlib.import_module(module)
