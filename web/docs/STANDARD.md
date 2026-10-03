@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Owner | Boluwatife Israel |
-| Version | 1.1 (2026-10-03): monorepo setup (recipe 1, step 0; `CONTRACT` in the Makefile); mock response helpers outlive the example; tokens from several sources, with shadows and the radius and shadow scales owned by the design; `cn` told the design's size names; `make check` rejects font sizes outside the type scale; the axe helper skips endless animations. 1.0 (2026-10-03): first version |
+| Version | 1.1.1 (2026-10-03): `.gitignore` ignores run artifacts only at the app's root, so a feature folder named `artifacts` is tracked; Vite inlines no assets as `data:` URLs, which the CSP would block. 1.1 (2026-10-03): monorepo setup (recipe 1, step 0; `CONTRACT` in the Makefile); mock response helpers outlive the example; tokens from several sources, with shadows and the radius and shadow scales owned by the design; `cn` told the design's size names; `make check` rejects font sizes outside the type scale; the axe helper skips endless animations. 1.0 (2026-10-03): first version |
 | Applies to | Every web frontend I build, for any project |
 | Default stack | **React 19, TypeScript, Vite, React Router, TanStack Query, shadcn/ui on Tailwind, npm** (§3). Anything else is a documented exception. |
 | Structure | §1–25 are the standard. §26 explains **profiles**: one per project, kept in that project's repository. Appendices hold templates and reference code. |
@@ -499,7 +499,8 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react(), tailwindcss(), msw()],
   resolve: { tsconfigPaths: true },
-  build: { sourcemap: 'hidden', manifest: true },
+  // No assets inlined as data: URLs: the CSP allows fonts and scripts only from 'self' (standard §19).
+  build: { sourcemap: 'hidden', manifest: true, assetsInlineLimit: 0 },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],

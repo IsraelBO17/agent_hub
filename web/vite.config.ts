@@ -8,7 +8,8 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react(), tailwindcss(), msw()],
   resolve: { tsconfigPaths: true },
-  build: { sourcemap: 'hidden', manifest: true },
+  // No assets inlined as data: URLs: the CSP allows fonts and scripts only from 'self' (standard §19).
+  build: { sourcemap: 'hidden', manifest: true, assetsInlineLimit: 0 },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
