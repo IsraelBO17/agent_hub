@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Owner | Boluwatife Israel |
-| Version | 1.1 (2026-10-03): a contract can be ahead of the code (pending operations are reported, not failures); full server URLs in the contract; `postgres://` database URLs accepted; `alembic check` compares server defaults. 1.0 (2026-09-30): first version |
+| Version | 1.2 (2026-10-03): expired access tokens are `401 token_expired` (retryable), distinct from `token_invalid`; the framework's own 400 uses the profile's validation status; pending methods on a built path. 1.1 (2026-10-03): a contract can be ahead of the code (pending operations are reported, not failures); full server URLs in the contract; `postgres://` database URLs accepted; `alembic check` compares server defaults. 1.0 (2026-09-30): first version |
 | Applies to | Every HTTP backend (API service) I build, for any project |
 | Default stack | **Python 3.12, uv, FastAPI, Pydantic v2, SQLAlchemy 2 async, Alembic, PostgreSQL** (§3). Anything else is a documented exception. |
 | Structure | §1–20 are the standard. §21 explains **profiles**: one per project, kept in that project's repository. Appendices hold templates and reference code. |
@@ -215,7 +215,7 @@ Every error response is **RFC 9457** `application/problem+json`:
 
 - `code` is **required**, snake_case, stable. Clients branch on `code`, never on `title` or `detail`. A shipped code is **never renamed or removed**: add the new one, keep sending the old until clients have moved.
 - `requestId` and `retryable` are required. `retryAfter` (seconds) is set, and the `Retry-After` header too, when known (429, 503).
-- **Validation** errors are **`400 invalid_request`** with `errors: [{ "path": "/json/pointer", "message": "…" }]`, one per bad field. A profile MAY choose 422 instead; the code and shape stay the same.
+- **Validation** errors (including a body that doesn't parse) are **`400 invalid_request`** with `errors: [{ "path": "/json/pointer", "message": "…" }]`, one per bad field. A profile MAY choose 422 instead; the code and shape stay the same.
 - Every code is listed in the contract's `ErrorCode` enum with its status, and defined once in code as an exception class (`exceptions.py`) with `status` and `code`. A feature that must raise another feature's error (a referenced row not found) imports it from that feature's `public.py`.
 - **Every database constraint has a typed exception** and a service-side check: unique → 409, check → 400, foreign key → 404 on the referenced thing. The check gives the good message; the constraint makes the rule true under concurrency. The service maps an `IntegrityError` **by constraint name** (`constraint_name(exc)`) and re-raises any it doesn't expect, which then surfaces as a 500.
 - Unhandled exceptions return `500 internal_error` with no stack trace or driver message; the traceback is logged with the request id.
@@ -266,7 +266,7 @@ Every error response is **RFC 9457** `application/problem+json`:
 - Browser sessions: a short-lived access token held in memory, and a **rotating refresh token** stored hashed in the database, sent in an `HttpOnly; Secure; SameSite=Strict` cookie scoped to the auth path. Reuse of a rotated refresh token revokes the whole family.
 - External identity providers (Google, Cognito, an SSO) only prove identity once; the service then issues its own session. Which provider is set by the profile.
 - **Authorization** lives in the service that owns the resource: every query filters by the principal's owner id, so another owner's row is **404, not 403** (OWASP API1). Coarse role gates (`require_role`) MAY sit on routers; anything that depends on what the resource is belongs in the service and its capability block.
-- Authentication failures are `401` with one generic message; the reason is logged, not returned. A known user who lacks permission is `403`.
+- Authentication failures are `401` with one generic message; the reason is logged, not returned. The one distinction kept is an **expired** access token: `401 token_expired` (`retryable: true`), so a client refreshes and repeats instead of sending the user to sign in. A known user who lacks permission is `403`.
 - Auth endpoints that use cookies check `Origin` against the allowed origins.
 
 ## 13. Background work
@@ -359,7 +359,7 @@ Rules:
 - A door's write function has a test that it leaves the transaction open (write, roll back, nothing persisted).
 - Job handlers are tested by running them twice (idempotency) and by forcing a failure (retry and dead-letter).
 - Mock only the outside world (HTTP to third parties), never another feature.
-- A Schemathesis exception lives in `schemathesis.toml`, per operation, with a written reason (e.g. an opaque cursor can match its schema and still be invalid). Never relax a check to hide a real mismatch.
+- A Schemathesis exception lives in `schemathesis.toml`, per operation, with a written reason (e.g. an opaque cursor can match its schema and still be invalid). Never relax a check to hide a real mismatch. One expected case: a documented method not built yet on a path whose other methods are built makes `Allow` (honestly) shorter than the contract; turn off `allow_header_conformance` for that path until it is built, with that reason.
 - `ASGITransport` buffers a response until the app finishes, so stream tests use finite streams; keep-alive and shutdown behaviour is tested against a real Uvicorn server started by the test.
 - Use `httpx.AsyncClient`, not Starlette's `TestClient` (with Starlette 1.x it warns unless `httpx2` is installed, and it runs the app on another thread).
 - pytest-asyncio runs in `auto` mode with the loop scope set to `session` for fixtures and tests, so session-scoped database fixtures share one event loop.

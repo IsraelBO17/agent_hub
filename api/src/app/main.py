@@ -10,6 +10,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -27,6 +28,8 @@ from app.core.middleware import (
     SecurityHeadersMiddleware,
 )
 from app.core.settings import get_settings
+from app.features.auth import router as auth_router
+from app.features.auth.google import GoogleVerifier
 
 CONTRACT = Path(
     "openapi.yaml"
@@ -39,8 +42,17 @@ def create_app() -> FastAPI:
     configure_retention(settings.job_retention_days)
 
     @asynccontextmanager
-    async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         db = init_db(settings)
+        # One client for Google's signing keys, for the life of the process (standard §16).
+        google_http = httpx.AsyncClient(timeout=settings.google_timeout_seconds)
+        app.state.google_verifier = GoogleVerifier(
+            google_http,
+            certs_url=settings.google_certs_url,
+            client_id=settings.google_client_id,
+            issuers=settings.google_issuers,
+            cache_seconds=settings.google_keys_cache_seconds,
+        )
         worker: asyncio.Task[None] | None = None
         if settings.run_worker_in_api:  # small services: no separate worker task (standard §13)
             worker = asyncio.create_task(work_loop(db.sessions, settings, shutting_down))
@@ -49,6 +61,7 @@ def create_app() -> FastAPI:
         if worker is not None:
             with contextlib.suppress(asyncio.CancelledError):
                 await worker
+        await google_http.aclose()
         await db.engine.dispose()
 
     app = FastAPI(
@@ -83,6 +96,8 @@ def create_app() -> FastAPI:
     app.add_middleware(RequestIdMiddleware)
 
     app.include_router(health.router)
+    app.include_router(auth_router.auth)
+    app.include_router(auth_router.me_router)
 
     if settings.docs_enabled:
 

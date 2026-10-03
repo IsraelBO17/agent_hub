@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Agent Hub API
-  version: 0.1.0
+  version: 0.2.0
   summary: One chat interface for many AI agents. Browser ↔ API contract, plus the API → agent payload.
   description: |
     The contract between the Agent Hub web app and its FastAPI service (build plan step 5).
@@ -180,6 +180,15 @@ paths:
                     email: ada.okafor@example.com
         '422':
           $ref: '#/components/responses/Invalid'
+        '503':
+          description: "`identity_provider_unavailable`: Google's signing keys couldn't be fetched; retry (`retryAfter`)."
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
 
   /v1/auth/refresh:
     post:
@@ -226,6 +235,8 @@ paths:
                 type: string
             X-Request-Id:
               $ref: '#/components/headers/XRequestId'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   # ---------------------------------------------------------------- Me
   /v1/me:
@@ -1547,6 +1558,7 @@ components:
         - `payload_too_large` [413] the request body is over the limit (files go to S3 directly, D7)
         - `too_many_runs` [429] three replies already running for this user
         - `agent_unavailable` [503, event] agent offline, or AgentCore unreachable
+        - `identity_provider_unavailable` [503] Google's signing keys couldn't be fetched during sign-in; retry
         - `shutting_down` [503] the API task is draining for a deploy; retry (`retryAfter`) (P2)
         - `agent_error` [event] the agent failed mid-run
         - `rate_limited` [event] AgentCore or the model throttled the call (`retryAfter`)
@@ -1592,6 +1604,7 @@ components:
         - payload_too_large
         - too_many_runs
         - agent_unavailable
+        - identity_provider_unavailable
         - shutting_down
         - agent_error
         - rate_limited

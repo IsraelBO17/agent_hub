@@ -1,6 +1,6 @@
 # Commands for people and coding agents (standard §6.1). `make check` is the "done" gate.
 .DEFAULT_GOAL := help
-.PHONY: help check fmt lint types test migrate migration downgrade db-up db-down db-reset run worker audit image token
+.PHONY: help check fmt lint types test migrate migration downgrade db-up db-down db-reset run worker audit image token invite
 
 # The local database: the same container as the root Makefile's `make db-up`. Settings come from
 # .env.example (then .env).
@@ -62,6 +62,9 @@ audit: ## Known vulnerabilities in the locked dependencies
 	uv export --format requirements.txt --no-emit-project --no-dev --locked --quiet -o requirements-audit.txt
 	uv run pip-audit -r requirements-audit.txt --disable-pip --require-hashes --progress-spinner off
 	@rm -f requirements-audit.txt
+
+invite: ## Let an email sign in (D9): make invite email=<address> (uses DATABASE_URL)
+	uv run python -m app.cli users invite "$(email)"
 
 token: ## Print a local access token: make token [user=<uuid>]
 	@uv run python -c "import sys, uuid; from app.core.auth import issue_access_token; \

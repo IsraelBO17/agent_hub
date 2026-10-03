@@ -54,6 +54,14 @@ async def test_inputs_accept_only_contract_names(
     assert r.status_code == 200
 
 
+async def test_unparseable_body_is_a_validation_error(
+    client: httpx.AsyncClient, auth: AuthHeaders
+) -> None:
+    headers = {**auth(None), "Content-Type": "application/json"}
+    r = await client.post(ECHO, content=b"{not json", headers=headers)
+    assert r.status_code == INVALID and r.json()["code"] == "invalid_request"
+
+
 async def test_nul_in_a_string_is_rejected_not_500(
     client: httpx.AsyncClient, auth: AuthHeaders
 ) -> None:

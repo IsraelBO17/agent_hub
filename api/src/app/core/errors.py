@@ -56,6 +56,12 @@ class Unauthenticated(ApiError):
     status, code, title = 401, "token_invalid", "Missing or invalid access token"
 
 
+class TokenExpired(Unauthenticated):
+    """The access token was valid but has expired: the client refreshes, then repeats the request."""
+
+    code, title, retryable = "token_expired", "Access token expired", True
+
+
 class Forbidden(ApiError):
     status, code, title = 403, "forbidden", "Not allowed"
 
@@ -156,7 +162,9 @@ def install_error_handlers(app: FastAPI, *, errors_base_url: str, validation_sta
             # first route that matched the path, so collect them from all routes.
             headers["Allow"] = _allowed_methods(request)
         code = _HTTP_CODES.get(exc.status_code, "http_error")
-        return problem(exc.status_code, code, str(exc.detail), headers=headers)
+        # The framework's own 400 (an unparseable body) is a validation error: same status as one.
+        status = _Config.validation_status if exc.status_code == 400 else exc.status_code
+        return problem(status, code, str(exc.detail), headers=headers)
 
     @app.exception_handler(Exception)
     async def _unhandled(_: Request, exc: Exception) -> JSONResponse:
