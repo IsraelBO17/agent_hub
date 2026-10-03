@@ -23,39 +23,21 @@ from sqlalchemy import (
     BigInteger,
     CheckConstraint,
     Computed,
-    DateTime,
     ForeignKey,
     ForeignKeyConstraint,
     Index,
     Integer,
     LargeBinary,
-    MetaData,
     SmallInteger,
     Text,
     UniqueConstraint,
     func,
     text,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, INET, JSONB, TSVECTOR, UUID
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import ARRAY, INET, TSVECTOR
+from sqlalchemy.orm import Mapped, mapped_column
 
-NAMING_CONVENTION = {
-    "ix": "ix_%(table_name)s_%(column_0_N_name)s",
-    "uq": "uq_%(table_name)s_%(column_0_N_name)s",
-    "ck": "ck_%(table_name)s_%(constraint_name)s",
-    "fk": "fk_%(table_name)s_%(column_0_N_name)s_%(referred_table_name)s",
-    "pk": "pk_%(table_name)s",
-}
-
-
-class Base(DeclarativeBase):
-    metadata = MetaData(naming_convention=NAMING_CONVENTION)
-    type_annotation_map = {
-        dict[str, Any]: JSONB,
-        list[Any]: JSONB,
-        datetime: DateTime(timezone=True),
-        uuid.UUID: UUID(as_uuid=True),
-    }
+from app.core.db import Base
 
 
 def one_of(column: str, values: tuple[str, ...], name: str | None = None) -> CheckConstraint:
@@ -87,7 +69,14 @@ RUNTIME_TYPES = ("agentcore", "http")
 AGENT_VISIBILITY = ("listed", "hidden")
 TITLE_SOURCES = ("auto", "user")
 MESSAGE_ROLES = ("user", "assistant")
-MESSAGE_STATUSES = ("streaming", "awaiting_approval", "complete", "stopped", "failed", "interrupted")
+MESSAGE_STATUSES = (
+    "streaming",
+    "awaiting_approval",
+    "complete",
+    "stopped",
+    "failed",
+    "interrupted",
+)
 OPEN_REPLY = "status IN ('streaming', 'awaiting_approval')"
 FILE_PURPOSES = ("upload", "artifact", "thumbnail", "export", "tool_output")
 FILE_STATUSES = ("pending", "uploaded", "failed")
@@ -103,12 +92,16 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = pk()
-    google_sub: Mapped[str | None] = mapped_column(Text, unique=True)  # null until an invite is accepted
+    google_sub: Mapped[str | None] = mapped_column(
+        Text, unique=True
+    )  # null until an invite is accepted
     email: Mapped[str] = mapped_column(Text)
     name: Mapped[str | None] = mapped_column(Text)
     avatar_url: Mapped[str | None] = mapped_column(Text)
     status: Mapped[str] = mapped_column(Text, server_default="invited")
-    preferences: Mapped[dict[str, Any]] = mapped_column(server_default=text("'{}'::jsonb"))  # defaultAgentSlug, reopenLastSession
+    preferences: Mapped[dict[str, Any]] = mapped_column(
+        server_default=text("'{}'::jsonb")
+    )  # defaultAgentSlug, reopenLastSession
     invited_at: Mapped[datetime | None]
     last_login_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = created_at()
@@ -128,7 +121,9 @@ class RefreshToken(Base):
 
     id: Mapped[uuid.UUID] = pk()
     user_id: Mapped[uuid.UUID] = user_fk()
-    family_id: Mapped[uuid.UUID]  # all rotations of one sign-in share a family; reuse revokes the family
+    family_id: Mapped[
+        uuid.UUID
+    ]  # all rotations of one sign-in share a family; reuse revokes the family
     token_hash: Mapped[bytes] = mapped_column(LargeBinary, unique=True)
     expires_at: Mapped[datetime]
     rotated_at: Mapped[datetime | None]  # set when exchanged for a new token
@@ -153,7 +148,9 @@ class Agent(Base):
     name: Mapped[str] = mapped_column(Text)
     description: Mapped[str] = mapped_column(Text)
     tagline: Mapped[str | None] = mapped_column(Text)  # short description for the mobile catalog
-    greeting: Mapped[str | None] = mapped_column(Text)  # new-session heading, e.g. "What are we building today?"
+    greeting: Mapped[str | None] = mapped_column(
+        Text
+    )  # new-session heading, e.g. "What are we building today?"
     icon: Mapped[str] = mapped_column(Text)  # lucide icon name
     color: Mapped[str] = mapped_column(Text)
     stage: Mapped[str] = mapped_column(Text, server_default="stable")
@@ -163,17 +160,25 @@ class Agent(Base):
     visibility: Mapped[str] = mapped_column(Text, server_default="listed")
     runtime_type: Mapped[str] = mapped_column(Text)
     runtime_arn: Mapped[str | None] = mapped_column(Text)  # AgentCore runtime ARN
-    runtime_qualifier: Mapped[str | None] = mapped_column(Text)  # AgentCore endpoint name, e.g. DEFAULT
+    runtime_qualifier: Mapped[str | None] = mapped_column(
+        Text
+    )  # AgentCore endpoint name, e.g. DEFAULT
     runtime_endpoint: Mapped[str | None] = mapped_column(Text)  # URL for runtime_type = http
     framework: Mapped[str | None] = mapped_column(Text)  # display only: strands, langgraph
-    version: Mapped[str | None] = mapped_column(Text)  # deployed version, shown as "Agent updated to vN"
+    version: Mapped[str | None] = mapped_column(
+        Text
+    )  # deployed version, shown as "Agent updated to vN"
     deployed_at: Mapped[datetime | None]
-    details: Mapped[dict[str, Any]] = mapped_column(server_default=text("'{}'::jsonb"))  # display only: model, region, framework version
+    details: Mapped[dict[str, Any]] = mapped_column(
+        server_default=text("'{}'::jsonb")
+    )  # display only: model, region, framework version
     disclaimer: Mapped[str | None] = mapped_column(Text)
     capabilities: Mapped[dict[str, Any]] = mapped_column(server_default=text("'{}'::jsonb"))
     tools: Mapped[list[Any]] = mapped_column(server_default=text("'[]'::jsonb"))
     starters: Mapped[list[Any]] = mapped_column(server_default=text("'[]'::jsonb"))
-    settings: Mapped[dict[str, Any]] = mapped_column(server_default=text("'{}'::jsonb"))  # history budget, run cap, memory
+    settings: Mapped[dict[str, Any]] = mapped_column(
+        server_default=text("'{}'::jsonb")
+    )  # history budget, run cap, memory
     sort_order: Mapped[int] = mapped_column(Integer, server_default="0")
     retired_at: Mapped[datetime | None]  # removed from the catalog; its sessions stay readable
     created_at: Mapped[datetime] = created_at()
@@ -216,18 +221,22 @@ class Session(Base):
         # Sidebar: one agent's live sessions, newest first.
         Index(
             "ix_sessions_sidebar",
-            "user_id", "agent_id", text("last_message_at DESC"),
+            "user_id",
+            "agent_id",
+            text("last_message_at DESC"),
             postgresql_where=text("deleted_at IS NULL AND archived_at IS NULL"),
         ),
         # Catalog "continue where you left off" and ⌘K: live sessions across agents.
         Index(
             "ix_sessions_recent",
-            "user_id", text("last_message_at DESC"),
+            "user_id",
+            text("last_message_at DESC"),
             postgresql_where=text("deleted_at IS NULL"),
         ),
         Index(
             "ix_sessions_archived",
-            "user_id", text("archived_at DESC"),
+            "user_id",
+            text("archived_at DESC"),
             postgresql_where=text("archived_at IS NOT NULL AND deleted_at IS NULL"),
         ),
         Index("ix_sessions_purge", "deleted_at", postgresql_where=text("deleted_at IS NOT NULL")),
@@ -248,7 +257,9 @@ class Message(Base):
     status: Mapped[str] = mapped_column(Text, server_default="complete")
     blocks: Mapped[list[Any]] = mapped_column(server_default=text("'[]'::jsonb"))
     client_message_id: Mapped[uuid.UUID | None]  # idempotent sends (user messages)
-    reply_to_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("messages.id", ondelete="CASCADE"))
+    reply_to_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("messages.id", ondelete="CASCADE")
+    )
     agent_version: Mapped[str | None] = mapped_column(Text)  # agent version that produced the reply
     error: Mapped[dict[str, Any] | None]  # {code, message, retryable}
     usage: Mapped[dict[str, Any] | None]  # tokens, durations
@@ -257,8 +268,12 @@ class Message(Base):
         TSVECTOR, Computed("to_tsvector('english', coalesce(search_text, ''))", persisted=True)
     )
     started_at: Mapped[datetime | None]
-    heartbeat_at: Mapped[datetime | None]  # written by the task running the reply; a stale one means that task died
-    cancel_requested_at: Mapped[datetime | None]  # Stop; the running task checks it, whichever task received the request
+    heartbeat_at: Mapped[
+        datetime | None
+    ]  # written by the task running the reply; a stale one means that task died
+    cancel_requested_at: Mapped[
+        datetime | None
+    ]  # Stop; the running task checks it, whichever task received the request
     completed_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = created_at()
     updated_at: Mapped[datetime] = updated_at()
@@ -277,7 +292,12 @@ class Message(Base):
         # Per user, not per session: the first send creates the session, so a resend must find it (F03).
         UniqueConstraint("user_id", "client_message_id"),
         # One open reply per session: running or waiting for an approval (run_in_progress, ARCHITECTURE D19).
-        Index("uq_messages_open_reply_per_session", "session_id", unique=True, postgresql_where=text(OPEN_REPLY)),
+        Index(
+            "uq_messages_open_reply_per_session",
+            "session_id",
+            unique=True,
+            postgresql_where=text(OPEN_REPLY),
+        ),
         Index("ix_messages_search", "search_vector", postgresql_using="gin"),
         Index(None, "reply_to_id"),
     )
@@ -333,7 +353,9 @@ class ToolCall(Base):
     summary: Mapped[str | None] = mapped_column(Text)
     input: Mapped[dict[str, Any] | None]
     output: Mapped[dict[str, Any] | None]
-    output_file_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("files.id", ondelete="SET NULL"))
+    output_file_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("files.id", ondelete="SET NULL")
+    )
     started_at: Mapped[datetime] = mapped_column(server_default=func.now())
     completed_at: Mapped[datetime | None]
 
@@ -356,18 +378,24 @@ class ApprovalRequest(Base):
     __tablename__ = "approval_requests"
 
     id: Mapped[uuid.UUID] = pk()
-    tool_call_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("tool_calls.id", ondelete="CASCADE"), unique=True)
+    tool_call_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("tool_calls.id", ondelete="CASCADE"), unique=True
+    )
     message_id: Mapped[uuid.UUID]
     session_id: Mapped[uuid.UUID]
     user_id: Mapped[uuid.UUID] = user_fk()
     agent_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("agents.id", ondelete="RESTRICT"))
     tool_name: Mapped[str] = mapped_column(Text)
-    arguments: Mapped[dict[str, Any]]  # validated by the API; the card renders these, not model prose
+    arguments: Mapped[
+        dict[str, Any]
+    ]  # validated by the API; the card renders these, not model prose
     display: Mapped[dict[str, Any] | None]  # title, fields and note for the card
     status: Mapped[str] = mapped_column(Text, server_default="pending")
     expires_at: Mapped[datetime]
     decided_at: Mapped[datetime | None]
-    decision_reason: Mapped[str | None] = mapped_column(Text)  # optional deny reason, sent to the agent
+    decision_reason: Mapped[str | None] = mapped_column(
+        Text
+    )  # optional deny reason, sent to the agent
     decided_user_agent: Mapped[str | None] = mapped_column(Text)
     executed_at: Mapped[datetime | None]  # set when the backend runs the approved call
     created_at: Mapped[datetime] = created_at()
@@ -375,7 +403,8 @@ class ApprovalRequest(Base):
     __table_args__ = (
         one_of("status", APPROVAL_STATUSES),
         CheckConstraint(
-            "(status IN ('pending', 'expired', 'cancelled')) = (decided_at IS NULL)", name="decided_at_matches"
+            "(status IN ('pending', 'expired', 'cancelled')) = (decided_at IS NULL)",
+            name="decided_at_matches",
         ),
         CheckConstraint("executed_at IS NULL OR status = 'approved'", name="execute_only_approved"),
         ForeignKeyConstraint(
@@ -385,7 +414,12 @@ class ApprovalRequest(Base):
             ["session_id", "user_id"], ["sessions.id", "sessions.user_id"], ondelete="CASCADE"
         ),
         # Sidebar badge and "approval waiting in another session".
-        Index("ix_approvals_pending", "user_id", "session_id", postgresql_where=text("status = 'pending'")),
+        Index(
+            "ix_approvals_pending",
+            "user_id",
+            "session_id",
+            postgresql_where=text("status = 'pending'"),
+        ),
         # Expiry sweep.
         Index("ix_approvals_expiry", "expires_at", postgresql_where=text("status = 'pending'")),
     )
@@ -399,8 +433,12 @@ class Artifact(Base):
     id: Mapped[uuid.UUID] = pk()
     session_id: Mapped[uuid.UUID]
     user_id: Mapped[uuid.UUID] = user_fk()
-    created_message_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("messages.id", ondelete="SET NULL"))
-    artifact_key: Mapped[str] = mapped_column(Text)  # the agent's id, so its later updates find the artifact
+    created_message_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("messages.id", ondelete="SET NULL")
+    )
+    artifact_key: Mapped[str] = mapped_column(
+        Text
+    )  # the agent's id, so its later updates find the artifact
     type: Mapped[str] = mapped_column(Text)
     title: Mapped[str] = mapped_column(Text)
     language: Mapped[str | None] = mapped_column(Text)  # for code
@@ -429,19 +467,27 @@ class ArtifactVersion(Base):
     artifact_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("artifacts.id", ondelete="CASCADE"))
     user_id: Mapped[uuid.UUID] = user_fk()
     version: Mapped[int] = mapped_column(Integer)
-    message_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("messages.id", ondelete="SET NULL"))
+    message_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("messages.id", ondelete="SET NULL")
+    )
     status: Mapped[str] = mapped_column(Text, server_default="streaming")
     content: Mapped[str | None] = mapped_column(Text)
     file_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("files.id", ondelete="CASCADE"))
-    thumbnail_file_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("files.id", ondelete="SET NULL"))
-    content_type: Mapped[str | None] = mapped_column(Text)  # text/markdown, text/csv, text/html, ...
+    thumbnail_file_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("files.id", ondelete="SET NULL")
+    )
+    content_type: Mapped[str | None] = mapped_column(
+        Text
+    )  # text/markdown, text/csv, text/html, ...
     size_bytes: Mapped[int | None] = mapped_column(BigInteger)
     change_note: Mapped[str | None] = mapped_column(Text)  # shown in the version menu
     created_at: Mapped[datetime] = created_at()
 
     __table_args__ = (
         one_of("status", ARTIFACT_VERSION_STATUSES),
-        CheckConstraint("status = 'streaming' OR content IS NOT NULL OR file_id IS NOT NULL", name="has_body"),
+        CheckConstraint(
+            "status = 'streaming' OR content IS NOT NULL OR file_id IS NOT NULL", name="has_body"
+        ),
         UniqueConstraint("artifact_id", "version"),
     )
 

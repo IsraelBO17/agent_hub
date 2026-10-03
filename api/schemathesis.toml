@@ -1,0 +1,13 @@
+# Contract-test settings (standard §18). Read automatically by the pytest integration.
+# Every exception here needs a reason; don't add one to make a real mismatch pass.
+
+# Strings may not contain NUL (PostgreSQL text can't store it; the API answers 400). The contract
+# says so in info.description; JSON Schema has no keyword for it.
+[generation]
+allow-x00 = false
+
+# An opaque cursor can match its schema (a string) and still be invalid; 400 is the documented
+# answer. Applies to every list operation: name them list<Resources> (standard §8).
+[[operations]]
+include-operation-id-regex = "^list[A-Z]"
+checks.positive_data_acceptance.expected-statuses = ["2xx", 400]

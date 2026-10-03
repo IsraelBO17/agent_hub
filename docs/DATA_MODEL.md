@@ -31,6 +31,7 @@ Step 4 of the build plan, amended by the alignment review (build step 4b, migrat
 | `artifacts` | Documents, code, HTML, tables | `artifact_key` is the agent's own id, so the agent's later update finds the artifact |
 | `artifact_versions` | Every version | Small bodies inline in `content`, large ones in S3 via `file_id`; `status = incomplete` for a stream that dropped mid-artifact |
 | `feedback` | 👍 / 👎 with reason chips (F20) | One per message per user |
+| `jobs` | Background work and sweeps (API standard §13) | Owned by `api/src/app/core/jobs/`; enqueued in the producing transaction; claimed with `SKIP LOCKED`; retried with backoff, then `dead` (migration `0003`) |
 | `share_links` | Public read-only links (F18); `options` column added with F18 (BUILD_PLAN follow-ups) | `slug` is random (≥ 22 chars); `up_to_seq` freezes the snapshot at the moment of sharing without copying data; revoke = 404 |
 
 ## Blocks vs. side tables (P6)
