@@ -283,3 +283,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-10-03 | D25 amended: CNAMEs in the `qucoon.com` zone instead of a delegated zone (the zone had been deleted outside Terraform). The API deploys in two phases: certificate, then ALB and service. |
 | 2026-10-03 | D25: the API is `api-fleet.qucoon.com` on qucoon's wildcard `*.qucoon.com` certificate (cloud team's request; they deleted the dedicated certificate). One-phase deploy again. |
 | 2026-10-03 | Issue #6 (API half): Google sign-in, rotating refresh sessions, `/v1/me`; invites by email activate on first sign-in (D9); `identity_provider_unavailable` (503) added to the contract. |
+| 2026-10-03 | Issue #7 (API half): the registry CLI `hub agents add|list` (D6) and `GET /v1/agents[/{slug}]`. Hidden agents are listed everywhere except production (the contract said "dev builds"); the runtime ARN is never returned, only a label without the account id. |

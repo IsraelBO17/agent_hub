@@ -28,6 +28,7 @@ from app.core.middleware import (
     SecurityHeadersMiddleware,
 )
 from app.core.settings import get_settings
+from app.features.agents import router as agents_router
 from app.features.auth import router as auth_router
 from app.features.auth.google import GoogleVerifier
 
@@ -98,6 +99,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(auth_router.auth)
     app.include_router(auth_router.me_router)
+    app.include_router(agents_router.router)
 
     if settings.docs_enabled:  # local only: `make docs` (core/docs.py)
         install_docs(app, CONTRACT, settings.service_name)

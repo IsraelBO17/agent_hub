@@ -83,12 +83,46 @@ Shared rules:
 
 (`PATCH /v1/me` is P1 and not part of this issue.)
 
-#### operation: `invite_user` → `app.cli users invite <email>` (operator only, no HTTP)
+#### operation: `invite_user` → `hub users invite <email>` (operator only, no HTTP)
 - **intent:** let a person sign in; v1 has one user, the owner (D9).
 - **effect:** insert `users(email, status = invited, invited_at = now())`. An email that already exists is reported and left unchanged.
 - **run:** `make -C api invite email=<address>` against the database in `DATABASE_URL_DIRECT`; for dev, Neon's direct URL from Secrets Manager.
 
 **Decided with the owner (2026-10-03):** the owner is invited by email and activated on first sign-in; an unreachable Google key set is `503 identity_provider_unavailable` (added to the contract); this pass builds the API half, and the web screens follow the web shell (#4).
+
+### Feature: agents (issue #7; F01, F02, D6, D23)
+Owns `agents`, the registry. Agents are data: the catalog comes from `GET /v1/agents`, and adding an agent is an operator command, never an API or UI change (J1). Reads the signed-in user's `sessions` for `myStats` (sessions isn't a feature yet; its table is read here and never written).
+
+Shared rules:
+- **The descriptor** (`agents/<slug>.yaml`, one per agent) holds the contract's `Agent` fields in camelCase, plus `visibility` (`listed` | `hidden`), `sortOrder`, `runtimeArn` or `runtimeEndpoint`, and `runtimeQualifier`. Unknown keys are rejected. `runtimeType: agentcore` needs a Bedrock AgentCore runtime ARN; `http` needs an `https://` endpoint. A tool with `requiresApproval: true` needs `capabilities.approvals: true`. Attachment limits stay within D23 (20 MB, 10 files, the seven types).
+- **Not from the descriptor:** health `status` (`online` on insert; set by hand in v1, D23) and `retiredAt`. Re-registering never changes them.
+- **The runtime ARN is never returned.** `details.runtimeLabel` defaults to `arn:…:runtime/<runtime id>` (no account id), or the endpoint's host for `http`.
+
+#### capability: `list_agents` → `AgentService.list_agents()` (GET /v1/agents)
+- **intent:** the catalog.
+- **actor / authz:** a valid access token. **inputs:** none.
+- **rejections:** `401 token_expired` or `token_invalid`.
+- **effect:** agents with `retired_at IS NULL` and `visibility = listed` (also `hidden` everywhere except `APP_ENV=prod`), ordered by `sort_order`, then `name`. Each has `myStats` for the caller: the number of their sessions with the agent that aren't deleted (archived ones count) and the latest `last_message_at` among them (`null` if none). Not paginated.
+- **transaction:** read only. **cross-feature:** reads `sessions` by `user_id`. **side effects, audit:** none. **idempotency:** yes.
+
+#### capability: `get_agent` → `AgentService.get_agent()` (GET /v1/agents/{slug})
+- **intent:** one agent, for the agent's page and its sessions, including retired and hidden ones so old sessions stay readable.
+- **rejections:** `401`; a slug not matching `^[a-z0-9]+(-[a-z0-9]+)*$` → `422 invalid_request`; no agent with this slug → `404 agent_not_found`.
+- **effect:** the agent and the caller's `myStats`, as above.
+- **transaction:** read only. **cross-feature:** as above. **side effects, audit:** none. **idempotency:** yes.
+
+#### operation: `register_agent` → `hub agents add <descriptor.yaml>` (operator only, no HTTP)
+- **intent:** ship an agent by adding its descriptor (J1, D6).
+- **rejections** (exit code 1, nothing written): unreadable file, invalid YAML, or an invalid descriptor (each field error printed); the slug inserted by someone else at the same moment → `conflict` (run it again).
+- **effect:** no agent with the slug → insert it (`deployed_at = now()` when it has a `version`). Otherwise update every descriptor column that differs; a changed `version` also sets `deployed_at = now()` (the "Agent updated" divider). Prints `added`, `updated` (with the version change) or `unchanged`, and, for AgentCore, a reminder that the API can call the runtime only once its ARN is in `agent_runtime_arns` (D27).
+- **transaction:** one commit; the row is locked (`FOR UPDATE`) while it is compared. **side effects:** none. **idempotency:** yes; the same descriptor again is `unchanged`.
+- **audit:** `updated_at`, `deployed_at`; the descriptor's history is git.
+- **run:** `make agent-add file=agents/<slug>.yaml` from the repository root, or `uv run hub agents add ../agents/<slug>.yaml` in `api/`, against `DATABASE_URL`; for dev, Neon's URL from Secrets Manager.
+
+#### operation: `list_registry` → `hub agents list` (operator only)
+- **effect:** every agent, retired and hidden included: slug, name, stage, status, visibility, version, retired date. Read only.
+
+**Picked defaults (2026-10-03):** hidden agents are listed everywhere but production (the contract said "dev builds"); `myStats` counts archived sessions; the API half is built now and the catalog screen follows the web shell (#4), as with auth.
 
 ## 5–8. Non-functional needs, integrations, background work, deployment
 See the profile and ARCHITECTURE: one user in v1 (D9), AgentCore runtimes by exact ARN (D27), Neon Postgres (D3), ECS Fargate behind an ALB (D2), the worker inside the API task (P7).

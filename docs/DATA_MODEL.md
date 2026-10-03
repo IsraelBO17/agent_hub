@@ -3,7 +3,7 @@
 Step 4 of the build plan, amended by the alignment review (build step 4b, migration `0002`). The API shapes built on these tables are in [`api/openapi.yaml`](../api/openapi.yaml). Postgres (Neon), 12 tables.
 
 - ER diagram: [`diagrams/er.mmd`](diagrams/er.mmd) ([PNG](diagrams/er.png)), key columns only.
-- Source of truth: [`api/app/db/models.py`](../api/app/db/models.py) (SQLAlchemy 2). Migrations: [`api/migrations/`](../api/migrations) (Alembic), generated from the models and reviewed by hand.
+- Source of truth: the SQLAlchemy 2 models: [`api/src/app/db/models.py`](../api/src/app/db/models.py) for tables whose feature isn't built yet, and `api/src/app/features/<name>/models.py` for the rest (`auth`: `users`, `refresh_tokens`; `agents`: `agents`). Migrations: [`api/migrations/`](../api/migrations) (Alembic), generated from the models and reviewed by hand.
 - Behaviour tests: [`api/tests/test_schema.py`](../api/tests/test_schema.py). How to run: [`api/README.md`](../api/README.md).
 
 ## Conventions

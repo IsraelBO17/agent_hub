@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Agent Hub API
-  version: 0.2.0
+  version: 0.3.0
   summary: One chat interface for many AI agents. Browser ↔ API contract, plus the API → agent payload.
   description: |
     The contract between the Agent Hub web app and its FastAPI service (build plan step 5).
@@ -294,7 +294,7 @@ paths:
       tags: [Agents]
       operationId: listAgents
       summary: The catalog
-      description: Listed, not retired agents, in catalog order. Not paginated; the registry is small. Hidden agents (the Scenario Agent) are included only in dev builds.
+      description: Listed, not retired agents, in catalog order (the descriptor's `sortOrder`, then name). Not paginated; the registry is small. Hidden agents (the Scenario Agent) are included everywhere except production.
       x-scope: v1
       responses:
         '200':
@@ -320,7 +320,7 @@ paths:
       tags: [Agents]
       operationId: getAgent
       summary: One agent, including retired and hidden ones
-      description: Retired agents are returned (with `retiredAt`) so their old sessions stay readable.
+      description: Retired agents are returned (with `retiredAt`) so their old sessions stay readable. An unknown slug is `404 agent_not_found`; one that doesn't match the slug pattern is `422 invalid_request`.
       x-scope: v1
       parameters:
         - $ref: '#/components/parameters/AgentSlug'
@@ -338,6 +338,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/Invalid'
 
   /v1/agents/{slug}/sessions:
     post:
