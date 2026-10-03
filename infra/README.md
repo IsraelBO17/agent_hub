@@ -14,7 +14,7 @@ modules/
   secrets/        Secrets Manager containers; values are set by hand, never through Terraform.
   alb/            Public ALB: HTTPS (ACM), HTTP→HTTPS, idle timeout 300 s, drain 300 s; api-fleet.qucoon.com on the *.qucoon.com certificate.
   service/        ECS cluster, task definition (ARM64, stopTimeout 120 s), service, logs, IAM, task security group.
-  amplify/        Amplify app for web/ (branch, GitHub and custom domain come in step 8).
+  amplify/        Amplify app for web/: build spec (Node from web/.nvmrc), SPA rewrite, security headers, the main branch, fleet.qucoon.com.
 ```
 
 ## First-time setup
@@ -48,6 +48,19 @@ Nothing here is applied without the owner's go-ahead on the plan output.
    aws secretsmanager put-secret-value --secret-id fleet-dev-session-key-secret-us-east-1 --secret-string "$(openssl rand -base64 48)"
    ```
    The two Neon connection strings are set once the Neon project exists (step 8).
+
+## Connecting the web app to GitHub (once, issue #4)
+
+Amplify builds `web/` from `main` on every push. The GitHub connection is made once by hand, so no token ever reaches Terraform state or git:
+
+1. Install the Amplify GitHub App for us-east-1 on the repository: https://github.com/apps/aws-amplify-us-east-1/installations/new (Only select repositories → `agent_hub`).
+2. Create a classic personal access token with only the `admin:repo_hook` scope and a short expiry. Amplify uses it once to set up the webhook and doesn't keep it.
+3. Connect the app (paste the token at the prompt; it isn't saved in your shell history):
+   ```bash
+   read -rs GITHUB_TOKEN && AWS_PROFILE=ml_account aws amplify update-app --region us-east-1 --app-id "$(terraform -chdir=infra/envs/dev output -raw amplify_app_id)" --repository https://github.com/IsraelBO17/agent_hub --access-token "$GITHUB_TOKEN"; unset GITHUB_TOKEN
+   ```
+4. Delete the token on GitHub. Set `web_repository` in `envs/dev/deploy.auto.tfvars`, plan, and apply: that creates the `main` branch and the `fleet.qucoon.com` domain association.
+5. Send the web app's records from `terraform -chdir=infra/envs/dev output dns_records_for_qucoon` (the certificate's validation CNAME and `fleet.qucoon.com`) to the `qucoon.com` owner. Until they exist, the app is on `web_branch_url`.
 
 ## Turning the API on (step 8)
 

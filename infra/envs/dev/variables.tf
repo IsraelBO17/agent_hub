@@ -75,6 +75,12 @@ variable "api_desired_count" {
   default     = 0
 }
 
+variable "web_repository" {
+  description = "The GitHub repository Amplify builds (D13). Set once the repository is connected by hand (infra/README.md); empty creates no branch or domain."
+  type        = string
+  default     = ""
+}
+
 variable "google_client_id" {
   description = "Google OAuth client ID (not secret; D15). Empty until it is created in the Google Cloud console."
   type        = string

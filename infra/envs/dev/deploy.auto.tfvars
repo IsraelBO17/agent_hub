@@ -12,3 +12,6 @@ api_certificate_arn = "arn:aws:acm:us-east-1:992382810653:certificate/14063ea3-8
 agent_runtime_arns = [
   "arn:aws:bedrock-agentcore:us-east-1:992382810653:runtime/fleet_dev_research_analyst_runtime_us_east_1-J5QFpm41XD",
 ]
+
+# The repository Amplify builds web/ from; connected by hand once (infra/README.md), so no token is in state.
+web_repository = "https://github.com/israelbo17/agent_hub" # lowercase, as Amplify stores it (a case change would re-send it without a token)

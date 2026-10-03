@@ -43,12 +43,17 @@ output "alb_dns_name" {
   value = one(module.alb[*].dns_name)
 }
 
+output "web_branch_url" {
+  description = "The deployed branch on Amplify's default domain, until fleet.qucoon.com resolves."
+  value       = module.web.branch_url
+}
+
 output "dns_records_for_qucoon" {
   description = "CNAME records for the owner of the qucoon.com zone to add (D25)."
-  value = [for dns in module.alb[*].dns_name : {
+  value = concat([for dns in module.alb[*].dns_name : {
     purpose = "the API"
     name    = "${local.api_domain}."
     type    = "CNAME"
     value   = dns
-  }]
+  }], module.web.dns_records)
 }
