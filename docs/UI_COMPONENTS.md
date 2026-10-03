@@ -16,7 +16,7 @@ shadcn/ui supplies the structure and the accessible behaviour. The Pencil file d
 - **Add primitives in the issue that first needs them** (`npx shadcn@latest add <name>`), then restyle that file to its Pencil component before it's used.
 - **No Radix.** Don't add shadcn `command` (its `cmdk` dependency pulls in `@radix-ui/react-dialog`). `make check` in `web/` fails if `npm ls --all` finds any `@radix-ui` package.
 - **Light theme only.** No dark tokens or screens exist (PRODUCT_PLAN §9 item 12): `theme.css` has no `.dark` block, and `.dark` is never set, so the primitives' `dark:` styles never apply.
-- **Restyled in #4** (every primitive `web/` has): Button (variants `primary`, `secondary`, `danger`, `ghost`; icon sizes), Tooltip (no arrow), Sidebar (widths), Sheet (scrim), Card (Content Card `l5WJH`), Dialog (with a `DialogBody` part), Confirm Dialog, Form Field (Field, Label, Input, Textarea), Empty State, Page Heading. The rest of §2 is added by the issue that first needs it. Disabled (50 %) and invalid (`danger` border) stand in until those states are drawn (§5 item 2).
+- **Restyled in #4** (every primitive `web/` has): Button (variants `primary`, `secondary`, `danger`, `ghost`; icon sizes), Tooltip (no arrow), Sidebar (widths), Sheet (scrim), Card (Content Card `l5WJH`), Dialog (with a `DialogBody` part), Confirm Dialog, Form Field (Field, Label, Input, Textarea), Empty State, Page Heading. Issue #7 added `dropdown-menu` (Menu Panel, Menu Item, Agent Menu Item) and `drawer` (the mobile agent sheet), and `components/application/` has Agent Avatar, Status Badge and Stage Tag. The rest of §2 is added by the issue that first needs it. Disabled (50 %) and invalid (`danger` border) stand in until those states are drawn (§5 item 2).
 
 ### Tokens
 

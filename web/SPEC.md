@@ -62,12 +62,18 @@ One per screen. The code follows the block; when a screen changes, its block cha
 - **User:** initials and name in the sidebar footer and the App Header (no Google photo: the CSP allows images from `self` only).
 - **Sign out** (Settings → Account, `RHrDH`): `POST /v1/auth/logout`, the cache cleared, other tabs signed out too (`BroadcastChannel`), then `/sign-in?signed-out`.
 
-### screen: Catalog (`/`)
-- **purpose:** see every agent and continue where you left off.
-- **design:** `PBQLh`; mobile F10.1 `UK1JP`.
-- **data:** none yet (#7: `GET /v1/agents`).
-- **states:** placeholder: "Your agents" and an empty state. #7 adds loading, empty (`j8NhJ`), error (`Jchi9`) and success.
+### screen: Catalog (`/`) (issue #7)
+- **purpose:** see every agent and start a session with one.
+- **design:** `PBQLh`; empty `j8NhJ`; error `Jchi9`; mobile F10.1 `UK1JP`, loading F11.1 `EP1MN`, error `sMh7q`, empty `iX1f6`.
+- **data:** `GET /v1/agents` → `agentsQuery()`; fresh for 60 s (status is set by hand, D23). No agent list in the app.
+- **actions:** an agent card (desktop) or row (mobile) → `/agents/:slug`. Register an agent / How to register an agent → `docs/AGENT_PROFILE.md` (registering in the app is P2). Try again and Reload refetch; Copy error details copies the status, code and reference.
+- **states:** loading (cards' or rows' skeleton); empty ("No agents yet"); error ("Couldn't load your agents", the reference, Try again, Copy error details); success: each agent with its icon tile, status, Beta, framework and runtime, sessions and last use; an offline agent is muted, says "Offline since …" and "Unavailable", and isn't a link.
+- **not built:** "Continue where you left off" needs `GET /v1/sessions` (M2; owner, 2026-10-03).
 - **open questions:** none.
+
+### shell: the Agent Switcher and the agent in the URL (issue #7)
+- **Switcher** (`RZF5q`; menu `uBRCZ`, F8.2; mobile sheet F11.10 `wE4kz`): the current agent is the URL's, else the user's default, else the most recently used, else the first. Picking another opens its new session; offline agents can't be picked. The list loads on first use. Its search field waits for P1.
+- **Chat Header:** the URL's agent from `GET /v1/agents/{slug}` (avatar, name, status). An unknown slug shows "Agent not found" (`V97EP`) with Browse agents and Go back.
 
 ### screen: New session (`/agents/:agentId`), Session (`/agents/:agentId/:sessionId`)
 - **purpose:** start a session with an agent; chat in a session.

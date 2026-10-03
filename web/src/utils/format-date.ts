@@ -16,3 +16,9 @@ export function formatRelative(date: Date, now: Date = new Date()): string {
   }
   return rtf.format(0, 'minute')
 }
+
+/** A day without the time, e.g. "Sep 24" (the year only when it isn't this one). */
+export function formatDay(date: Date, now: Date = new Date()): string {
+  const sameYear = date.getFullYear() === now.getFullYear()
+  return new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric', ...(sameYear ? {} : { year: 'numeric' }), ...(timeZone ? { timeZone } : {}) }).format(date)
+}

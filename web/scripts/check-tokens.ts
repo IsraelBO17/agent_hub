@@ -12,7 +12,7 @@ export const rules: { name: string; pattern: RegExp }[] = [
 ]
 
 const skip = [
-  /^src\/components\/ui\/(alert-dialog|button|card|dialog|field|input|label|separator|sheet|sidebar|skeleton|textarea|tooltip)\.tsx$/,
+  /^src\/components\/ui\/(alert-dialog|button|card|dialog|field|input|label|separator|sheet|sidebar|skeleton|textarea|tooltip|dropdown-menu|drawer)\.tsx$/,
   /^src\/service\/generated\//,
   /^src\/styles\/tokens\.css$/,
   /^src\/lib\/token-names\.ts$/,
