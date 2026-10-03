@@ -3,6 +3,10 @@
  "source": "design/fleet_dev.pen",
  "groups": [
   {
+   "key": "colleagues",
+   "title": "Colleagues and builders (D31)"
+  },
+  {
    "key": "core",
    "title": "Core screens"
   },
@@ -2368,6 +2372,76 @@
    "flow": 11,
    "step": "F11.19",
    "trigger": "Taps “Back to agents”"
+  },
+  {
+   "id": "DXXMq",
+   "name": "Catalog — staff, first visit",
+   "size": "1440×1024",
+   "group": "colleagues",
+   "scope": "P0",
+   "status": "M2",
+   "note": "Staff see no runtime line, no registry footnote and no Register button (design change 3).",
+   "built": [],
+   "flow": null,
+   "step": null,
+   "trigger": null,
+   "render": "colleagues/DXXMq-catalog-staff-first-visit.png"
+  },
+  {
+   "id": "Z8yHd",
+   "name": "Catalog — builder",
+   "size": "1440×1024",
+   "group": "colleagues",
+   "scope": "P0",
+   "status": "M2",
+   "note": "A builder sees Register an agent, and their draft agent with its runtime and the Draft tag (change 5).",
+   "built": [],
+   "flow": null,
+   "step": null,
+   "trigger": null,
+   "render": "colleagues/Z8yHd-catalog-builder.png"
+  },
+  {
+   "id": "b7rUpi",
+   "name": "First visit — new session",
+   "size": "1440×1024",
+   "group": "colleagues",
+   "scope": "P0",
+   "status": "M2",
+   "note": "A colleague opens an agent for the first time: an empty sidebar that says the history is private (change 4).",
+   "built": [],
+   "flow": null,
+   "step": null,
+   "trigger": null,
+   "render": "colleagues/b7rUpi-first-visit-new-session.png"
+  },
+  {
+   "id": "h3wzrt",
+   "name": "Reply details — builders",
+   "size": "1440×1024",
+   "group": "colleagues",
+   "scope": "P0",
+   "status": "M2",
+   "note": "Details on a reply opens the run: model, version, request ID, timings, tokens and cost, tool calls, raw events (change 1).",
+   "built": [],
+   "flow": null,
+   "step": null,
+   "trigger": null,
+   "render": "colleagues/h3wzrt-reply-details-builders.png"
+  },
+  {
+   "id": "suD2V",
+   "name": "Mobile — Reply details",
+   "size": "390×844",
+   "group": "colleagues",
+   "scope": "P0",
+   "status": "M2",
+   "note": "The same details as a bottom sheet.",
+   "built": [],
+   "flow": null,
+   "step": null,
+   "trigger": null,
+   "render": "colleagues/suD2V-mobile-reply-details.png"
   }
  ]
 }

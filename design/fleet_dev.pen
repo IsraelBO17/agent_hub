@@ -1826,13 +1826,18 @@
           "type": "frame",
           "id": "p89GY",
           "name": "Tags",
+          "width": "fit_content(132)",
+          "height": "fit_content(16)",
           "gap": 6,
           "alignItems": "center",
           "children": [
             {
               "type": "text",
               "id": "ohlRV",
+              "x": 0,
+              "y": 0,
               "name": "Framework",
+              "enabled": false,
               "fill": "$text-tertiary",
               "content": "Strands",
               "fontFamily": "$font-mono",
@@ -1842,7 +1847,10 @@
             {
               "type": "text",
               "id": "s5eNT",
+              "x": 57,
+              "y": 0.5,
               "name": "Sep",
+              "enabled": false,
               "fill": "$text-tertiary",
               "content": "·",
               "fontFamily": "$font-ui",
@@ -1852,7 +1860,10 @@
             {
               "type": "text",
               "id": "x1H6I",
+              "x": 67,
+              "y": 0,
               "name": "Runtime",
+              "enabled": false,
               "fill": "$text-tertiary",
               "content": "AgentCore",
               "fontFamily": "$font-mono",
@@ -1866,6 +1877,13 @@
               "name": "Stage",
               "x": 134,
               "y": 0,
+              "enabled": false
+            },
+            {
+              "id": "DcPfg",
+              "type": "ref",
+              "ref": "j8Myl",
+              "name": "Draft",
               "enabled": false
             }
           ]
@@ -2386,7 +2404,7 @@
               "fill": "$danger-strong",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "The agent returned an error. Your message was saved.",
+              "content": "The agent couldn't finish this reply. Your message was saved.",
               "fontFamily": "$font-ui",
               "fontSize": 13,
               "fontWeight": "normal"
@@ -2623,6 +2641,13 @@
           "fontWeight": "600"
         },
         {
+          "id": "z3acML",
+          "type": "ref",
+          "ref": "j8Myl",
+          "name": "Draft",
+          "enabled": false
+        },
+        {
           "type": "frame",
           "id": "JHdPs",
           "name": "Status",
@@ -2709,6 +2734,13 @@
               "type": "ref",
               "ref": "JQ0rx",
               "name": "Status"
+            },
+            {
+              "id": "IupGO",
+              "type": "ref",
+              "ref": "j8Myl",
+              "name": "Draft",
+              "enabled": false
             },
             {
               "type": "text",
@@ -3322,6 +3354,22 @@
           }
         },
         {
+          "id": "dbohV",
+          "type": "ref",
+          "ref": "btfe4",
+          "name": "Details",
+          "width": 28,
+          "height": 28,
+          "descendants": {
+            "xaABz": {
+              "icon": "scan-search",
+              "width": 14,
+              "height": 14,
+              "fill": "$text-tertiary"
+            }
+          }
+        },
+        {
           "id": "HkTKh",
           "type": "ref",
           "ref": "btfe4",
@@ -3650,7 +3698,7 @@
                   "id": "rUzbl",
                   "name": "Label",
                   "fill": "$text-tertiary",
-                  "content": "Online · Strands",
+                  "content": "Online",
                   "fontFamily": "$font-ui",
                   "fontSize": 12,
                   "fontWeight": "normal"
@@ -5430,7 +5478,7 @@
       "reusable": true,
       "fill": "$surface-muted",
       "cornerRadius": 999,
-      "gap": 5,
+      "gap": 6,
       "padding": [
         10,
         12
@@ -5462,6 +5510,16 @@
           "fill": "$text-secondary",
           "width": 7,
           "height": 7
+        },
+        {
+          "type": "text",
+          "id": "WRlse",
+          "name": "Label",
+          "fill": "$text-secondary",
+          "content": "Waiting for the agent · 3 s",
+          "fontFamily": "$font-ui",
+          "fontSize": 13,
+          "fontWeight": "normal"
         }
       ]
     },
@@ -10328,7 +10386,7 @@
                       "id": "XUwDC",
                       "name": "Subtitle",
                       "fill": "$text-secondary",
-                      "content": "Pick an agent to start a new session. 6 agents registered · 5 available now.",
+                      "content": "Pick an agent to start a new session. 6 agents · 5 available now.",
                       "fontFamily": "$font-ui",
                       "fontSize": 15,
                       "fontWeight": "normal"
@@ -10339,6 +10397,8 @@
                   "type": "frame",
                   "id": "e4YaFg",
                   "name": "Controls",
+                  "width": "fit_content(158)",
+                  "height": "fit_content(32)",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
@@ -10347,6 +10407,7 @@
                       "type": "ref",
                       "ref": "XBZK2",
                       "name": "Register an agent",
+                      "enabled": false,
                       "descendants": {
                         "mfSA0": {
                           "enabled": true,
@@ -10754,7 +10815,10 @@
             {
               "type": "frame",
               "id": "pzsqk",
+              "x": 120,
+              "y": 882,
               "name": "Registry Note",
+              "enabled": false,
               "gap": 8,
               "alignItems": "center",
               "children": [
@@ -16209,10 +16273,10 @@
                       "name": "Label",
                       "descendants": {
                         "AfOZN": {
-                          "content": "More menu (P2)"
+                          "content": "Details (builders only)"
                         },
                         "iaryW": {
-                          "content": "Share reply, Copy link, View raw JSON and Report are out of v1"
+                          "content": "Opens Reply details: model, timings, tokens and cost, request ID, raw events. Share, Copy link and Report stay out of v1"
                         }
                       }
                     },
@@ -16290,6 +16354,7 @@
                               "blur": 3
                             }
                           ],
+                          "enabled": false,
                           "descendants": {
                             "p97XhG": {
                               "type": "frame",
@@ -46992,7 +47057,7 @@
                       "id": "XQ237",
                       "name": "Subtitle",
                       "fill": "$text-secondary",
-                      "content": "Agents come from GET /agents. None are registered yet.",
+                      "content": "Agents shared with you appear here.",
                       "fontFamily": "$font-ui",
                       "fontSize": 15,
                       "fontWeight": "normal"
@@ -47003,6 +47068,8 @@
                   "type": "frame",
                   "id": "F39BI4",
                   "name": "Controls",
+                  "width": "fit_content(158)",
+                  "height": "fit_content(32)",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
@@ -47041,6 +47108,7 @@
                       "type": "ref",
                       "ref": "XBZK2",
                       "name": "Register an agent",
+                      "enabled": false,
                       "descendants": {
                         "mfSA0": {
                           "enabled": true,
@@ -47088,7 +47156,10 @@
                       "content": "No agents yet"
                     },
                     "aYTTj": {
-                      "content": "Agents appear here once they're in the registry. Register one with hub agents add agent.yaml, then reload this page."
+                      "content": "No agents have been shared with you yet. Ask the person who builds an agent to add you, then reload this page."
+                    },
+                    "k940K9": {
+                      "enabled": false
                     },
                     "k940K9/W8udYR": {
                       "enabled": true,
@@ -47107,7 +47178,10 @@
             {
               "type": "frame",
               "id": "F4atdO",
+              "x": 120,
+              "y": 896,
               "name": "Registry Note",
+              "enabled": false,
               "gap": 8,
               "alignItems": "center",
               "children": [
@@ -58138,7 +58212,7 @@
                       "id": "jLgsW",
                       "name": "Subtitle",
                       "fill": "$text-secondary",
-                      "content": "Pick an agent to start a new session. 6 agents registered · 5 available now.",
+                      "content": "Pick an agent to start a new session. 6 agents · 5 available now.",
                       "fontFamily": "$font-ui",
                       "fontSize": 15,
                       "fontWeight": "normal"
@@ -58149,6 +58223,8 @@
                   "type": "frame",
                   "id": "jYgsK",
                   "name": "Controls",
+                  "width": "fit_content(158)",
+                  "height": "fit_content(32)",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
@@ -58157,6 +58233,7 @@
                       "type": "ref",
                       "ref": "XBZK2",
                       "name": "Register an agent",
+                      "enabled": false,
                       "descendants": {
                         "mfSA0": {
                           "enabled": true,
@@ -58564,7 +58641,10 @@
             {
               "type": "frame",
               "id": "siHOr",
+              "x": 120,
+              "y": 882,
               "name": "Registry Note",
+              "enabled": false,
               "gap": 8,
               "alignItems": "center",
               "children": [
@@ -60465,7 +60545,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -60940,7 +61020,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -61298,7 +61378,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -61568,7 +61648,12 @@
                               "id": "ZtXKk",
                               "type": "ref",
                               "ref": "eFeRx",
-                              "name": "Typing Indicator"
+                              "name": "Typing Indicator",
+                              "descendants": {
+                                "WRlse": {
+                                  "content": "Waiting for Coding Agent · 3 s"
+                                }
+                              }
                             }
                           ]
                         },
@@ -61660,7 +61745,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -62163,7 +62248,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -62594,7 +62679,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -67929,7 +68014,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -68396,7 +68481,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -69636,7 +69721,7 @@
               "content": "Ledger"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -70004,7 +70089,7 @@
               "content": "Ledger"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -70473,7 +70558,7 @@
               "content": "Ledger"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -70937,7 +71022,7 @@
               "content": "Ledger"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -71378,7 +71463,7 @@
               "content": "Ledger"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -71809,7 +71894,7 @@
                       "id": "KyfZM",
                       "name": "Subtitle",
                       "fill": "$text-secondary",
-                      "content": "Pick an agent to start a new session. 6 agents registered · 5 available now.",
+                      "content": "Pick an agent to start a new session. 6 agents · 5 available now.",
                       "fontFamily": "$font-ui",
                       "fontSize": 15,
                       "fontWeight": "normal"
@@ -71820,6 +71905,8 @@
                   "type": "frame",
                   "id": "D7fIy",
                   "name": "Controls",
+                  "width": "fit_content(158)",
+                  "height": "fit_content(32)",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
@@ -71828,6 +71915,7 @@
                       "type": "ref",
                       "ref": "XBZK2",
                       "name": "Register an agent",
+                      "enabled": false,
                       "descendants": {
                         "mfSA0": {
                           "enabled": true,
@@ -72235,7 +72323,10 @@
             {
               "type": "frame",
               "id": "JWeKc",
+              "x": 120,
+              "y": 882,
               "name": "Registry Note",
+              "enabled": false,
               "gap": 8,
               "alignItems": "center",
               "children": [
@@ -74047,7 +74138,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -74324,7 +74415,7 @@
                                   "content": "Couldn't generate a reply"
                                 },
                                 "lzDZK": {
-                                  "content": "The agent returned an error (500 · req_8f2a). Your message was saved."
+                                  "content": "Coding Agent couldn't finish this reply. Your message was saved."
                                 }
                               }
                             }
@@ -74422,7 +74513,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -74813,7 +74904,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -75240,7 +75331,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -75632,7 +75723,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -75992,7 +76083,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -88615,7 +88706,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -89709,7 +89800,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -90494,7 +90585,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -91175,7 +91266,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -96900,7 +96991,7 @@
                       "id": "DcFs3",
                       "name": "Subtitle",
                       "fill": "$text-secondary",
-                      "content": "Pick an agent to start a new session. 6 agents registered · 5 available now.",
+                      "content": "Pick an agent to start a new session. 6 agents · 5 available now.",
                       "fontFamily": "$font-ui",
                       "fontSize": 15,
                       "fontWeight": "normal"
@@ -96911,6 +97002,8 @@
                   "type": "frame",
                   "id": "GDtGw",
                   "name": "Controls",
+                  "width": "fit_content(158)",
+                  "height": "fit_content(32)",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
@@ -96919,6 +97012,7 @@
                       "type": "ref",
                       "ref": "XBZK2",
                       "name": "Register an agent",
+                      "enabled": false,
                       "descendants": {
                         "mfSA0": {
                           "enabled": true,
@@ -97330,7 +97424,10 @@
             {
               "type": "frame",
               "id": "rZ5lu",
+              "x": 120,
+              "y": 882,
               "name": "Registry Note",
+              "enabled": false,
               "gap": 8,
               "alignItems": "center",
               "children": [
@@ -97389,7 +97486,7 @@
               "content": "Ledger"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -97684,7 +97781,12 @@
                               "id": "t4jnJ",
                               "type": "ref",
                               "ref": "eFeRx",
-                              "name": "Typing Indicator"
+                              "name": "Typing Indicator",
+                              "descendants": {
+                                "WRlse": {
+                                  "content": "Waiting for Ledger · 11 s"
+                                }
+                              }
                             },
                             {
                               "type": "text",
@@ -100176,7 +100278,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -101657,7 +101759,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -102119,7 +102221,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -102525,7 +102627,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -102910,7 +103012,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -103351,7 +103453,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -103792,7 +103894,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -104765,7 +104867,7 @@
               "content": "Health Assistant"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -105201,7 +105303,7 @@
               "content": "Coding Agent"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -109549,7 +109651,7 @@
                   "content": "Couldn't generate a reply"
                 },
                 "lzDZK": {
-                  "content": "Research Analyst returned an error (500 · req_4c1d). Your message is saved, so retrying won't send it again."
+                  "content": "Research Analyst couldn't finish this reply. Your message is saved, so retrying won't send it again."
                 },
                 "v48J0": {
                   "width": "fill_container"
@@ -111251,7 +111353,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -111654,7 +111756,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -112263,7 +112365,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -112699,7 +112801,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -115200,7 +115302,7 @@
                       "id": "XDrTl",
                       "name": "Subtitle",
                       "fill": "$text-secondary",
-                      "content": "Agents come from GET /agents.",
+                      "content": "Pick an agent to start a new session.",
                       "fontFamily": "$font-ui",
                       "fontSize": 15,
                       "fontWeight": "normal"
@@ -115211,6 +115313,8 @@
                   "type": "frame",
                   "id": "gXRT3",
                   "name": "Controls",
+                  "width": "fit_content(158)",
+                  "height": "fit_content(32)",
                   "gap": 12,
                   "alignItems": "center",
                   "children": [
@@ -115249,6 +115353,7 @@
                       "type": "ref",
                       "ref": "XBZK2",
                       "name": "Register an agent",
+                      "enabled": false,
                       "descendants": {
                         "mfSA0": {
                           "enabled": true,
@@ -115297,7 +115402,7 @@
                       "content": "Couldn't load your agents"
                     },
                     "aYTTj": {
-                      "content": "The registry didn't answer (GET /agents returned 503). Nothing is lost: your sessions are stored separately."
+                      "content": "The server had a problem. Try again in a moment. Your sessions are safe."
                     },
                     "k940K9/W8udYR": {
                       "enabled": true,
@@ -115316,7 +115421,10 @@
             {
               "type": "frame",
               "id": "wHJyg",
+              "x": 120,
+              "y": 896,
               "name": "Registry Note",
+              "enabled": false,
               "gap": 8,
               "alignItems": "center",
               "children": [
@@ -116009,7 +116117,7 @@
               "content": "Ledger"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -116721,7 +116829,7 @@
                 },
                 "aYTTj": {
                   "width": "fill_container",
-                  "content": "The registry didn't answer. Your sessions are safe."
+                  "content": "The server had a problem. Try again in a moment. Your sessions are safe."
                 },
                 "k940K9/W8udYR": {
                   "enabled": true,
@@ -123736,6 +123844,9 @@
                     "jjY9k": {
                       "enabled": true
                     },
+                    "jjY9k/dbohV": {
+                      "enabled": false
+                    },
                     "jjY9k/T5u9VW": {
                       "content": "10:43 · 3 tool calls"
                     }
@@ -126085,7 +126196,12 @@
           "id": "jIuN0",
           "type": "ref",
           "ref": "eFeRx",
-          "name": "Typing Indicator"
+          "name": "Typing Indicator",
+          "descendants": {
+            "WRlse": {
+              "enabled": false
+            }
+          }
         },
         {
           "type": "text",
@@ -130568,7 +130684,7 @@
                   "content": "Thinking"
                 },
                 "ryiGq": {
-                  "content": "Dots while waiting for the first token, then a collapsible reasoning row"
+                  "content": "Agent name and elapsed seconds until the first event, then a collapsible reasoning row"
                 }
               }
             },
@@ -130597,7 +130713,7 @@
                           "content": "Waiting"
                         },
                         "iaryW": {
-                          "content": "Three-dot indicator until the first event"
+                          "content": "Names the agent and counts seconds until the first event"
                         }
                       }
                     },
@@ -130661,7 +130777,12 @@
                                   "id": "vfzuv",
                                   "type": "ref",
                                   "ref": "eFeRx",
-                                  "name": "Typing Indicator"
+                                  "name": "Typing Indicator",
+                                  "descendants": {
+                                    "WRlse": {
+                                      "content": "Waiting for Health Assistant · 3 s"
+                                    }
+                                  }
                                 }
                               ]
                             },
@@ -132123,7 +132244,7 @@
                   "content": "Streaming"
                 },
                 "ryiGq": {
-                  "content": "Partial reply with a soft caret; Stop replaces Send"
+                  "content": "Text appears at a steady pace, not in bursts; Stop replaces Send"
                 }
               }
             },
@@ -132423,6 +132544,47 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "frame",
+              "id": "P6720",
+              "name": "Reveal rule",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 10,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                14,
+                16
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "rjwgE",
+                  "name": "Title",
+                  "fill": "$text-primary",
+                  "content": "Steady reveal (the rule for streamed text)",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "DOlVF",
+                  "name": "Body",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Text arrives in uneven bursts (the model and runtime, not the hub). The web app buffers it and reveals it at a steady pace: about 60 characters a second, speeding up whenever it falls more than 1 s behind what has arrived, so it never lags. Everything that has arrived shows at once when the reply ends, when the user presses Stop or scrolls up, and when the tab is hidden. Thinking, tool chips, plans and other blocks are not paced: they appear as they arrive. With reduced motion, text appears a sentence at a time instead.",
+                  "lineHeight": 1.55,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
             }
           ]
         },
@@ -132547,7 +132709,7 @@
                                       "content": "Couldn't generate a reply"
                                     },
                                     "lzDZK": {
-                                      "content": "The agent returned an error (500 · req_8f2a). Your message was saved."
+                                      "content": "Coding Agent couldn't finish this reply. Your message was saved."
                                     }
                                   }
                                 }
@@ -133858,7 +134020,7 @@
                                       "content": "Couldn't generate a reply"
                                     },
                                     "lzDZK": {
-                                      "content": "The agent returned an error (500 · req_8f2a). Your message was saved."
+                                      "content": "Coding Agent couldn't finish this reply. Your message was saved."
                                     },
                                     "v48J0/BsWQ6": {
                                       "content": "Retry"
@@ -136308,7 +136470,7 @@
               "content": "Research Analyst"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -140102,7 +140264,7 @@
               "content": "Ledger"
             },
             "GRHgJ/rUzbl": {
-              "content": "Online · Strands"
+              "content": "Online"
             },
             "uHSbn": {
               "type": "frame",
@@ -147714,6 +147876,3231 @@
       "width": 560,
       "height": 110,
       "content": "Focus: every focusable control gets the Focus Ring component when focused by keyboard: a 2 px $focus-ring ring (= $accent, shadcn --ring) with a 2 px gap; ring radius = the control's radius + 4, pills stay 999. Rows inside menus, the palette and lists don't get a ring: their focus is the highlight fill ($hover in menus, $sidebar in the palette)."
+    },
+    {
+      "type": "frame",
+      "id": "j8Myl",
+      "x": 2301,
+      "y": -7044,
+      "name": "Stage Tag / Draft",
+      "reusable": true,
+      "fill": "$warning-subtle",
+      "cornerRadius": 999,
+      "stroke": "$warning-line",
+      "strokeWidth": 1,
+      "gap": 4,
+      "padding": [
+        2,
+        8
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "icon",
+          "id": "QP8PJ",
+          "name": "Icon",
+          "width": 12,
+          "height": 12,
+          "icon": "eye-off",
+          "library": "lucide",
+          "fill": "$warning-strong"
+        },
+        {
+          "type": "text",
+          "id": "QLryd",
+          "name": "Label",
+          "fill": "$warning-strong",
+          "content": "Draft · builders only",
+          "fontFamily": "$font-ui",
+          "fontSize": 12,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "n63hvg",
+      "x": 4520,
+      "y": -1130,
+      "name": "Reply Details",
+      "reusable": true,
+      "width": 380,
+      "fill": "$surface",
+      "stroke": "$border",
+      "strokeWidth": {
+        "left": 1
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "CGweY",
+          "name": "Header",
+          "width": "fill_container",
+          "height": 60,
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "padding": [
+            0,
+            12,
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "viPVb",
+              "name": "Title Block",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "yKDHo",
+                  "name": "Title",
+                  "fill": "$text-primary",
+                  "content": "Reply details",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "o8FtCW",
+                  "name": "Subtitle",
+                  "fill": "$text-tertiary",
+                  "content": "Research Analyst · 10:43 · Complete",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "Sz563",
+              "type": "ref",
+              "ref": "btfe4",
+              "name": "Close",
+              "descendants": {
+                "xaABz": {
+                  "icon": "x"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XUEjX",
+          "name": "Body",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "c2YhVG",
+              "name": "RUN",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ZexLh",
+                  "name": "Head",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "dBCjh",
+                      "name": "L",
+                      "fill": "$text-tertiary",
+                      "content": "RUN",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.2
+                    }
+                  ]
+                },
+                {
+                  "id": "K4UMb",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "Model",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "cpu"
+                    },
+                    "xiNNU": {
+                      "content": "Model"
+                    },
+                    "jGvZV": {
+                      "content": "Claude Sonnet 5.5"
+                    }
+                  }
+                },
+                {
+                  "id": "P4S7FS",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "Agent version",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "git-commit-horizontal"
+                    },
+                    "xiNNU": {
+                      "content": "Agent version"
+                    },
+                    "jGvZV": {
+                      "content": "v4 · deployed Oct 2"
+                    }
+                  }
+                },
+                {
+                  "id": "tiBDJ",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "Request ID",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "hash"
+                    },
+                    "xiNNU": {
+                      "content": "Request ID"
+                    },
+                    "jGvZV": {
+                      "content": "req_7f3a91c2  ⧉",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12
+                    }
+                  }
+                },
+                {
+                  "id": "c7Is9",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "Status",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "circle-check"
+                    },
+                    "xiNNU": {
+                      "content": "Status"
+                    },
+                    "jGvZV": {
+                      "content": "Complete"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d9iiO",
+              "name": "TIMING",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "iYTmH",
+                  "name": "Head",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QWDJv",
+                      "name": "L",
+                      "fill": "$text-tertiary",
+                      "content": "TIMING",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "B798Mn",
+                      "name": "N",
+                      "fill": "$text-tertiary",
+                      "content": "13.6 s total",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Tbr50",
+                  "name": "Bar",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 8,
+                  "cornerRadius": 4,
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "iRX87",
+                      "name": "Waiting",
+                      "fill": "$chart-3",
+                      "width": 29,
+                      "height": 8
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "ZAzt9",
+                      "name": "Thinking",
+                      "fill": "$chart-2",
+                      "width": 76,
+                      "height": 8
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "O88tr3",
+                      "name": "Tools",
+                      "fill": "$chart-5",
+                      "width": 10,
+                      "height": 8
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "SCgLV",
+                      "name": "Writing",
+                      "fill": "$chart-1",
+                      "width": 219,
+                      "height": 8
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "jRC8E",
+                  "name": "Legend",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "xgS9H",
+                      "name": "Row 1",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "xcdwu",
+                          "name": "Waiting 1.2 s",
+                          "gap": 5,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "VzNS5",
+                              "name": "Key",
+                              "fill": "$chart-3",
+                              "width": 7,
+                              "height": 7
+                            },
+                            {
+                              "type": "text",
+                              "id": "G1Ca1",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Waiting 1.2 s",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ER5k8",
+                          "name": "Thinking 3.1 s",
+                          "gap": 5,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "wTOho",
+                              "name": "Key",
+                              "fill": "$chart-2",
+                              "width": 7,
+                              "height": 7
+                            },
+                            {
+                              "type": "text",
+                              "id": "qdJQV",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Thinking 3.1 s",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xDpU3",
+                      "name": "Row 2",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "N7AFaD",
+                          "name": "Tools 0.4 s",
+                          "gap": 5,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "LzbOR",
+                              "name": "Key",
+                              "fill": "$chart-5",
+                              "width": 7,
+                              "height": 7
+                            },
+                            {
+                              "type": "text",
+                              "id": "BMpWR",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Tools 0.4 s",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jngls",
+                          "name": "Writing 8.9 s",
+                          "gap": 5,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "LzPVX",
+                              "name": "Key",
+                              "fill": "$chart-1",
+                              "width": 7,
+                              "height": 7
+                            },
+                            {
+                              "type": "text",
+                              "id": "DZBJ0",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Writing 8.9 s",
+                              "fontFamily": "$font-ui",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "W9xUJy",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "First event",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "send"
+                    },
+                    "xiNNU": {
+                      "content": "First event"
+                    },
+                    "jGvZV": {
+                      "content": "1.2 s"
+                    }
+                  }
+                },
+                {
+                  "id": "p62GSP",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "First words",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "text-cursor"
+                    },
+                    "xiNNU": {
+                      "content": "First words"
+                    },
+                    "jGvZV": {
+                      "content": "4.7 s"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "oRvG1",
+              "name": "TOKENS AND COST",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MQwJm",
+                  "name": "Head",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "zaGAn",
+                      "name": "L",
+                      "fill": "$text-tertiary",
+                      "content": "TOKENS AND COST",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.2
+                    }
+                  ]
+                },
+                {
+                  "id": "r3yvZL",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "Input",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "arrow-down-to-line"
+                    },
+                    "xiNNU": {
+                      "content": "Input"
+                    },
+                    "jGvZV": {
+                      "content": "6,214"
+                    }
+                  }
+                },
+                {
+                  "id": "n1Es0",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "Output",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "arrow-up-from-line"
+                    },
+                    "xiNNU": {
+                      "content": "Output"
+                    },
+                    "jGvZV": {
+                      "content": "1,802"
+                    }
+                  }
+                },
+                {
+                  "id": "Th0ZM",
+                  "type": "ref",
+                  "ref": "NEFiE",
+                  "name": "Cost (estimated)",
+                  "width": "fill_container",
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "descendants": {
+                    "kLCGF": {
+                      "icon": "coins"
+                    },
+                    "xiNNU": {
+                      "content": "Cost (estimated)"
+                    },
+                    "jGvZV": {
+                      "content": "$0.046"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "GIGes",
+              "name": "TOOL CALLS",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "u6pNg0",
+                  "name": "Head",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "S3Pel",
+                      "name": "L",
+                      "fill": "$text-tertiary",
+                      "content": "TOOL CALLS",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "zlnKx",
+                      "name": "N",
+                      "fill": "$text-tertiary",
+                      "content": "1",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gfgzF",
+                  "name": "fetch_url",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "cornerRadius": 9,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "gap": 10,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "vaQW2",
+                      "name": "Status",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "circle-check",
+                      "library": "lucide",
+                      "fill": "$online"
+                    },
+                    {
+                      "type": "text",
+                      "id": "gt5fI",
+                      "name": "Name",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "fetch_url",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "aka2L",
+                      "name": "Meta",
+                      "fill": "$text-tertiary",
+                      "content": "0.4 s · 2.1 kB out",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "i8s7k",
+                      "name": "Chevron",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "$text-tertiary"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d1Zuxj",
+              "name": "RAW EVENTS",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "I2sFBo",
+                  "name": "Head",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TBsbr",
+                      "name": "L",
+                      "fill": "$text-tertiary",
+                      "content": "RAW EVENTS",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "h8II4",
+                      "name": "N",
+                      "fill": "$text-tertiary",
+                      "content": "214",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "itnyq",
+                  "name": "Log",
+                  "width": "fill_container",
+                  "fill": "$code",
+                  "cornerRadius": 9,
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "sZUV7",
+                      "name": "Line 1",
+                      "fill": "$code-text",
+                      "content": "0.000  run.started",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "dhXyp",
+                      "name": "Line 2",
+                      "fill": "$code-text",
+                      "content": "1.204  block.started   thinking",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "miKGY",
+                      "name": "Line 3",
+                      "fill": "$code-text",
+                      "content": "1.211  block.delta ×38",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "L1NEj4",
+                      "name": "Line 4",
+                      "fill": "$code-text",
+                      "content": "4.318  block.started   tool fetch_url",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qjSsx",
+                      "name": "Line 5",
+                      "fill": "$code-text",
+                      "content": "4.702  block.completed tool",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "JdPEM",
+                      "name": "Line 6",
+                      "fill": "$code-text",
+                      "content": "4.715  block.delta ×171   text",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q1MvYH",
+                      "name": "Line 7",
+                      "fill": "$code-text",
+                      "content": "13.612 run.completed",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "STRN6",
+                  "name": "Actions",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "id": "rk2NX",
+                      "type": "ref",
+                      "ref": "XBZK2",
+                      "name": "Copy as JSON",
+                      "descendants": {
+                        "mfSA0": {
+                          "icon": "copy"
+                        },
+                        "BsWQ6": {
+                          "content": "Copy as JSON"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "oiRz6",
+          "name": "Footer",
+          "width": "fill_container",
+          "stroke": "$border",
+          "strokeWidth": {
+            "top": 1
+          },
+          "gap": 8,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "Oyfmz",
+              "name": "Icon",
+              "width": 13,
+              "height": 13,
+              "icon": "wrench",
+              "library": "lucide",
+              "fill": "$text-tertiary"
+            },
+            {
+              "type": "text",
+              "id": "F7s7y9",
+              "name": "Note",
+              "fill": "$text-tertiary",
+              "content": "Only Research Analyst's builders see this.",
+              "fontFamily": "$font-ui",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "h3wzrt",
+      "x": 0,
+      "y": 43100,
+      "name": "Reply details — builders",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$bg",
+      "children": [
+        {
+          "id": "j52tuF",
+          "type": "ref",
+          "ref": "hj5RV",
+          "name": "Sidebar",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "W90ZX",
+          "name": "Chat Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "WwOno",
+              "type": "ref",
+              "ref": "H0YWK",
+              "name": "Chat Header",
+              "width": "fill_container",
+              "descendants": {
+                "yLOjn": {
+                  "fill": "$surface-muted"
+                },
+                "yLOjn/xaABz": {
+                  "icon": "panel-right",
+                  "fill": "$text-primary"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "XFkc8",
+              "name": "Thread",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                0,
+                0,
+                24,
+                0
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ZffqS",
+                  "name": "Column",
+                  "width": 760,
+                  "layout": "vertical",
+                  "gap": 28,
+                  "children": [
+                    {
+                      "id": "C1Euv",
+                      "type": "ref",
+                      "ref": "EfHME",
+                      "name": "User Message",
+                      "width": "fill_container"
+                    },
+                    {
+                      "id": "j0s4x",
+                      "type": "ref",
+                      "ref": "BsXl7",
+                      "name": "Agent Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "BohzX": {
+                          "type": "frame",
+                          "id": "xwiPW",
+                          "name": "Content",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "wzuVp",
+                              "name": "Tool Calls",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "V3BUr",
+                                  "name": "Chip Row",
+                                  "gap": 8,
+                                  "children": [
+                                    {
+                                      "id": "h9sDDf",
+                                      "type": "ref",
+                                      "ref": "Hbhy0",
+                                      "name": "read_file",
+                                      "descendants": {
+                                        "Lj8UD": {
+                                          "content": "read_file"
+                                        },
+                                        "FCBEG": {
+                                          "content": "auth.ts · 0.2s"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "id": "RmEJn",
+                                      "type": "ref",
+                                      "ref": "Hbhy0",
+                                      "name": "search_code",
+                                      "descendants": {
+                                        "Lj8UD": {
+                                          "content": "search_code"
+                                        },
+                                        "FCBEG": {
+                                          "content": "3 matches · 0.4s"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "eUDMW",
+                                  "type": "ref",
+                                  "ref": "pkhri",
+                                  "name": "run_tests (expanded)",
+                                  "width": "fill_container"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "ki9I8",
+                              "name": "Paragraph",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "The failure is a timing race. isExpired() compares the token's exp claim against Date.now(), but the test fixture mints a token that expires exactly 1 second after creation. On a slow CI runner the check can run before that second elapses, so the expired-token case passes as valid.",
+                              "lineHeight": 1.65,
+                              "fontFamily": "$font-ui",
+                              "fontSize": 15,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "YmN9g",
+                              "name": "Markdown Table",
+                              "clip": true,
+                              "width": "fill_container",
+                              "cornerRadius": 10,
+                              "stroke": "$border",
+                              "strokeWidth": 1,
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "THn8J",
+                                  "name": "Header Row",
+                                  "width": "fill_container",
+                                  "fill": "$sidebar",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "fcrm7",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Run",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "wJaIu",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Token age at check",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "o5eP9q",
+                                      "name": "Cell",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Result",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Enon1",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "YCbTS",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#3",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "auiGz",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "998 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "R4D8rH",
+                                      "name": "Cell",
+                                      "fill": "$danger",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✕ 200 OK",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "JOZSi",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "stroke": "$border",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  },
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "ud0S9",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#7",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "FufH7",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "1,004 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "m2JYxV",
+                                      "name": "Cell",
+                                      "fill": "$online",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✓ 401",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "UVs5q",
+                                  "name": "Row",
+                                  "width": "fill_container",
+                                  "fill": "$surface",
+                                  "padding": [
+                                    9,
+                                    14
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "xY7fE",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "#11",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "X1n5P",
+                                      "name": "Cell",
+                                      "fill": "$text-secondary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "991 ms",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "A99kK",
+                                      "name": "Cell",
+                                      "fill": "$danger",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "✕ 200 OK",
+                                      "fontFamily": "$font-ui",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "s45aii",
+                              "name": "Paragraph",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Freeze time in the test instead of relying on wall-clock time:",
+                              "lineHeight": 1.65,
+                              "fontFamily": "$font-ui",
+                              "fontSize": 15,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "Sivs5",
+                              "type": "ref",
+                              "ref": "wW1XY",
+                              "name": "Code Block",
+                              "width": "fill_container"
+                            }
+                          ]
+                        },
+                        "jjY9k/dbohV": {
+                          "fill": "$hover"
+                        },
+                        "jjY9k/dbohV/xaABz": {
+                          "fill": "$text-primary"
+                        },
+                        "jjY9k/T5u9VW": {
+                          "content": "10:43 · 3 tool calls"
+                        }
+                      }
+                    },
+                    {
+                      "id": "OMe2h",
+                      "type": "ref",
+                      "ref": "EfHME",
+                      "name": "User Message",
+                      "width": "fill_container",
+                      "descendants": {
+                        "FaJKO": {
+                          "content": "Looks right. Apply the patch and rerun the suite 50 times to confirm."
+                        },
+                        "s3ct8N": {
+                          "content": "10:45"
+                        }
+                      }
+                    },
+                    {
+                      "id": "HKiXJ",
+                      "type": "ref",
+                      "ref": "BsXl7",
+                      "name": "Agent Message — Streaming",
+                      "width": "fill_container",
+                      "descendants": {
+                        "BohzX": {
+                          "type": "frame",
+                          "id": "QDF64",
+                          "name": "Content",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 14,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "fn0CX",
+                              "name": "Chip Row",
+                              "gap": 8,
+                              "children": [
+                                {
+                                  "id": "XYPxy",
+                                  "type": "ref",
+                                  "ref": "Hbhy0",
+                                  "name": "apply_patch",
+                                  "descendants": {
+                                    "Lj8UD": {
+                                      "content": "apply_patch"
+                                    },
+                                    "FCBEG": {
+                                      "content": "+6 −2 · 0.3s"
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "gitWB",
+                                  "type": "ref",
+                                  "ref": "Hbhy0",
+                                  "name": "run_tests (running)",
+                                  "fill": "$accent-soft",
+                                  "stroke": "$accent-line",
+                                  "descendants": {
+                                    "q8wsPE": {
+                                      "icon": "loader-circle",
+                                      "fill": "$accent"
+                                    },
+                                    "Lj8UD": {
+                                      "content": "run_tests",
+                                      "fill": "$accent"
+                                    },
+                                    "FCBEG": {
+                                      "content": "Running · 31/50",
+                                      "fill": "$accent"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "CboZB",
+                              "name": "Streaming Text",
+                              "width": "fill_container",
+                              "gap": 2,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "udJpY",
+                                  "name": "Paragraph",
+                                  "fill": "$text-primary",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Patch applied to tests/auth.spec.ts. The first 31 runs have all passed, including the expired-token case, which now consistently returns 401. I'll report the final ▍",
+                                  "lineHeight": 1.65,
+                                  "fontFamily": "$font-ui",
+                                  "fontSize": 15,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "jjY9k": {
+                          "enabled": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "phJVR",
+              "name": "Composer Area",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                4,
+                0,
+                20,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "dMBpm",
+                  "type": "ref",
+                  "ref": "K6k66O",
+                  "name": "Composer",
+                  "width": 760,
+                  "descendants": {
+                    "pd7xv": {
+                      "content": "Message Coding Agent…"
+                    },
+                    "l7U0l": {
+                      "enabled": false
+                    },
+                    "rKlXG": {
+                      "enabled": true
+                    },
+                    "yv5LZ": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "EM2TS",
+                  "type": "ref",
+                  "ref": "QTWM6",
+                  "name": "Disclaimer",
+                  "content": "Coding Agent can make mistakes. Tool calls run in an isolated sandbox."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hO8ej",
+          "type": "ref",
+          "ref": "n63hvg",
+          "name": "Reply Details",
+          "layoutPosition": "absolute",
+          "x": 1060,
+          "y": 0,
+          "height": 1024,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#1B1A1714",
+            "offset": {
+              "x": -12,
+              "y": 0
+            },
+            "blur": 32
+          },
+          "descendants": {
+            "o8FtCW": {
+              "content": "Coding Agent · 10:43 · Complete"
+            },
+            "XUEjX": {
+              "height": "fill_container"
+            },
+            "K4UMb/jGvZV": {
+              "content": "Claude Sonnet 5.5"
+            },
+            "zlnKx": {
+              "content": "3"
+            },
+            "gt5fI": {
+              "content": "run_tests"
+            },
+            "aka2L": {
+              "content": "8.1 s · 4 of 20 failed"
+            },
+            "L1NEj4": {
+              "content": "4.318  block.started   tool read_file"
+            },
+            "Q1MvYH": {
+              "content": "13.612 run.completed"
+            },
+            "F7s7y9": {
+              "content": "Only Coding Agent's builders see this."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "suD2V",
+      "x": 1560,
+      "y": 43100,
+      "name": "Mobile — Reply details",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "cornerRadius": 36,
+      "stroke": "$border-strong",
+      "strokeWidth": 1,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "TUAvf",
+          "type": "ref",
+          "ref": "CLJUJ",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "R3JkI",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "height": 52,
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 10,
+          "padding": [
+            0,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "R3R23d",
+              "name": "Menu",
+              "width": 20,
+              "height": 20,
+              "icon": "menu",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "id": "RVICt",
+              "type": "ref",
+              "ref": "vCJQN",
+              "name": "Agent Avatar",
+              "fill": "$agent-purple-bg",
+              "descendants": {
+                "Jg8uM": {
+                  "icon": "book-open-text",
+                  "fill": "$agent-purple-fg"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "AY30u",
+              "name": "Title",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "D4dBV",
+                  "name": "Agent",
+                  "fill": "$text-primary",
+                  "content": "Research Analyst",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "EP4M0",
+                  "name": "Session",
+                  "fill": "$text-tertiary",
+                  "content": "Distillation brief",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "v6Kvl",
+              "name": "New",
+              "width": 19,
+              "height": 19,
+              "icon": "square-pen",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "vVsmv",
+          "name": "Thread",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": 16,
+          "justifyContent": "end",
+          "children": [
+            {
+              "id": "rOBRU",
+              "type": "ref",
+              "ref": "EfHME",
+              "name": "User Message",
+              "width": "fill_container",
+              "descendants": {
+                "GbV3H": {
+                  "width": 290
+                },
+                "FaJKO": {
+                  "content": "Write a short research brief on distilling small agent models.",
+                  "fontSize": 15
+                },
+                "s3ct8N": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "nV4mQ",
+              "name": "Reply",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Here's the brief. I compared six recent papers and pulled the headline numbers into a table.",
+              "lineHeight": 1.6,
+              "fontFamily": "$font-ui",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            },
+            {
+              "id": "aPqLo",
+              "type": "ref",
+              "ref": "SMBup",
+              "name": "Artifact Card",
+              "width": "fill_container",
+              "stroke": "$accent",
+              "strokeWidth": 1.5,
+              "descendants": {
+                "EvmOU": {
+                  "padding": 8,
+                  "stroke": "$border"
+                },
+                "V3ZNc9": {
+                  "enabled": false
+                },
+                "Hupb5": {
+                  "icon": "chevron-right"
+                }
+              }
+            },
+            {
+              "id": "TKib8",
+              "type": "ref",
+              "ref": "SnIqS",
+              "name": "Message Actions",
+              "descendants": {
+                "T5u9VW": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AWdHQ",
+          "name": "Composer",
+          "width": "fill_container",
+          "padding": [
+            8,
+            12,
+            28,
+            12
+          ],
+          "children": [
+            {
+              "id": "GPtLw",
+              "type": "ref",
+              "ref": "OUcXN",
+              "name": "Composer",
+              "width": "fill_container",
+              "descendants": {
+                "IB1yY": {
+                  "content": "Message Research Analyst…"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Yrg40",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Scrim",
+          "width": 390,
+          "height": 844,
+          "fill": "$scrim-light"
+        },
+        {
+          "type": "frame",
+          "id": "rfXlt",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 120,
+          "name": "Details Sheet",
+          "clip": true,
+          "width": 390,
+          "height": 724,
+          "fill": "$surface",
+          "cornerRadius": [
+            16,
+            16,
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "kqXf9",
+              "name": "Grabber",
+              "width": "fill_container",
+              "height": 20,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "EOVu8",
+                  "name": "Handle",
+                  "fill": "$border-strong",
+                  "width": 36,
+                  "height": 4
+                }
+              ]
+            },
+            {
+              "id": "cTQJw",
+              "type": "ref",
+              "ref": "n63hvg",
+              "name": "Reply Details",
+              "width": "fill_container",
+              "strokeWidth": 0,
+              "descendants": {
+                "o8FtCW": {
+                  "content": "Research Analyst · 09:12 · Complete"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "b7rUpi",
+      "x": 3120,
+      "y": 43100,
+      "name": "First visit — new session",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$bg",
+      "children": [
+        {
+          "id": "HER5J",
+          "type": "ref",
+          "ref": "hj5RV",
+          "name": "Sidebar",
+          "height": "fill_container",
+          "descendants": {
+            "GRHgJ": {
+              "stroke": "$border",
+              "strokeWidth": 1
+            },
+            "GRHgJ/R8Iz13": {
+              "fill": "$agent-purple-bg"
+            },
+            "GRHgJ/R8Iz13/Jg8uM": {
+              "icon": "book-open-text",
+              "fill": "$agent-purple-fg"
+            },
+            "GRHgJ/ZFVRA": {
+              "content": "Research Analyst"
+            },
+            "m3Rwp": {
+              "fill": "$surface-muted"
+            },
+            "m3Rwp/M9DTK2": {
+              "fontWeight": "600"
+            },
+            "uHSbn": {
+              "type": "frame",
+              "id": "VoWVJ",
+              "name": "Session List",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                18,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "SJqII",
+                  "name": "Empty Title",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "No sessions with Research Analyst yet",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "IoEhb",
+                  "name": "Empty Body",
+                  "fill": "$text-tertiary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Your conversations with it will be listed here. Only you can see them.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-ui",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            "l25fy/augts": {
+              "content": "TA"
+            },
+            "l25fy/yPOoA": {
+              "content": "Tolu A."
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "x8zIKs",
+          "name": "Chat Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "uMDXG",
+              "type": "ref",
+              "ref": "H0YWK",
+              "name": "Chat Header",
+              "width": "fill_container",
+              "descendants": {
+                "u5en6G": {
+                  "fill": "$agent-purple-bg"
+                },
+                "u5en6G/Jg8uM": {
+                  "icon": "book-open-text",
+                  "fill": "$agent-purple-fg"
+                },
+                "Cqh5k": {
+                  "content": "Research Analyst"
+                },
+                "LhLSN": {
+                  "content": "New session",
+                  "fill": "$text-tertiary"
+                },
+                "Z776zF": {
+                  "enabled": false
+                },
+                "LbIfx": {
+                  "content": "Not saved yet · created on first message"
+                },
+                "DSisD": {
+                  "opacity": 0.35
+                },
+                "yLOjn": {
+                  "opacity": 0.35
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "rUixu",
+              "name": "Thread",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                0,
+                0,
+                40,
+                0
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YlYr0",
+                  "name": "Empty Session",
+                  "width": 760,
+                  "layout": "vertical",
+                  "gap": 32,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "a7hwet",
+                      "name": "Intro",
+                      "layout": "vertical",
+                      "gap": 14,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "gYUpF",
+                          "type": "ref",
+                          "ref": "vCJQN",
+                          "name": "Agent Avatar",
+                          "width": 56,
+                          "height": 56,
+                          "cornerRadius": 16,
+                          "fill": "$agent-purple-bg",
+                          "descendants": {
+                            "Jg8uM": {
+                              "icon": "book-open-text",
+                              "fill": "$agent-purple-fg",
+                              "width": 28,
+                              "height": 28
+                            }
+                          }
+                        },
+                        {
+                          "type": "text",
+                          "id": "shu5g",
+                          "name": "Title",
+                          "fill": "$text-primary",
+                          "content": "What should I read for you?",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 28,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.5
+                        },
+                        {
+                          "type": "text",
+                          "id": "xghgl",
+                          "name": "Subtitle",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": 560,
+                          "content": "Research Analyst reads the web pages you give it and answers from what they say, with links to its sources.",
+                          "lineHeight": 1.55,
+                          "textAlign": "center",
+                          "fontFamily": "$font-ui",
+                          "fontSize": 15,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xsLan",
+                      "name": "Starter Prompts",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Q4aER",
+                          "name": "Row",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "id": "oVEDd",
+                              "type": "ref",
+                              "ref": "fkUCB",
+                              "name": "Summarize my latest lab results",
+                              "width": "fill_container",
+                              "descendants": {
+                                "q04s3": {
+                                  "content": "Summarise a page"
+                                },
+                                "YU85i": {
+                                  "content": "Five bullet points, with a link to the page"
+                                }
+                              }
+                            },
+                            {
+                              "id": "T4AQpp",
+                              "type": "ref",
+                              "ref": "fkUCB",
+                              "name": "Check a medication interaction",
+                              "width": "fill_container",
+                              "descendants": {
+                                "q04s3": {
+                                  "content": "Compare two pages"
+                                },
+                                "YU85i": {
+                                  "content": "Where they agree and where they differ"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uoLeD",
+                          "name": "Row",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "id": "nHGS5",
+                              "type": "ref",
+                              "ref": "fkUCB",
+                              "name": "Prepare for a doctor's visit",
+                              "width": "fill_container",
+                              "descendants": {
+                                "q04s3": {
+                                  "content": "Check a claim"
+                                },
+                                "YU85i": {
+                                  "content": "Does the source actually say it?"
+                                }
+                              }
+                            },
+                            {
+                              "id": "AUh3e",
+                              "type": "ref",
+                              "ref": "fkUCB",
+                              "name": "Explain a term in my records",
+                              "width": "fill_container",
+                              "descendants": {
+                                "q04s3": {
+                                  "content": "Pull out the numbers"
+                                },
+                                "YU85i": {
+                                  "content": "Key figures, with context"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Zi41V",
+              "name": "Composer Area",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                4,
+                0,
+                20,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "QOMXn",
+                  "type": "ref",
+                  "ref": "K6k66O",
+                  "name": "Composer",
+                  "width": 760,
+                  "descendants": {
+                    "pd7xv": {
+                      "content": "Message Research Analyst…"
+                    },
+                    "yv5LZ": {
+                      "fill": "$surface-muted"
+                    },
+                    "HBv0r": {
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "id": "VNoQS",
+                  "type": "ref",
+                  "ref": "QTWM6",
+                  "name": "Disclaimer",
+                  "content": "Research Analyst can make mistakes. It only reads the pages you link, and those pages can be wrong or out of date."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "DXXMq",
+      "x": 4680,
+      "y": 43100,
+      "name": "Catalog — staff, first visit",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "dVdVv",
+          "type": "ref",
+          "ref": "fqLch",
+          "name": "App Header",
+          "width": "fill_container",
+          "descendants": {
+            "Irjyk": {
+              "content": "TA"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "gCgpe",
+          "name": "Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 32,
+          "padding": [
+            48,
+            120
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "luLLb",
+              "name": "Page Heading",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NhzvK",
+                  "name": "Title Group",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "s9ZJv4",
+                      "name": "Title",
+                      "fill": "$text-primary",
+                      "content": "Your agents",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 28,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.6
+                    },
+                    {
+                      "type": "text",
+                      "id": "VYQeB",
+                      "name": "Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "Pick an agent to start a new session. 3 agents are shared with you.",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ENXDA",
+                  "name": "Controls",
+                  "width": "fit_content(158)",
+                  "height": "fit_content(32)",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "RAbUP",
+                      "type": "ref",
+                      "ref": "XBZK2",
+                      "name": "Register an agent",
+                      "enabled": false,
+                      "descendants": {
+                        "mfSA0": {
+                          "enabled": true,
+                          "icon": "book-open"
+                        },
+                        "BsWQ6": {
+                          "content": "Register an agent"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VyhYC",
+              "name": "Agent Grid",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "E7cKv",
+                  "name": "Row 1",
+                  "width": "fill_container",
+                  "gap": 20,
+                  "children": [
+                    {
+                      "id": "s8SuV",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Health Assistant",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-purple-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "book-open-text",
+                          "fill": "$agent-purple-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "Research Analyst"
+                        },
+                        "NrH3H": {
+                          "content": "Reads the web pages you give it and answers from what they say, with links to its sources."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": false
+                        },
+                        "KVGpx": {
+                          "content": "No sessions yet"
+                        }
+                      }
+                    },
+                    {
+                      "id": "FEX7H",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Coding Agent",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-amber-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "users",
+                          "fill": "$agent-amber-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "HR Assistant"
+                        },
+                        "NrH3H": {
+                          "content": "Answers questions about leave, benefits and Qucoon policy, or passes them to HR."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": false
+                        },
+                        "KVGpx": {
+                          "content": "No sessions yet"
+                        }
+                      }
+                    },
+                    {
+                      "id": "J29pS",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Ledger",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-blue-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "folder-open",
+                          "fill": "$agent-blue-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "Documents"
+                        },
+                        "NrH3H": {
+                          "content": "Drafts business documents and files them to SharePoint, Google Drive or a repo, asking you first."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": false
+                        },
+                        "KVGpx": {
+                          "content": "No sessions yet"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HAsqR",
+                  "x": 0,
+                  "y": 271,
+                  "name": "Row 2",
+                  "enabled": false,
+                  "width": "fill_container(1200)",
+                  "gap": 20,
+                  "children": [
+                    {
+                      "id": "J6TP3Q",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Research Analyst",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-purple-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "book-open-text",
+                          "fill": "$agent-purple-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "Research Analyst"
+                        },
+                        "NrH3H": {
+                          "content": "Searches papers and the web, then writes briefs with inline citations you can verify."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "KVGpx": {
+                          "content": "22 sessions · 5h ago"
+                        }
+                      }
+                    },
+                    {
+                      "id": "x0tQ2N",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Travel Planner",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-amber-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "plane",
+                          "fill": "$agent-amber-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "Travel Planner"
+                        },
+                        "NrH3H": {
+                          "content": "Builds day-by-day itineraries with flights, stays and a running budget."
+                        },
+                        "ohlRV": {
+                          "content": "LangGraph"
+                        },
+                        "x1H6I": {
+                          "content": "HTTP adapter"
+                        },
+                        "bsqwr": {
+                          "enabled": true
+                        },
+                        "KVGpx": {
+                          "content": "3 sessions · 2d ago"
+                        },
+                        "e9nGV": {
+                          "content": "New session",
+                          "fill": "$accent",
+                          "fontWeight": "600"
+                        },
+                        "yKtEF": {
+                          "icon": "arrow-right",
+                          "fill": "$accent"
+                        }
+                      }
+                    },
+                    {
+                      "id": "x6Ikdc",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Home Ops",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "opacity": 0.72,
+                      "fill": "$bg",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-grey-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "house",
+                          "fill": "$agent-grey-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$offline"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Offline"
+                        },
+                        "oocDB": {
+                          "content": "Home Ops"
+                        },
+                        "NrH3H": {
+                          "content": "Controls smart-home devices and schedules appliances around energy prices."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "KVGpx": {
+                          "content": "Offline since Sep 24"
+                        },
+                        "e9nGV": {
+                          "content": "Unavailable",
+                          "fill": "$text-tertiary",
+                          "fontWeight": "500"
+                        },
+                        "yKtEF": {
+                          "icon": "lock",
+                          "fill": "$text-tertiary"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "n0ASk",
+              "x": 120,
+              "y": 697,
+              "name": "Recent Sessions",
+              "enabled": false,
+              "width": "fill_container(1200)",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Hq68k",
+                  "name": "Heading",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "n0lzHc",
+                      "name": "Title",
+                      "fill": "$text-primary",
+                      "content": "Continue where you left off",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "m4q7Ay",
+                  "name": "List",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "id": "p9wtb",
+                      "type": "ref",
+                      "ref": "V8961f",
+                      "name": "Row Fix flaky auth middleware test",
+                      "width": "fill_container",
+                      "descendants": {
+                        "h0tjF": {
+                          "icon": "code-xml",
+                          "fill": "$agent-blue-fg"
+                        },
+                        "sXPHE": {
+                          "content": "Fix flaky auth middleware test"
+                        },
+                        "mkQCL": {
+                          "content": "Coding Agent"
+                        },
+                        "bxb5P": {
+                          "content": "18m ago"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Ec4lB",
+                      "type": "ref",
+                      "ref": "V8961f",
+                      "name": "Row Compare my March and August lipid panels",
+                      "width": "fill_container",
+                      "descendants": {
+                        "h0tjF": {
+                          "icon": "heart-pulse",
+                          "fill": "$agent-red-fg"
+                        },
+                        "sXPHE": {
+                          "content": "Compare my March and August lipid panels"
+                        },
+                        "mkQCL": {
+                          "content": "Health Assistant"
+                        },
+                        "bxb5P": {
+                          "content": "2h ago"
+                        }
+                      }
+                    },
+                    {
+                      "id": "bAtcv",
+                      "type": "ref",
+                      "ref": "V8961f",
+                      "name": "Row Brief: small-model distillation papers 2026",
+                      "width": "fill_container",
+                      "strokeWidth": 0,
+                      "descendants": {
+                        "h0tjF": {
+                          "icon": "book-open-text",
+                          "fill": "$agent-purple-fg"
+                        },
+                        "sXPHE": {
+                          "content": "Brief: small-model distillation papers 2026"
+                        },
+                        "mkQCL": {
+                          "content": "Research Analyst"
+                        },
+                        "bxb5P": {
+                          "content": "5h ago"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "onNT0",
+              "x": 120,
+              "y": 882,
+              "name": "Registry Note",
+              "enabled": false,
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "jVsfj",
+                  "name": "Icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "info",
+                  "library": "lucide",
+                  "fill": "$text-tertiary"
+                },
+                {
+                  "type": "text",
+                  "id": "z25lt",
+                  "name": "Text",
+                  "fill": "$text-tertiary",
+                  "content": "Agents are loaded from GET /agents. Register a new agent in the backend and it appears here, no UI changes needed.",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Z8yHd",
+      "x": 6240,
+      "y": 43100,
+      "name": "Catalog — builder",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "TXIvn",
+          "type": "ref",
+          "ref": "fqLch",
+          "name": "App Header",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "kcTog",
+          "name": "Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 32,
+          "padding": [
+            48,
+            120
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "d04b9G",
+              "name": "Page Heading",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "UF7nQ",
+                  "name": "Title Group",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "D0jjIQ",
+                      "name": "Title",
+                      "fill": "$text-primary",
+                      "content": "Your agents",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 28,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.6
+                    },
+                    {
+                      "type": "text",
+                      "id": "SY2Xn",
+                      "name": "Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "Pick an agent to start a new session. 4 agents · 1 draft that only its builders see.",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "l7tF9n",
+                  "name": "Controls",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "s2xGcg",
+                      "type": "ref",
+                      "ref": "XBZK2",
+                      "name": "Register an agent",
+                      "enabled": true,
+                      "descendants": {
+                        "mfSA0": {
+                          "enabled": true,
+                          "icon": "book-open"
+                        },
+                        "BsWQ6": {
+                          "content": "Register an agent"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xeTVJ",
+              "name": "Agent Grid",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "h89Tr",
+                  "name": "Row 1",
+                  "width": "fill_container",
+                  "gap": 20,
+                  "children": [
+                    {
+                      "id": "xXID2",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Health Assistant",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-purple-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "book-open-text",
+                          "fill": "$agent-purple-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "Research Analyst"
+                        },
+                        "NrH3H": {
+                          "content": "Reads the web pages you give it and answers from what they say, with links to its sources."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": false
+                        },
+                        "KVGpx": {
+                          "content": "14 sessions · 2h ago"
+                        }
+                      }
+                    },
+                    {
+                      "id": "K43zs",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Coding Agent",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-amber-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "users",
+                          "fill": "$agent-amber-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "HR Assistant"
+                        },
+                        "NrH3H": {
+                          "content": "Answers questions about leave, benefits and Qucoon policy, or passes them to HR."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": false
+                        },
+                        "KVGpx": {
+                          "content": "6 sessions · yesterday"
+                        }
+                      }
+                    },
+                    {
+                      "id": "ZRcwi",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Ledger",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-blue-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "folder-open",
+                          "fill": "$agent-blue-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "Documents"
+                        },
+                        "NrH3H": {
+                          "content": "Drafts business documents and files them to SharePoint, Google Drive or a repo, asking you first."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "bsqwr": {
+                          "enabled": false
+                        },
+                        "KVGpx": {
+                          "content": "3 sessions · 5h ago"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "eKspH",
+                  "name": "Row 2",
+                  "width": "fill_container",
+                  "gap": 20,
+                  "children": [
+                    {
+                      "id": "C7vk0",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Research Analyst",
+                      "width": 387,
+                      "height": "fit_content",
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-green-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "file-search",
+                          "fill": "$agent-green-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "Contract Reviewer"
+                        },
+                        "NrH3H": {
+                          "content": "Reads a contract and lists the clauses that differ from Qucoon's standard terms."
+                        },
+                        "ohlRV": {
+                          "content": "Strands",
+                          "enabled": true
+                        },
+                        "s5eNT": {
+                          "enabled": true
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore",
+                          "enabled": true
+                        },
+                        "bsqwr": {
+                          "enabled": false
+                        },
+                        "DcPfg": {
+                          "enabled": true
+                        },
+                        "KVGpx": {
+                          "content": "2 sessions · 20m ago"
+                        }
+                      }
+                    },
+                    {
+                      "id": "w7R3hj",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Travel Planner",
+                      "width": "fill_container(386.6666666666667)",
+                      "height": "fit_content",
+                      "enabled": false,
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-amber-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "plane",
+                          "fill": "$agent-amber-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$online"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Online"
+                        },
+                        "oocDB": {
+                          "content": "Travel Planner"
+                        },
+                        "NrH3H": {
+                          "content": "Builds day-by-day itineraries with flights, stays and a running budget."
+                        },
+                        "ohlRV": {
+                          "content": "LangGraph"
+                        },
+                        "x1H6I": {
+                          "content": "HTTP adapter"
+                        },
+                        "bsqwr": {
+                          "enabled": true
+                        },
+                        "KVGpx": {
+                          "content": "3 sessions · 2d ago"
+                        },
+                        "e9nGV": {
+                          "content": "New session",
+                          "fill": "$accent",
+                          "fontWeight": "600"
+                        },
+                        "yKtEF": {
+                          "icon": "arrow-right",
+                          "fill": "$accent"
+                        }
+                      }
+                    },
+                    {
+                      "id": "P2Adx",
+                      "type": "ref",
+                      "ref": "VZuIf",
+                      "name": "Home Ops",
+                      "width": "fill_container(386.6666666666667)",
+                      "height": "fit_content",
+                      "opacity": 0.72,
+                      "fill": "$bg",
+                      "enabled": false,
+                      "descendants": {
+                        "xjiXy": {
+                          "fill": "$agent-grey-bg"
+                        },
+                        "xjiXy/Jg8uM": {
+                          "icon": "house",
+                          "fill": "$agent-grey-fg"
+                        },
+                        "QU6R2/ULA8T": {
+                          "fill": "$offline"
+                        },
+                        "QU6R2/vhw7V": {
+                          "content": "Offline"
+                        },
+                        "oocDB": {
+                          "content": "Home Ops"
+                        },
+                        "NrH3H": {
+                          "content": "Controls smart-home devices and schedules appliances around energy prices."
+                        },
+                        "ohlRV": {
+                          "content": "Strands"
+                        },
+                        "x1H6I": {
+                          "content": "AgentCore"
+                        },
+                        "KVGpx": {
+                          "content": "Offline since Sep 24"
+                        },
+                        "e9nGV": {
+                          "content": "Unavailable",
+                          "fill": "$text-tertiary",
+                          "fontWeight": "500"
+                        },
+                        "yKtEF": {
+                          "icon": "lock",
+                          "fill": "$text-tertiary"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "u2aA4c",
+              "name": "Recent Sessions",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "B699x",
+                  "name": "Heading",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "HcbTv",
+                      "name": "Title",
+                      "fill": "$text-primary",
+                      "content": "Continue where you left off",
+                      "fontFamily": "$font-ui",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NcZfe",
+                  "name": "List",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "id": "J50JYm",
+                      "type": "ref",
+                      "ref": "V8961f",
+                      "name": "Row Fix flaky auth middleware test",
+                      "width": "fill_container",
+                      "descendants": {
+                        "h0tjF": {
+                          "icon": "book-open-text",
+                          "fill": "$agent-purple-fg"
+                        },
+                        "sXPHE": {
+                          "content": "Brief: small-model distillation papers 2026"
+                        },
+                        "mkQCL": {
+                          "content": "Research Analyst"
+                        },
+                        "bxb5P": {
+                          "content": "2h ago"
+                        }
+                      }
+                    },
+                    {
+                      "id": "vl7r7",
+                      "type": "ref",
+                      "ref": "V8961f",
+                      "name": "Row Compare my March and August lipid panels",
+                      "width": "fill_container",
+                      "descendants": {
+                        "h0tjF": {
+                          "icon": "file-search",
+                          "fill": "$agent-green-fg"
+                        },
+                        "sXPHE": {
+                          "content": "Check the Lagos office lease against our terms"
+                        },
+                        "mkQCL": {
+                          "content": "Contract Reviewer"
+                        },
+                        "bxb5P": {
+                          "content": "20m ago"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Gvd5M",
+                      "type": "ref",
+                      "ref": "V8961f",
+                      "name": "Row Brief: small-model distillation papers 2026",
+                      "width": "fill_container",
+                      "strokeWidth": 0,
+                      "descendants": {
+                        "h0tjF": {
+                          "icon": "users",
+                          "fill": "$agent-amber-fg"
+                        },
+                        "sXPHE": {
+                          "content": "How many days of parental leave do I get?"
+                        },
+                        "mkQCL": {
+                          "content": "HR Assistant"
+                        },
+                        "bxb5P": {
+                          "content": "Yesterday"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xZ3UW",
+              "x": 120,
+              "y": 882,
+              "name": "Registry Note",
+              "enabled": false,
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "HdPHr",
+                  "name": "Icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "info",
+                  "library": "lucide",
+                  "fill": "$text-tertiary"
+                },
+                {
+                  "type": "text",
+                  "id": "yppaB",
+                  "name": "Text",
+                  "fill": "$text-tertiary",
+                  "content": "Agents are loaded from GET /agents. Register a new agent in the backend and it appears here, no UI changes needed.",
+                  "fontFamily": "$font-ui",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "variables": {
