@@ -1,5 +1,6 @@
 """The operator's invite command (D9)."""
 
+import pytest
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -20,3 +21,17 @@ async def test_invite_is_idempotent_by_email(sessions: async_sessionmaker[AsyncS
     finally:
         async with sessions() as s, s.begin():
             await s.execute(delete(User).where(func.lower(User.email) == email.lower()))
+
+
+def test_local_token_refuses_a_non_local_database(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app import cli
+
+    monkeypatch.setattr(get_settings(), "database_url", "postgresql+psycopg://u:p@db.neon.tech/x")
+    assert cli.main(["users", "local-token", "a@b.dev"]) == 2
+
+
+def test_local_token_refuses_outside_local(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app import cli
+
+    monkeypatch.setattr(get_settings(), "env", "dev")
+    assert cli.main(["users", "local-token", "a@b.dev"]) == 2

@@ -13,11 +13,11 @@ from pathlib import Path
 import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
 
 from app import __version__
 from app.core import health
 from app.core.db import init_db
+from app.core.docs import install_docs
 from app.core.errors import install_error_handlers
 from app.core.jobs.runner import configure_retention, work_loop
 from app.core.lifecycle import shutting_down
@@ -99,10 +99,7 @@ def create_app() -> FastAPI:
     app.include_router(auth_router.auth)
     app.include_router(auth_router.me_router)
 
-    if settings.docs_enabled:
-
-        @app.get("/openapi.yaml", include_in_schema=False)
-        async def contract() -> FileResponse:
-            return FileResponse(CONTRACT, media_type="application/yaml")
+    if settings.docs_enabled:  # local only: `make docs` (core/docs.py)
+        install_docs(app, CONTRACT, settings.service_name)
 
     return app

@@ -28,6 +28,11 @@ class UserRepository:
             .with_for_update()
         )
 
+    async def by_email(self, email: str) -> User | None:
+        return await self.session.scalar(
+            select(User).where(func.lower(User.email) == email.lower())
+        )
+
     async def email_exists(self, email: str) -> bool:
         found = await self.session.scalar(
             select(User.id).where(func.lower(User.email) == email.lower()).limit(1)

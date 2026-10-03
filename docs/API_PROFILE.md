@@ -7,7 +7,7 @@ Agent Hub's API follows the [API Development Standard](https://github.com/Israel
 | Topic | Agent Hub rule |
 |---|---|
 | Repository | Monorepo (D24): the template's files go in `api/`; the root `Makefile` calls them as `make api-*` (`make db-up`, `make api-test`, `make contract-lint`) |
-| Contract | [`api/openapi.yaml`](../api/openapi.yaml) (D23), linted by `make contract-lint` (Redocly, pinned) as well as the template's validity test. Not served by the API (`DOCS_ENABLED=false`) |
+| Contract | [`api/openapi.yaml`](../api/openapi.yaml) (D23), linted by `make contract-lint` (Redocly, pinned) as well as the template's validity test. Not served by deployed environments (`DOCS_ENABLED=false`). Locally, `make -C api docs` serves Swagger UI over it at `http://localhost:8000/docs`, pointed at the local API, with a local-only test token |
 | Validation status | **422** `invalid_request` (the contract's choice; standard §9 allows it): `VALIDATION_STATUS=422`. Every other `[422]` code in `ErrorCode` (`empty_message`, `file_too_large`, …) is a validation-class error too |
 | Errors | RFC 9457 with `code`, `requestId`, `retryable`, `retryAfter`; `type` is `https://fleet.qucoon.com/errors/<code>` (`ERRORS_BASE_URL=https://fleet.qucoon.com/errors/`). Streams and stored errors (`run.failed`, `messages.error`) use the same object (D23) |
 | Wire | Standard defaults: `/v1`, camelCase, UUIDs, RFC 3339 UTC. Cursor pagination with `limit` ≤ 100; **messages page backwards by `seq`**, not by `created_at` (D23). Agents are addressed by slug |

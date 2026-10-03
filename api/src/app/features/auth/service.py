@@ -121,6 +121,22 @@ class AuthService(BaseService):
             await self.users.add_invited(email)
         return True
 
+    async def activate_local_test_user(self, email: str) -> uuid.UUID:
+        """LOCAL TESTING ONLY (the CLI checks the environment and database first): an active user
+        for `email`, with a placeholder Google sub, so the API can be called without Google."""
+        async with self.transaction():
+            user = await self.users.invited_by_email(email)
+            if user is None and not await self.users.email_exists(email):
+                user = await self.users.add_invited(email)
+            if user is not None:
+                user.google_sub = f"local-test:{email.lower()}"
+                user.status = "active"
+                await self.users.flush()
+            found = user or await self.users.by_email(email)
+            if found is None:
+                raise NotInvited(email=email)
+            return found.id
+
     async def _new_refresh_token(
         self, user_id: uuid.UUID, family_id: uuid.UUID, client: Client
     ) -> str:
