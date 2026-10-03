@@ -98,7 +98,9 @@ Errors use the common format in D23 (`code`, `requestId`, `retryable`, optional 
 - **SSE through the ALB with keep-alives.** A reply of 3 min 16 s streamed through the ALB without a drop; the agent's silences (about 15–18 s around each tool call) were filled by the API's `: ping` (8 of them), so no gap between bytes exceeded 15.08 s. Events arrive as sent (no buffering).
 - **Deploy draining.** A deploy forced 30 s into a 3 min 18 s reply: the reply finished on the old task (`complete`), the new task's startup sweep left it alone, and the old task got SIGTERM only after the 300 s deregistration delay, then exited cleanly. Details: ARCHITECTURE P2.
 - **Locally (issue #8):** a client that hangs up after 2 s leaves the reply running to `complete`, and polling `GET /v1/messages/{id}` picks it up; SIGTERM in the middle of a reply lets it finish, then the process exits.
-- **Not yet:** the same checks from a browser and a phone, and "first rendered event ≤ 150 ms after the first SSE byte", which need the web app (#4).
+- **From the browser (2026-10-03, Chrome on macOS, `fleet.qucoon.com`):** a Research Analyst reply of 3 min 23 s (three 10 s fetches, then about 6,100 words, 3,646 events, 776 KB) streamed through the ALB to the web app without a drop and without falling back to polling; the longest gap between chunks was 10 s, so no ping was needed. **First rendered event: 21 ms and 10 ms after the first SSE byte** (target ≤ 150 ms); headers arrived 0.64–0.75 s after the send. Stop from the browser ended a reply within about 2 s with its partial text kept.
+- **Found by that run:** a tab in the background gets no animation frames, so the web app's per-frame batching held a hidden tab's events until it was shown again (and showed "Still working" meanwhile). Fixed: the batch also flushes on a 250 ms timer. A long reply also showed that the API's history budget drops every earlier turn when the latest one is over 32,000 characters (to fix in the API).
+- **Not yet:** the same check from a phone.
 
 ## Not verified yet
 
