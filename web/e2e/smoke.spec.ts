@@ -11,6 +11,7 @@ const routes: { path: string; heading: string; apiStatus?: number }[] = [
   { path: '/archived', heading: 'Archived sessions' },
   { path: '/settings', heading: 'Settings' },
   { path: '/s/share-1', heading: 'Shared session' },
+  { path: '/sign-in', heading: 'Your agents' }, // signed in (the mocks' default), sign-in sends you on
   { path: '/no-such-page', heading: 'Page not found' },
 ]
 

@@ -6,14 +6,14 @@ import { AppShell } from '@/components/layout/app-shell'
 import { SidebarToggle } from '@/components/layout/sidebar-toggle'
 import { AppSidebar } from '@/modules/shell/components/app-sidebar'
 import { Brand } from '@/modules/shell/components/brand'
-import { UserSkeleton } from '@/modules/shell/components/user-skeleton'
+import { UserBadge } from '@/modules/shell/components/user-badge'
 
 export function HubLayout() {
   return (
     <AppShell
       desktopSidebar={false}
       sidebar={<AppSidebar />}
-      header={<AppHeader brand={<Brand size="header" />} menu={<SidebarToggle kind="open" className="md:hidden" />} actions={<UserSkeleton size="header" />} />}
+      header={<AppHeader brand={<Brand size="header" />} menu={<SidebarToggle kind="open" className="md:hidden" />} actions={<UserBadge size="header" />} />}
     >
       <Outlet />
     </AppShell>

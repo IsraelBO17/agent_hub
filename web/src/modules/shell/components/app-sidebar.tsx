@@ -7,7 +7,7 @@ import { Brand } from '@/modules/shell/components/brand'
 import { SessionListSkeleton } from '@/modules/shell/components/session-list-skeleton'
 import { SidebarFooterLinks } from '@/modules/shell/components/sidebar-footer-links'
 import { SidebarNav } from '@/modules/shell/components/sidebar-nav'
-import { UserSkeleton } from '@/modules/shell/components/user-skeleton'
+import { UserBadge } from '@/modules/shell/components/user-badge'
 
 export function AppSidebar() {
   return (
@@ -24,7 +24,7 @@ export function AppSidebar() {
         <SessionListSkeleton />
       </SidebarContent>
       <SidebarFooter className="flex-row items-center gap-2 border-t px-3.5 py-3">
-        <UserSkeleton size="sidebar" />
+        <UserBadge size="sidebar" />
         <SidebarFooterLinks />
       </SidebarFooter>
     </>

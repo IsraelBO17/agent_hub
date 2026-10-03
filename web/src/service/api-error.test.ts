@@ -22,6 +22,11 @@ describe('toApiError', () => {
   it('honours the retryable flag from the problem', () => {
     expect(toApiError({ code: 'busy', retryable: true }, { status: 409 }).retryable).toBe(true)
   })
+
+  it('keeps the problem\'s extension members', () => {
+    const error = toApiError({ code: 'not_invited', title: 'No access', email: 'ada@example.com', retryAfter: 5 }, { status: 403 })
+    expect(error.extras).toEqual({ email: 'ada@example.com', retryAfter: 5 })
+  })
 })
 
 describe('unwrap', () => {

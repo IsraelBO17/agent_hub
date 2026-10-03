@@ -8,6 +8,8 @@ export class ApiError extends Error {
   readonly retryable: boolean
   /** Field errors keyed by field name (the last segment of the problem's JSON pointer). */
   readonly fieldErrors: Readonly<Record<string, string>>
+  /** The problem's extension members (RFC 9457 §3.2), e.g. the Google `email` on `not_invited`. */
+  readonly extras: Readonly<Record<string, unknown>>
 
   constructor(init: {
     status: number
@@ -16,6 +18,7 @@ export class ApiError extends Error {
     requestId?: string | undefined
     retryable?: boolean
     fieldErrors?: Record<string, string>
+    extras?: Record<string, unknown>
   }) {
     super(init.message)
     this.status = init.status
@@ -23,6 +26,7 @@ export class ApiError extends Error {
     this.requestId = init.requestId
     this.retryable = init.retryable ?? init.status >= 500
     this.fieldErrors = init.fieldErrors ?? {}
+    this.extras = init.extras ?? {}
   }
 }
 
@@ -34,6 +38,8 @@ export interface ResponseLike {
   statusText?: string
   headers?: Headers
 }
+
+const standardMembers = new Set(['type', 'title', 'status', 'detail', 'instance', 'code', 'requestId', 'retryable', 'errors'])
 
 export function toApiError(body: unknown, response: ResponseLike): ApiError {
   const p = isRecord(body) ? body : {}
@@ -52,6 +58,7 @@ export function toApiError(body: unknown, response: ResponseLike): ApiError {
     requestId: typeof p.requestId === 'string' ? p.requestId : (response.headers?.get('x-request-id') ?? undefined),
     ...(typeof p.retryable === 'boolean' ? { retryable: p.retryable } : {}),
     fieldErrors,
+    extras: Object.fromEntries(Object.entries(p).filter(([key]) => !standardMembers.has(key))),
   })
 }
 

@@ -5,6 +5,12 @@ import { StreamStalledError } from '@/service/sse'
 const byCode: Record<string, string> = {
   not_found: 'This item no longer exists.',
   invalid_request: 'Check the highlighted fields.',
+  invalid_google_token: "Sign-in didn't finish. Try again.",
+  session_expired: 'Your session ended. Sign in again.',
+  origin_not_allowed: "Sign-in isn't available from this address.",
+  identity_provider_unavailable: "Google sign-in isn't answering right now. Try again in a moment.",
+  not_invited: "This Google account doesn't have access to Agent Hub.",
+  account_disabled: 'This account has been turned off.',
 }
 
 export interface ErrorDescription {
