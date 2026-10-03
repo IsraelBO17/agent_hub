@@ -150,6 +150,23 @@ class ChatRepository:
             update(ToolCall).where(ToolCall.id == tool_call_id).values(**values)
         )
 
+    async def stop_requested(self, message_id: uuid.UUID) -> bool:
+        flag = await self.session.scalar(
+            select(Message.cancel_requested_at).where(Message.id == message_id)
+        )
+        return flag is not None
+
+    async def request_stop(self, message_id: uuid.UUID, at: datetime) -> str | None:
+        """Sets the flag on a `streaming` reply (keeping an earlier one); returns the status, or
+        None if the message isn't streaming (left alone)."""
+        status = await self.session.scalar(
+            update(Message)
+            .where(Message.id == message_id, Message.status == RUNNING)
+            .values(cancel_requested_at=func.coalesce(Message.cancel_requested_at, at))
+            .returning(Message.status)
+        )
+        return status
+
     async def stale_replies(self, cutoff: datetime, limit: int) -> list[Message]:
         """`streaming` replies whose task stopped writing its heartbeat, oldest first, locked so two
         sweeps (two tasks during a deploy) never take the same row."""

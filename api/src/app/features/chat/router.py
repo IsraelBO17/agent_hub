@@ -23,6 +23,7 @@ from app.features.chat.schemas import (
     MessagePageQuery,
     SendMessageRequest,
     SendReplay,
+    StopAccepted,
 )
 from app.features.chat.service import ChatService, Started
 
@@ -124,6 +125,11 @@ async def list_messages(
     return await svc.list_messages(
         user.user_id, session_id, before=params.before, limit=params.limit
     )
+
+
+@router.post("/messages/{message_id}/stop", status_code=202)
+async def stop_reply(message_id: uuid.UUID, user: CurrentUser, svc: Service) -> StopAccepted:
+    return await svc.stop(user.user_id, message_id)
 
 
 @router.get("/messages/{message_id}")

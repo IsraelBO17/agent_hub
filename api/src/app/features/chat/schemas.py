@@ -89,6 +89,11 @@ class MessageOut(ApiModel):
     completed_at: datetime | None
 
 
+class StopAccepted(ApiModel):
+    message_id: uuid.UUID
+    status: str
+
+
 class MessagePage(ApiModel):
     items: list[MessageOut]
     next_before: int | None

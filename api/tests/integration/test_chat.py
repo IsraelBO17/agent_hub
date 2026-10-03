@@ -454,8 +454,15 @@ async def started_run(
     steps: list[tuple[asyncio.Event | None, bytes]],
     settings: RunSettings | None = None,
 ) -> tuple[Run, asyncio.Task[None]]:
-    """A send through the service, then the run with a gated body (no HTTP response)."""
-    w.fake.reply = lambda _: httpx.Response(200, stream=Gate(steps))
+    """A send through the service, then the run with a gated body (no HTTP response). A cancel
+    call is answered at once, as the real agent does."""
+
+    def reply(request: httpx.Request) -> httpx.Response:
+        if "cancel" in json.loads(request.content):
+            return sse_response("cancel-reply")
+        return httpx.Response(200, stream=Gate(steps))
+
+    w.fake.reply = reply
     async with sessions() as s:
         result = await ChatService(s, get_settings()).start(
             w.user_id, w.agent_slug, SendMessageRequest.model_validate(body())
@@ -543,6 +550,7 @@ async def test_runs_that_outlive_their_window_are_interrupted(
     saved = await row(sessions, str(run.spec.message_id))
     code = "run_time_limit" if why == "time-limit" else "run_interrupted"
     assert saved.status == "interrupted" and saved.error and saved.error["code"] == code
+    assert {"cancel": {"messageId": str(run.spec.message_id)}} in world.fake.payloads()
     async with sessions() as s:
         call = await s.scalar(select(ToolCall).where(ToolCall.message_id == saved.id))
     assert call is not None and call.status == "cancelled" and call.completed_at is not None
@@ -688,3 +696,172 @@ async def test_files_for_an_agent_that_takes_them_are_not_ready_yet(
         )
     r = await first_send(world, body(fileIds=[str(uuid.uuid4())]))
     assert (r.status_code, r.json()["code"]) == (409, "file_not_ready")
+
+
+# ---------------------------------------------------------------- stop_reply (issue #9)
+
+
+def agent_that_honours_cancel(
+    w: World, case: str, *, hold_from: str, confirm: bool = True
+) -> asyncio.Event:
+    """The reply streams up to the first frame containing `hold_from` and waits there, like a
+    fetch in progress. A cancel call answers with the recorded cancel frame and lets the rest of
+    the reply through (the tool's `cancelled` result, then `result: cancelled`)."""
+    released = asyncio.Event()
+    parts = chunks(case)
+    held = next(i for i, p in enumerate(parts) if hold_from.encode() in p)
+
+    def reply(request: httpx.Request) -> httpx.Response:
+        if "cancel" in json.loads(request.content):
+            if not confirm:
+                return httpx.Response(503, json={"message": "unavailable"})
+            released.set()
+            return sse_response("cancel-reply")
+        steps = [*((None, p) for p in parts[:held]), *((released, p) for p in parts[held:])]
+        return httpx.Response(200, stream=Gate(steps))
+
+    w.fake.reply = reply
+    return released
+
+
+async def start_held_run(
+    w: World, sessions: async_sessionmaker[AsyncSession], settings: RunSettings | None = None
+) -> tuple[Run, asyncio.Task[None]]:
+    async with sessions() as s:
+        result = await ChatService(s, get_settings()).start(
+            w.user_id, w.agent_slug, SendMessageRequest.model_validate(body())
+        )
+    assert isinstance(result, Started)
+    run = Run(
+        spec=result.spec,
+        client=w.fake.client,
+        sessions=sessions,
+        settings=settings or result.settings,
+    )
+    run.emit("run.started", {"assistantMessage": result.spec.assistant.model_dump(mode="json")})
+    task = runs.start(run)
+    for _ in range(200):  # until a block has started and the reply is waiting on the agent
+        if run.n > 1:
+            break
+        await asyncio.sleep(0.01)
+    return run, task
+
+
+async def stream_of(run: Run) -> list[dict[str, Any]]:
+    body_ = b"".join([chunk async for chunk in mirror(run)])
+    return events_of(httpx.Response(200, content=body_))
+
+
+async def test_stop_keeps_the_partial_reply_and_ends_with_run_stopped(
+    world: World, sessions: async_sessionmaker[AsyncSession]
+) -> None:
+    agent_that_honours_cancel(world, "cancelled-mid-fetch", hold_from='"role": "user"')
+    run, task = await start_held_run(world, sessions)
+    reading = asyncio.create_task(stream_of(run))
+    t0 = asyncio.get_running_loop().time()
+    r = await world.http.post(f"/v1/messages/{run.spec.message_id}/stop", headers=world.headers)
+    assert r.status_code == 202 and r.json() == {
+        "messageId": str(run.spec.message_id),
+        "status": "streaming",
+    }
+    await asyncio.wait_for(task, timeout=10)
+    assert asyncio.get_running_loop().time() - t0 < 2  # same task: no wait for the poll
+    events = await reading
+    last = events[-1]
+    assert last["type"] == "run.stopped" and last["message"]["status"] == "stopped"
+    assert last["message"]["error"] is None and last["message"]["usage"]["inputTokens"] > 0
+    assert last["message"]["blocks"][0]["toolCall"]["status"] == "cancelled"
+
+    cancel = world.fake.requests[1]
+    assert json.loads(cancel.content) == {"cancel": {"messageId": str(run.spec.message_id)}}
+    session_header = "x-amzn-bedrock-agentcore-runtime-session-id"
+    assert cancel.headers[session_header] == world.fake.requests[0].headers[session_header]
+    saved = await row(sessions, str(run.spec.message_id))
+    assert saved.status == "stopped" and saved.cancel_requested_at is not None
+    polled = await world.http.get(f"/v1/messages/{run.spec.message_id}", headers=world.headers)
+    assert polled.json() == last["message"]
+
+
+async def test_a_stop_received_by_another_task_is_picked_up_from_the_database(
+    world: World, sessions: async_sessionmaker[AsyncSession], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    agent_that_honours_cancel(world, "cancelled-mid-fetch", hold_from='"role": "user"')
+    settings = RunSettings(time_limit_seconds=60, drain_seconds=60, cancel_poll_seconds=0.2)
+    run, task = await start_held_run(world, sessions, settings)
+    monkeypatch.setattr(runs, "signal_stop", lambda _: False)  # this task doesn't run it
+    r = await world.http.post(f"/v1/messages/{run.spec.message_id}/stop", headers=world.headers)
+    assert r.status_code == 202
+    await asyncio.wait_for(task, timeout=10)
+    assert (await row(sessions, str(run.spec.message_id))).status == "stopped"
+    assert any("cancel" in p for p in world.fake.payloads())
+
+
+async def test_stop_still_ends_the_reply_when_the_agent_doesnt_confirm(
+    world: World, sessions: async_sessionmaker[AsyncSession]
+) -> None:
+    agent_that_honours_cancel(
+        world, "cancelled-mid-fetch", hold_from='"role": "user"', confirm=False
+    )
+    settings = RunSettings(time_limit_seconds=60, drain_seconds=60, stop_grace_seconds=0.3)
+    run, task = await start_held_run(world, sessions, settings)
+    await world.http.post(f"/v1/messages/{run.spec.message_id}/stop", headers=world.headers)
+    await asyncio.wait_for(task, timeout=10)
+    saved = await row(sessions, str(run.spec.message_id))
+    assert saved.status == "stopped" and saved.usage is None
+    async with sessions() as s:
+        call = await s.scalar(select(ToolCall).where(ToolCall.message_id == saved.id))
+    assert call is not None and call.status == "cancelled"
+
+
+async def test_a_reply_that_finishes_before_the_cancel_lands_is_complete(
+    world: World, sessions: async_sessionmaker[AsyncSession]
+) -> None:
+    agent_that_honours_cancel(world, "plain-answer", hold_from='"result"')
+    run, task = await start_held_run(world, sessions)
+    await world.http.post(f"/v1/messages/{run.spec.message_id}/stop", headers=world.headers)
+    await asyncio.wait_for(task, timeout=10)
+    assert (await row(sessions, str(run.spec.message_id))).status == "complete"
+
+
+async def test_stop_on_a_message_that_isnt_running(world: World) -> None:
+    events = events_of(await first_send(world))
+    reply, user = events[-1]["message"], events[0]["userMessage"]
+    for message, status in [(reply, "complete"), (user, "complete")]:
+        r = await world.http.post(f"/v1/messages/{message['id']}/stop", headers=world.headers)
+        assert (r.status_code, r.json()) == (202, {"messageId": message["id"], "status": status})
+    stranger = {"Authorization": f"Bearer {issue_access_token(get_settings(), uuid.uuid4())}"}
+    r = await world.http.post(f"/v1/messages/{reply['id']}/stop", headers=stranger)
+    assert (r.status_code, r.json()["code"]) == (404, "message_not_found")
+    r = await world.http.post("/v1/messages/not-a-uuid/stop", headers=world.headers)
+    assert (r.status_code, r.json()["code"]) == (422, "invalid_request")
+
+
+async def test_stop_is_idempotent(
+    world: World, sessions: async_sessionmaker[AsyncSession], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    events = events_of(await first_send(world))
+    mid = uuid.UUID(events[-1]["messageId"])
+    async with sessions() as s, s.begin():  # as if still running on another task
+        await s.execute(update(Message).where(Message.id == mid).values(status="streaming"))
+    first = await world.http.post(f"/v1/messages/{mid}/stop", headers=world.headers)
+    flagged = (await row(sessions, str(mid))).cancel_requested_at
+    second = await world.http.post(f"/v1/messages/{mid}/stop", headers=world.headers)
+    assert first.json() == second.json() == {"messageId": str(mid), "status": "streaming"}
+    assert flagged is not None and (await row(sessions, str(mid))).cancel_requested_at == flagged
+
+
+async def test_sweep_saves_a_dead_run_that_was_being_stopped_as_stopped(
+    world: World, sessions: async_sessionmaker[AsyncSession]
+) -> None:
+    mid = uuid.UUID(events_of(await first_send(world))[-1]["messageId"])
+    long_ago = datetime.now(UTC) - timedelta(minutes=5)
+    async with sessions() as s, s.begin():
+        await s.execute(
+            update(Message)
+            .where(Message.id == mid)
+            .values(status="streaming", heartbeat_at=long_ago, cancel_requested_at=long_ago)
+        )
+    async with sessions() as s, s.begin():
+        await interrupt_stale_replies(s)
+    swept = await row(sessions, str(mid))
+    assert swept.status == "stopped" and swept.error is None

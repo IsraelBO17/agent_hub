@@ -18,7 +18,8 @@ BATCH = 100
 
 @sweep("chat.interrupt_stale_replies", every=timedelta(minutes=1))
 async def interrupt_stale_replies(session: AsyncSession) -> int:
-    """`streaming` replies with no heartbeat for 60 s become `interrupted`; their running tools
+    """`streaming` replies with no heartbeat for 60 s become `interrupted` (`stopped` if a Stop
+    was requested); their running tools
     `cancelled`. A run alive on another task (a deploy) keeps its heartbeat fresh, so it's left
     alone. Bounded, oldest first; idempotent (a second pass finds nothing)."""
     repo = ChatRepository(session)
@@ -27,7 +28,12 @@ async def interrupt_stale_replies(session: AsyncSession) -> int:
     error = problem_body(RunInterrupted("The reply stopped because the service restarted."))
     for message in stale:
         await repo.cancel_running_tools(message.id, now)
-        await repo.update_message(message.id, status="interrupted", error=error, completed_at=now)
+        if message.cancel_requested_at is not None:  # the user had pressed Stop
+            await repo.update_message(message.id, status="stopped", error=None, completed_at=now)
+        else:
+            await repo.update_message(
+                message.id, status="interrupted", error=error, completed_at=now
+            )
     if len(stale) == BATCH:
         log.warning("sweep_capped", extra={"sweep": "chat.interrupt_stale_replies", "batch": BATCH})
     return len(stale)
