@@ -7,6 +7,8 @@ The Agent Hub design lives in [`fleet_dev.pen`](fleet_dev.pen), a [Pencil](https
 | `fleet_dev.pen` | The design file. Open it in Pencil to view or edit it. |
 | [`INDEX.md`](INDEX.md) | Generated map of the file: variables, components by group (with IDs and slots), reference screens, and the 10 user flows with the trigger for each step. |
 | `tools/pen_index.py` | Regenerates `INDEX.md`. Needs only Python 3. |
+| [`renders/`](renders/) | A PNG of every screen and board (1×), grouped by surface and flow, and [`renders/index.html`](renders/index.html), a gallery that shows each one with its scope, delivery status and the matching build screenshot from `docs/screenshots/`. The data is `renders/manifest.json`. |
+| `tools/render_gallery.py` | Rebuilds `renders/index.html` from `renders/manifest.json`. Needs only Python 3. |
 
 ## Working with the file without Pencil
 
@@ -38,4 +40,5 @@ Find a node by searching for its ID from `INDEX.md`, for example `"id": "PBQLh"`
 
 1. Save in Pencil and copy the file over `design/fleet_dev.pen`.
 2. Run `python3 design/tools/pen_index.py`.
-3. Commit both files together.
+3. Re-export the changed screens into `renders/` (Pencil MCP `Export(ids, "png", dir, {scale: 1})`), update their rows in `renders/manifest.json` (status too, when a screen ships), and run `python3 design/tools/render_gallery.py`.
+4. Commit the `.pen` file, `INDEX.md` and the renders together.
