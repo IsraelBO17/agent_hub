@@ -11,7 +11,7 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 - `docs/DELIVERY_PLAN.md`: milestones M1–M4 to v1 (18 Dec), the build order, and how progress is tracked (GitHub milestones, issues, pinned Weekly status).
 - `docs/ARCHITECTURE.md`: technical decision log (single source of truth; wins over the stack notes in PRODUCT_PLAN).
 - `docs/SEND_MESSAGE.md`: the send/stream flow, message statuses, timers and error codes (diagrams in `docs/diagrams/`).
-- `docs/DATA_MODEL.md`: Postgres tables, enforced rules and indexes (models in `api/app/db/models.py`, migrations with Alembic in `api/migrations/`).
+- `docs/DATA_MODEL.md`: Postgres tables, enforced rules and indexes (models in `api/src/app/db/models.py` and each built feature's `api/src/app/features/<name>/models.py`, migrations with Alembic in `api/migrations/`).
 - `api/openapi.yaml`: the API contract (OpenAPI 3.1): every endpoint, error code, SSE event and message block, plus the API → agent payload. Lint with `make contract-lint` (Redocly CLI, version pinned in the Makefile).
 - `docs/API_PROFILE.md`: how Agent Hub's API is built: the owner's [api-standard](https://github.com/IsraelBO17/api-standard) template and standard, plus fleet's values (contract, AWS names and tags, Neon, SSE rules, deploy settings).
 - `docs/AGENT_PROFILE.md`: how Agent Hub agents are built: the [agent-standard](https://github.com/IsraelBO17/agent-standard) template and standard, plus fleet's contract and conventions. Agent code lives in `fleet-agent-<slug>` repos, not here.

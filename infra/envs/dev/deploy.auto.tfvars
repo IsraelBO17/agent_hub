@@ -4,7 +4,7 @@
 
 enable_api        = true
 api_desired_count = 1
-api_image_tag     = "9474b51" # git SHA of the commit the image was built from (ECR tags are immutable)
+api_image_tag       = "72b4b84" # git SHA of the commit the image was built from (ECR tags are immutable)
 
 # qucoon's shared wildcard certificate (*.qucoon.com), owned by the qucoon cloud team (D25).
 api_certificate_arn = "arn:aws:acm:us-east-1:992382810653:certificate/14063ea3-87d8-4f3e-bd3e-6f76dc640b81"
