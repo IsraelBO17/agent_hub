@@ -6,7 +6,7 @@ The FastAPI service behind Agent Hub (ARCHITECTURE D1, D2). Built to the owner's
 |---|---|
 | Owner | Israel B. |
 | Stage | Build (M1) |
-| Version | 0.4.0 |
+| Version | 0.5.0 |
 | Stack | FastAPI · SQLAlchemy 2 async (psycopg 3) · Neon Postgres · ECS Fargate (exceptions: none) |
 | Contract | [`openapi.yaml`](openapi.yaml) (D23) |
 | Spec | [`SPEC.md`](SPEC.md), which indexes the planning documents |

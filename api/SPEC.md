@@ -174,6 +174,19 @@ Shared rules:
 - **rejections:** `401`; invalid parameters → `422 invalid_request`; no such session for this user, or deleted → `404 session_not_found`.
 - **effect:** the newest `limit` messages with `seq < before`, returned oldest first; `nextBefore` is the smallest `seq` in the page when older messages exist, else `null`. Tool blocks hydrated. Read only; idempotent.
 
+#### capability: `stop_reply` → `ChatService.stop()` (POST /v1/messages/{messageId}/stop) (issue #9; F04, P4)
+- **intent:** stop a reply that is being written, keeping what it has written so far.
+- **actor / authz:** a valid access token; the message's owner.
+- **rejections:** `401`; a malformed id → `422 invalid_request`; not this user's message, or its session deleted → `404 message_not_found`.
+- **effect:** if the message is `streaming`, set `cancel_requested_at = now()` (kept if already set) and return `202 {messageId, status: streaming}`. Any other message (a reply that already ended, a user message) is left alone: `202` with its current status. The flag is the signal, so it works whichever task receives the request (rule 7, two tasks during a deploy); the task that runs the reply is also told directly when it is the same one.
+- **the run, on seeing the flag** (at most 2 s later: it reads the flag on every save, and every 2 s otherwise): it sends `AgentCancel` (`{"cancel": {"messageId"}}`) on the same runtime session, keeps reading the reply for up to 5 s so the agent's last frames (a tool's `cancelled` result, `result` with `stopReason: cancelled`) are saved, then closes open blocks (running tools become `cancelled`) and saves `stopped`, with no error and the usage if the agent sent it. The stream ends with `run.stopped`. If the reply finished (`end_turn`) before the cancel took effect, it is `complete`. A failed cancel call is logged and the reply is still saved `stopped` (the agent may run on until its own limit).
+- **transaction:** one small commit for the flag; the run's endings as before.
+- **side effects:** the `AgentCancel` call, from the run, outside any transaction.
+- **idempotency:** yes: repeating it keeps the first `cancel_requested_at` and returns `202`.
+- **audit:** `cancel_requested_at`, `completed_at`.
+
+Related endings: a reply that hits the run cap or is cut by a shutdown also sends `AgentCancel` (best effort, 3 s), so the agent doesn't run on unread. The sweep saves a dead run that had a stop requested as `stopped` instead of `interrupted`.
+
 #### sweep: `chat.interrupt_stale_replies` (every minute, and at startup)
 - `streaming` replies whose `heartbeat_at` is older than 60 s become `interrupted` with `run_interrupted` (the task running them died); their running tools become `cancelled`. A reply still running on the old task during a deploy keeps its heartbeat fresh and is left alone. Bounded to 100 rows per run, oldest first; idempotent.
 

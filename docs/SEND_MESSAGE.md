@@ -54,7 +54,7 @@ stopped / failed / interrupted ──► streaming   Retry
 | Client stall detection | 45 s with no bytes | Browser | Three missed pings means the connection is gone; switch to polling |
 | "Still working" note | 60 s with no events (pings don't count) | Browser | Reassures during long tool calls; not an error |
 | Stale heartbeat | 60 s | API sweep, every minute and on startup | Marks runs of a dead task `interrupted` (P1) |
-| Stop pickup | ≤ 2 s | Running task | Checks `cancel_requested_at` at each checkpoint and keep-alive tick |
+| Stop pickup | ≤ 2 s | Running task | Reads `cancel_requested_at` on every save and every 2 s otherwise; a Stop on the same task is immediate. Then `AgentCancel`, and up to 5 s for the agent's last frames |
 | ALB idle timeout | 300 s | Terraform | Explicit, well above the ping interval (D5) |
 | ALB deregistration delay | 300 s | Terraform | Lets streams finish during a deploy (P2) |
 | Container stop timeout | 120 s (ECS max) | Task definition | Time to finish open streams after SIGTERM (P2) |

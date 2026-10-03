@@ -25,6 +25,7 @@ from app.core.lifecycle import shutting_down
 from app.core.service import BaseService
 from app.features.chat.agentcore import (
     AgentCoreClient,
+    AgentCoreError,
     AgentCoreRejected,
     AgentCoreStreamLost,
     AgentCoreThrottled,
@@ -54,7 +55,7 @@ from app.features.chat.translator import (
 log = logging.getLogger("app.chat.run")
 
 _END = object()  # the agent's body ended
-_TICK = object()  # a second passed with no frame
+_TICK = object()  # half a second passed with no frame
 
 
 @dataclass(frozen=True)
@@ -63,6 +64,9 @@ class RunSettings:
     drain_seconds: float  # after SIGTERM, how long a run may continue (P2)
     checkpoint_seconds: float = 2.0
     heartbeat_seconds: float = 15.0
+    cancel_poll_seconds: float = 2.0  # Stop is picked up within this (P4)
+    stop_grace_seconds: float = 5.0  # after AgentCancel, how long to keep reading its last frames
+    cancel_call_seconds: float = 10.0
 
 
 @dataclass(frozen=True)
@@ -125,7 +129,8 @@ class RunStore(BaseService):
         blocks: list[dict[str, Any]],
         tools: list[tuple[str, dict[str, Any]]],
         final: dict[str, Any] | None = None,
-    ) -> None:
+    ) -> bool:
+        """Saves, and returns whether a stop was requested (any task may have set the flag)."""
         now = datetime.now(UTC)
         async with self.transaction():
             for action, call in tools:
@@ -149,10 +154,15 @@ class RunStore(BaseService):
                 values.update(final)
                 await self.repo.touch_session(spec.session_id, now)
             await self.repo.update_message(spec.message_id, **values)
+            return await self.repo.stop_requested(spec.message_id)
 
-    async def beat(self, spec: RunSpec) -> None:
+    async def beat(self, spec: RunSpec) -> bool:
         async with self.transaction():
             await self.repo.update_message(spec.message_id, heartbeat_at=datetime.now(UTC))
+            return await self.repo.stop_requested(spec.message_id)
+
+    async def poll(self, spec: RunSpec) -> bool:
+        return await self.repo.stop_requested(spec.message_id)
 
 
 @dataclass
@@ -165,6 +175,7 @@ class Run:
     listening: bool = True
     n: int = 0
     message: MessageOut | None = None  # the final state, once ended
+    stop: asyncio.Event = field(default_factory=asyncio.Event)  # set by a Stop on this task
 
     def emit(self, event_type: str, data: dict[str, Any]) -> None:
         self.n += 1
@@ -182,11 +193,36 @@ class Run:
         final: dict[str, Any] | None = None,
     ) -> None:
         async with self.sessions() as session:
-            await RunStore(session).save(self.spec, blocks, tools, final)
+            if await RunStore(session).save(self.spec, blocks, tools, final):
+                self.stop.set()
 
     async def _beat(self) -> None:
         async with self.sessions() as session:
-            await RunStore(session).beat(self.spec)
+            if await RunStore(session).beat(self.spec):
+                self.stop.set()
+
+    async def _poll(self) -> None:
+        async with self.sessions() as session:
+            if await RunStore(session).poll(self.spec):
+                self.stop.set()
+
+    async def _cancel_agent(self) -> None:
+        """P4: `AgentCancel` on the same runtime session reaches the process running the reply
+        (closing our stream doesn't stop it). Best effort: a failure is logged, never raised."""
+        mid = str(self.spec.message_id)
+        try:
+            async with asyncio.timeout(self.settings.cancel_call_seconds):
+                async for frame in self.client.invoke(
+                    runtime_arn=self.spec.runtime_arn,
+                    qualifier=self.spec.qualifier,
+                    session_id=str(self.spec.session_id),
+                    payload={"cancel": {"messageId": mid}},
+                ):
+                    if isinstance(frame, dict) and isinstance(frame.get("cancel"), dict):
+                        cancelled = frame["cancel"].get("cancelled")
+                        log.info("agent_cancel", extra={"message_id": mid, "cancelled": cancelled})
+        except (AgentCoreError, TimeoutError) as exc:
+            log.warning("agent_cancel_failed", extra={"message_id": mid, "detail": str(exc)})
 
     async def _read(self, frames: asyncio.Queue[Any]) -> None:
         try:
@@ -209,6 +245,9 @@ class Run:
         start = time.monotonic()
         last_save = last_beat = start
         drain_deadline: float | None = None
+        last_poll = start
+        stopping_since: float | None = None
+        cancel: asyncio.Task[None] | None = None
         dirty = False
         ending: tuple[str, ApiError | None, dict[str, int] | None] | None = None
 
@@ -234,6 +273,15 @@ class Run:
         try:
             while ending is None:
                 now = time.monotonic()
+                if self.stop.is_set() and stopping_since is None:
+                    stopping_since = now
+                    cancel = asyncio.create_task(self._cancel_agent())
+                if (
+                    stopping_since is not None
+                    and now - stopping_since >= self.settings.stop_grace_seconds
+                ):
+                    ending = ("stopped", None, None)  # the agent didn't confirm in time
+                    break
                 if shutting_down.is_set() and drain_deadline is None:
                     drain_deadline = now + self.settings.drain_seconds
                 if now - start >= self.settings.time_limit_seconds:
@@ -247,7 +295,7 @@ class Run:
                     )
                     break
                 try:
-                    item = await asyncio.wait_for(frames.get(), timeout=1.0)
+                    item = await asyncio.wait_for(frames.get(), timeout=0.5)
                 except TimeoutError:
                     item = _TICK
                 save_now = False
@@ -266,11 +314,16 @@ class Run:
                     blocks, pending = list(translator.blocks), tools[:]
                     tools.clear()
                     await self._save(blocks, pending)
-                    last_save = last_beat = time.monotonic()
+                    last_save = last_beat = last_poll = time.monotonic()
                     dirty = False
                 elif now - last_beat >= self.settings.heartbeat_seconds:
                     await self._beat()
-                    last_beat = time.monotonic()
+                    last_beat = last_poll = time.monotonic()
+                elif (
+                    stopping_since is None and now - last_poll >= self.settings.cancel_poll_seconds
+                ):
+                    await self._poll()  # a Stop received by another task (rule 7)
+                    last_poll = time.monotonic()
         except Exception:
             log.exception("run_failed", extra={"message_id": str(self.spec.message_id)})
             ending = ("failed", InternalRunError(), None)
@@ -278,9 +331,16 @@ class Run:
             reader.cancel()
             with contextlib.suppress(asyncio.CancelledError, Exception):
                 await reader
-        await self._finish(
-            translator, tools, ending or ("failed", InternalRunError(), None), handle
-        )
+        ending = ending or ("failed", InternalRunError(), None)
+        if stopping_since is not None:
+            ending = _stopped(ending, translator.ended)
+        elif ending[0] == "interrupted" and translator.ended is None:
+            # The run cap or a shutdown cut it: don't leave the agent running unread.
+            cancel = asyncio.create_task(self._cancel_agent())
+        if cancel is not None:
+            with contextlib.suppress(Exception):
+                await asyncio.wait_for(cancel, timeout=3.0)
+        await self._finish(translator, tools, ending, handle)
 
     async def _finish(
         self,
@@ -325,6 +385,8 @@ class Run:
         wire = self.message.model_dump(mode="json")
         if status == "complete":
             self.emit("run.completed", {"message": wire})
+        elif status == "stopped":
+            self.emit("run.stopped", {"message": wire})
         else:
             self.emit("run.failed", {"error": problem, "message": wire})
         if self.listening:
@@ -340,7 +402,7 @@ def _ending_of(
 ) -> tuple[str, ApiError | None, dict[str, int] | None]:
     if isinstance(ended, RunResult):
         if ended.stop_reason == "cancelled":  # the agent's own time limit; Stop (#9) is ours
-            detail = "The agent's own time limit ended the reply."
+            detail = "The agent's own time limit ended the reply."  # (a Stop is `_stopped`)
             return ("interrupted", RunTimeLimit(detail), _usage(ended))
         return ("complete", None, _usage(ended))
     if isinstance(ended, RunError):
@@ -349,6 +411,17 @@ def _ending_of(
         )
         return ("failed", AgentFailed(), None)
     return ("failed", AgentFailed("The agent's reply ended without a result."), None)
+
+
+def _stopped(
+    ending: tuple[str, ApiError | None, dict[str, int] | None],
+    ended: RunResult | RunError | None,
+) -> tuple[str, ApiError | None, dict[str, int] | None]:
+    """After a Stop: `stopped`, keeping what was written, unless the reply had finished anyway."""
+    if ending[0] == "complete":
+        return ending
+    usage = _usage(ended) if isinstance(ended, RunResult) else None
+    return ("stopped", None, usage)
 
 
 def _ending_of_error(exc: Exception) -> tuple[str, ApiError | None, dict[str, int] | None]:
@@ -369,14 +442,31 @@ def _ending_of_error(exc: Exception) -> tuple[str, ApiError | None, dict[str, in
 # ---------------------------------------------------------------------- the running set
 
 _running: set[asyncio.Task[None]] = set()
+_by_message: dict[uuid.UUID, Run] = {}
 
 
 def start(run: Run) -> asyncio.Task[None]:
     """Run it as its own task, kept referenced until it ends."""
     task = asyncio.create_task(run.main(), name=f"run:{run.spec.message_id}")
     _running.add(task)
-    task.add_done_callback(_running.discard)
+    _by_message[run.spec.message_id] = run
+
+    def ended(t: asyncio.Task[None]) -> None:
+        _running.discard(t)
+        _by_message.pop(run.spec.message_id, None)
+
+    task.add_done_callback(ended)
     return task
+
+
+def signal_stop(message_id: uuid.UUID) -> bool:
+    """A Stop received by the task running the reply: act now instead of at the next poll.
+    The database flag is the real signal (another task may run it); this only saves time."""
+    run = _by_message.get(message_id)
+    if run is None:
+        return False
+    run.stop.set()
+    return True
 
 
 async def wait_for_runs(grace_seconds: float) -> None:

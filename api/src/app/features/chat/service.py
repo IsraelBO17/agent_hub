@@ -16,6 +16,7 @@ from app.core.lifecycle import shutting_down
 from app.core.service import BaseService
 from app.core.settings import Settings
 from app.features.agents import public as agents
+from app.features.chat import runs
 from app.features.chat.exceptions import (
     AgentRetired,
     AgentUnavailable,
@@ -41,6 +42,7 @@ from app.features.chat.schemas import (
     SendMessageRequest,
     SendReplay,
     SessionSummaryOut,
+    StopAccepted,
 )
 
 TITLE_CHARS = 60  # D21
@@ -382,6 +384,20 @@ class ChatService(BaseService):
             pending_approvals=0,  # approvals arrive with D19's slice
             message_count=count,
         )
+
+    # ------------------------------------------------------------------ stop
+
+    async def stop(self, user_id: uuid.UUID, message_id: uuid.UUID) -> StopAccepted:
+        """P4: the flag is the signal, read by whichever task runs the reply."""
+        message = await self.repo.message(user_id, message_id)
+        if message is None:
+            raise MessageNotFound()
+        async with self.transaction():
+            status = await self.repo.request_stop(message.id, datetime.now(UTC))
+        if status is None:  # already ended (or a user message): report it as it is
+            return StopAccepted(message_id=message.id, status=message.status)
+        runs.signal_stop(message.id)  # committed; if this task runs the reply, act now
+        return StopAccepted(message_id=message.id, status=status)
 
     # ------------------------------------------------------------------ reads
 
