@@ -30,8 +30,7 @@ Nothing here is applied without the owner's go-ahead on the plan output.
    ```bash
    terraform -chdir=infra/bootstrap apply
    ```
-   It prints `name_servers`.
-3. **Delegate `fleet` (whoever manages `qucoon.com`, in its Route 53 zone in the other AWS account):** add one record of type `NS`, name `fleet`, with the four `name_servers` values, TTL 3600. Check with `dig +short NS fleet.qucoon.com`. Needed before `enable_api = true` (the API certificate is validated through this zone); it can be done any time before step 8.
+3. **DNS is CNAMEs in the `qucoon.com` zone** (another AWS account, D25). Terraform prints the records to add as `dns_records_for_qucoon`; whoever manages `qucoon.com` adds them. Nothing to do yet.
 4. **Dev environment:** copy `envs/dev/terraform.tfvars.example` to `envs/dev/terraform.tfvars` and fill it in, then:
    ```bash
    make infra-init
@@ -43,6 +42,9 @@ Nothing here is applied without the owner's go-ahead on the plan output.
    terraform -chdir=infra/envs/dev apply
    ```
    With `enable_api = false` (the default) this creates the network, ECR, the files bucket, the secrets and the Amplify app; no load balancer and no ECS service.
+5. **The API, in two phases** (values in the committed `envs/dev/deploy.auto.tfvars`; show each plan to the owner before applying):
+   - **Phase 1:** `enable_api = true`, `api_certificate_issued = false`. Creates only the API's certificate. Send the validation record from `terraform -chdir=infra/envs/dev output dns_records_for_qucoon` to the `qucoon.com` owner and wait until `output api_certificate_status` is `ISSUED`.
+   - **Phase 2:** `api_certificate_issued = true`, with `api_image_tag` set and `api_desired_count = 1`. Creates the ALB and the ECS service. Send the `api.fleet.qucoon.com` CNAME from the same output, then check `curl https://api.fleet.qucoon.com/v1/health`.
 5. **Secret values** (by hand, never in Terraform or git): for each name in the `secret_names` output,
    ```bash
    aws secretsmanager put-secret-value --secret-id fleet-dev-session-key-secret-us-east-1 --secret-string "$(openssl rand -base64 48)"
@@ -55,7 +57,8 @@ Two switches, so nothing is billed before it's needed:
 
 | Variable | Default | Effect |
 |---|---|---|
-| `enable_api` | `false` | Creates the ALB, its certificate and `api.fleet.qucoon.com`, the ECS cluster, task definition, service and their IAM roles. Needs step 3 done (the certificate validates through the delegated zone). |
+| `enable_api` | `false` | Phase 1: creates the API's ACM certificate (validated by a CNAME in `qucoon.com`). |
+| `api_certificate_issued` | `false` | Phase 2: creates the ALB, the ECS cluster, task definition, service and their IAM roles. Set once the certificate is issued. |
 | `api_desired_count` | `0` | Number of API tasks. Set to `1` once an image is in ECR (P7: one task, no autoscaling). |
 
 ## Monthly cost, dev (us-east-1, 730 h, checked 2026-09-29)

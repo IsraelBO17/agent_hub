@@ -3,8 +3,8 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "zone_name" {
-  description = "Delegated subdomain created in infra/bootstrap (D25)."
+variable "app_domain" {
+  description = "The app's host name; the API is api.<app_domain>. Both are CNAMEs in the qucoon.com zone, which another account manages (D25)."
   type        = string
   default     = "fleet.qucoon.com"
 }
@@ -40,9 +40,15 @@ variable "aws_apn_id" {
 
 variable "enable_api" {
   description = <<-EOT
-    Creates the ALB (with its certificate and api. DNS record) and the ECS service. Off until step 8 so the
-    ALB's fixed ~$24/month doesn't start before there is an API to serve.
+    Phase 1: creates the API's ACM certificate, whose validation CNAME the qucoon.com owner adds (D25).
+    With api_certificate_issued it also creates the ALB and the ECS service (~$24/month for the ALB alone).
   EOT
+  type        = bool
+  default     = false
+}
+
+variable "api_certificate_issued" {
+  description = "Phase 2: set true once ACM shows the API certificate as Issued; creates the ALB and the ECS service."
   type        = bool
   default     = false
 }

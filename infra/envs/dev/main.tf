@@ -1,13 +1,9 @@
 # The dev environment, the only one until v1 (D17). Apply order and the manual steps: infra/README.md.
 
-data "aws_route53_zone" "fleet" {
-  name = var.zone_name
-}
-
 locals {
   prefix     = "${var.project}-${var.environment}" # names: <prefix>-<component>-<type>-<region> (D26)
-  app_domain = var.zone_name                       # https://fleet.qucoon.com (Amplify, step 8)
-  api_domain = "api.${var.zone_name}"              # https://api.fleet.qucoon.com (ALB)
+  app_domain = var.app_domain                      # https://fleet.qucoon.com (Amplify)
+  api_domain = "api.${var.app_domain}"             # https://api.fleet.qucoon.com (ALB)
   app_origin = "https://${local.app_domain}"
   api_port   = 8000
   # The account is shared: the API may invoke only fleet's own runtimes, listed explicitly.
@@ -43,22 +39,39 @@ module "secrets" {
   }
 }
 
-module "alb" {
+# The API's certificate. DNS-validated by a CNAME the qucoon.com owner adds (D25); the
+# `dns_records_for_qucoon` output lists it. Created first, on its own (phase 1).
+resource "aws_acm_certificate" "api" {
   count             = var.enable_api ? 1 : 0
+  domain_name       = local.api_domain
+  validation_method = "DNS"
+  tags              = { Name = "${local.prefix}-api-cert-${var.region}" }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+locals {
+  # Phase 2: the load balancer and the service, once the certificate is issued.
+  api_serving = var.enable_api && var.api_certificate_issued
+}
+
+module "alb" {
+  count             = local.api_serving ? 1 : 0
   source            = "../../modules/alb"
   prefix            = "${local.prefix}-api"
   region            = var.region
   vpc_id            = module.network.vpc_id
   vpc_cidr          = module.network.vpc_cidr
   subnet_ids        = module.network.public_subnet_ids
-  zone_id           = data.aws_route53_zone.fleet.zone_id
-  domain            = local.api_domain
+  certificate_arn   = aws_acm_certificate.api[0].arn
   container_port    = local.api_port
   health_check_path = "/v1/health"
 }
 
 module "api" {
-  count                 = var.enable_api ? 1 : 0
+  count                 = local.api_serving ? 1 : 0
   source                = "../../modules/service"
   prefix                = "${local.prefix}-api"
   region                = var.region

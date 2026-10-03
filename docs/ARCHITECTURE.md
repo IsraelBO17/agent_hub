@@ -159,14 +159,16 @@ Compute, S3, AgentCore, Secrets Manager, Amplify and Neon all in us-east-1. **Re
 **Why.** The simplest layout that keeps "adding an agent touches only `agents/`" checkable in a pull request, and keeps each part deployable on its own.
 **Revisit if.** A second TypeScript package appears (then npm workspaces), or the contract gains another consumer (then move it to a top-level `contract/`).
 
-### D25. Domain: `fleet.qucoon.com`, delegated to its own Route 53 zone
-**Decision (owner, 2026-09-29, Q2; changed the same day from `fleet.qucoon.com`).** `qucoon.com` is hosted in Route 53 in **another AWS account**. Only `fleet.qucoon.com` is delegated to a Route 53 zone in the Agent Hub account (created by `infra/bootstrap`): whoever manages `qucoon.com` adds four `NS` records named `fleet` with the values Terraform prints.
+### D25. Domain: `fleet.qucoon.com`, as CNAMEs in the `qucoon.com` zone
+**Decision (owner, 2026-09-29, Q2; amended 2026-10-03).** `qucoon.com` is hosted in Route 53 in **another AWS account**, and its owner adds fleet's records there as **CNAMEs**; there is no delegated zone. Terraform prints them (`dns_records_for_qucoon` in `infra/envs/dev`):
+- `api.fleet.qucoon.com` → the ALB's DNS name, and the API certificate's validation CNAME (kept: ACM renews with it).
+- `fleet.qucoon.com` → Amplify's domain, and Amplify's validation CNAME (when the web app is deployed).
 - Web app (Amplify): `https://fleet.qucoon.com`; share links `https://fleet.qucoon.com/s/<slug>`.
 - API (ALB): `https://api.fleet.qucoon.com`.
-- Certificates: ACM in us-east-1, validated through DNS records in the delegated zone. Amplify manages its own certificate for the app.
+- Certificates: ACM in us-east-1, DNS-validated by the CNAMEs above. Amplify manages its own certificate for the app.
 - Google OAuth authorised JavaScript origin: `https://fleet.qucoon.com`; CORS allows only that origin.
 - Checked 2026-09-29: `qucoon.com` is on Route 53 (`awsdns` name servers), has no CAA records (nothing blocks Amazon certificates), and `fleet` isn't in use.
-**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). A delegated zone keeps Agent Hub's records in its own account and leaves the rest of `qucoon.com` untouched; $0.50/month.
+**Why.** Owning the domain gives the ALB a certificate and puts app and API on one site, which the `SameSite=Strict` refresh cookie needs (D8). CNAMEs (amended 2026-10-03, at the domain owner's request) leave the `qucoon.com` zone under its owner's control; the first design, a delegated zone, was deleted outside Terraform before it was used. The cost: each record is a handoff, and the API's CNAME follows the ALB, so the ALB must not be replaced casually.
 **Revisit if.** The app moves to another domain: change one Terraform variable, the Google OAuth origin and the CORS origin.
 
 ### D26. Resource names and required tags
@@ -233,7 +235,7 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 
 ## 5. Open items (known, not yet decided)
 
-- The four `NS` records for `fleet` in the `qucoon.com` zone (another AWS account), added by whoever manages it once Terraform creates the delegated zone (D25).
+- The CNAMEs for `fleet` in the `qucoon.com` zone (another AWS account), added by whoever manages it from Terraform's `dns_records_for_qucoon` output (D25).
 - Google OAuth client: created by hand in Google Cloud console. Needs the app origin as an authorised JavaScript origin.
 - Terraform state bucket: bootstrapped first, by a separate minimal config.
 - Neon: created by hand; its pooled and direct connection strings go into Secrets Manager.
@@ -278,3 +280,4 @@ Answered 2026-09-29: Q9 → Research Analyst v0 (`DELIVERY_PLAN.md` §2), Q2 →
 | 2026-10-03 | D28: UI primitives from shadcn/ui on Base UI (no Radix), restyled to the Pencil components; component map in `docs/UI_COMPONENTS.md`. D16 points to it. |
 | 2026-10-03 | API standard written (personal, project-neutral, private template `IsraelBO17/api-standard`); Agent Hub's values in `docs/API_PROFILE.md` (validation 422, Neon pooled/direct URLs, SSE timers, deploy settings). |
 | 2026-10-03 | D3 verified (issue #5): psycopg 3 works through Neon's pooler with prepared statements on or off; the app keeps them off. API shell built from the API standard (`api/`). |
+| 2026-10-03 | D25 amended: CNAMEs in the `qucoon.com` zone instead of a delegated zone (the zone had been deleted outside Terraform). The API deploys in two phases: certificate, then ALB and service. |
