@@ -365,7 +365,7 @@ From the catalog to a finished reply: pick an agent, start a session, watch it t
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
-| F2.1 Catalog | `UwUMM` | 1440×1024 | Clicks the Coding Agent card |
+| F2.1 Catalog | `UwUMM` | 1440×1024 | Clicks the Research Analyst card |
 | F2.2 Agent detail | `PHIgn` | 1440×1024 | Clicks “Start session” |
 | F2.3 New session | `mU5UB` | 1440×1024 | Clicks a starter prompt |
 | F2.4 Composing | `xpt2S` | 1440×1024 | Edits the prompt, presses Enter |
@@ -391,13 +391,13 @@ Research Analyst turns a request into a document artifact, then the user opens, 
 
 ### Flow 4 — Human in the loop
 
-Documents asks before it files a contract to SharePoint (approve, deny, expire). Then, in Ledger, a long background task finishes while the user is away and a toast brings them back.
+Documents asks before it files a contract to SharePoint (approve, deny, expire). Then a long contract review finishes while the user is away and a toast brings them back.
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
 | F4.1 Approval requested | `C6Znz` | 1440×1024 | Clicks “Approve and file”; in v1 this goes straight to step 3 |
 | F4.2 Confirm with Face ID (P2, parked) | `RPA2L` | 1440×1024 | Authenticates (P2 only) |
-| F4.3 Filed | `Xju40` | 1440×1024 | Later, in Ledger, asks for a monthly reconciliation |
+| F4.3 Filed | `Xju40` | 1440×1024 | Later, asks Documents to review last quarter's contracts |
 | F4.4 Branch · Denied | `oTQRM` | 1440×1024 | If the user clicks Deny instead |
 | F4.5 Long task running | `l7fEn` | 1440×1024 | Leaves the page |
 | F4.6 Task complete, anywhere | `pwVxh` | 1440×1024 | Clicks “View result” |
@@ -405,7 +405,7 @@ Documents asks before it files a contract to SharePoint (approve, deny, expire).
 
 ### Flow 5 — Attachments & voice
 
-The user shares a photo and a lab report with Health Assistant, gets an answer about them, then dictates a follow-up.
+The user shares a photo of a doctor's note and a payslip with HR Assistant, gets an answer about sick pay, then dictates a follow-up.
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
@@ -413,7 +413,7 @@ The user shares a photo and a lab report with Health Assistant, gets an answer a
 | F5.2 Uploading | `k7zUs` | 1440×1024 | Uploads finish; types a question |
 | F5.3 Ready to send | `U1xhD` | 1440×1024 | Presses Enter |
 | F5.4 Agent reads the files | `LJlPN` | 1440×1024 | Answer arrives |
-| F5.5 Answer with care note | `xwgQu` | 1440×1024 | Taps the mic to follow up |
+| F5.5 Answer with policy note | `xwgQu` | 1440×1024 | Taps the mic to follow up |
 | F5.6 Dictating | `rzkSq` | 1440×1024 | Taps ✓ to finish |
 | F5.7 Transcribed, ready to send | `sGUaU` | 1440×1024 | Presses Enter |
 
@@ -429,7 +429,7 @@ What the user sees when things go wrong: a failed reply, a dropped connection, r
 | F6.4 Back online | `PsIbC` | 1440×1024 | Sends several requests quickly |
 | F6.5 Rate limited (P2) | `HmCpV` | 1440×1024 | Later: session grows very long |
 | F6.6 Session too long (P2) | `M7v0g` | 1440×1024 | Clicks “Start new session” |
-| F6.7 Fresh session with summary (P2) | `uZP3Q` | 1440×1024 | Switches to Home Ops |
+| F6.7 Fresh session with summary (P2) | `uZP3Q` | 1440×1024 | Switches to Expenses Assistant |
 | F6.8 Agent offline while typing | `j5dD9g` | 1440×1024 | Draft kept; waits or switches |
 
 ### Flow 7 — Finding & organising
@@ -455,10 +455,10 @@ Move between agents from anywhere. Switching always opens a fresh session; past 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
 | F8.1 Mid-conversation | `oI49h` | 1440×1024 | Clicks the agent switcher |
-| F8.2 Agent switcher | `ga0YM` | 1440×1024 | Picks Health Assistant |
+| F8.2 Agent switcher | `ga0YM` | 1440×1024 | Picks HR Assistant |
 | F8.3 Fresh session | `p8e9kq` | 1440×1024 | Opens a past session from the sidebar |
 | F8.4 Past session reopened | `jrgPt` | 1440×1024 | Presses ⌘J to switch quickly |
-| F8.5 Quick switch (⌘J) | `gihjG` | 1440×1024 | Picks Coding Agent → Flow 2 |
+| F8.5 Quick switch (⌘J) | `gihjG` | 1440×1024 | Picks Research Analyst → Flow 2 |
 
 ### Flow 9 — Settings & management
 
@@ -472,7 +472,7 @@ Change preferences, wipe data safely, learn shortcuts, and manage an agent's det
 | F9.4 Keyboard shortcuts | `Iicud` | 1440×1024 | Opens an agent's page |
 | F9.5 Agent detail | `yz8Mr` | 1440×1024 | Clicks “Edit agent” (P2) |
 | F9.6 Edit agent (P2, parked) | `gpyEo` | 1440×1024 | Saves changes |
-| F9.7 Degraded agent in catalog | `H1yh2` | 1440×1024 | Opens Ledger anyway |
+| F9.7 Degraded agent in catalog | `H1yh2` | 1440×1024 | Opens Documents anyway |
 | F9.8 Degraded agent in chat | `s1omGy` | 1440×1024 | Status recovers automatically |
 
 ### Flow 10 — Mobile
@@ -485,8 +485,8 @@ The same product on a phone: browse agents, chat, open artifacts as full-screen 
 | F10.2 Chat with artifact | `j57Yaa` | 390×844 | Taps the artifact card |
 | F10.3 Artifact sheet | `o3XCU` | 390×844 | Taps ⋯ |
 | F10.4 Overflow menu | `oNbW3` | 390×844 | Downloads; taps back, opens menu |
-| F10.5 Sessions drawer | `i46aRN` | 390×844 | Opens Ledger session |
-| F10.6 Approve on mobile | `GCuQ2` | 390×844 | Taps “Approve transfer” |
+| F10.5 Sessions drawer | `i46aRN` | 390×844 | Switches to Documents, opens the contract session |
+| F10.6 Approve on mobile | `GCuQ2` | 390×844 | Taps “Approve” |
 
 ### Flow 11 — Mobile core
 
@@ -503,8 +503,8 @@ The v1 phone states: loading, starting and composing, streaming with tools, plan
 | F11.7 Question card | `wiL50` | 390×844 | Picks “Engineering team” |
 | F11.8 Reconnecting | `e6XAO` | 390×844 | The agent returns an error |
 | F11.9 Reply failed | `vBCdH` | 390×844 | Taps the agent name |
-| F11.10 Agent switcher sheet | `wE4kz` | 390×844 | Picks Home Ops |
-| F11.11 Agent offline | `t4QWfb` | 390×844 | Switches to Ledger; approves a transfer |
+| F11.10 Agent switcher sheet | `wE4kz` | 390×844 | Picks Expenses Assistant |
+| F11.11 Agent offline | `t4QWfb` | 390×844 | Switches to Documents; approves a filing |
 | F11.12 Approval approved | `c16G99` | 390×844 | Branch: denies instead |
 | F11.13 Approval denied | `s9qGv` | 390×844 | Branch: lets it expire |
 | F11.14 Approval expired | `AKLDi` | 390×844 | Opens the drawer |

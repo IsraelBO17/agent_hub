@@ -1159,7 +1159,7 @@
    "render": "flows/f02-start-chatting/UwUMM-f2-1-catalog.png",
    "flow": 2,
    "step": "F2.1",
-   "trigger": "Clicks the Coding Agent card"
+   "trigger": "Clicks the Research Analyst card"
   },
   {
    "id": "PHIgn",
@@ -1421,7 +1421,7 @@
    "render": "flows/f04-human-in-the-loop/Xju40-f4-3-filed.png",
    "flow": 4,
    "step": "F4.3",
-   "trigger": "Later, in Ledger, asks for a monthly reconciliation"
+   "trigger": "Later, asks Documents to review last quarter's contracts"
   },
   {
    "id": "oTQRM",
@@ -1537,14 +1537,14 @@
   },
   {
    "id": "xwgQu",
-   "name": "F5.5 Answer with care note",
+   "name": "F5.5 Answer with policy note",
    "size": "1440×1024",
    "group": "flows/f05-attachments-voice",
    "scope": "P0",
    "status": "M3",
    "note": "",
    "built": [],
-   "render": "flows/f05-attachments-voice/xwgQu-f5-5-answer-with-care-note.png",
+   "render": "flows/f05-attachments-voice/xwgQu-f5-5-answer-with-policy-note.png",
    "flow": 5,
    "step": "F5.5",
    "trigger": "Taps the mic to follow up"
@@ -1675,7 +1675,7 @@
    "render": "flows/f06-recovering-from-problems/uZP3Q-f6-7-fresh-session-with-summary-p2.png",
    "flow": 6,
    "step": "F6.7",
-   "trigger": "Switches to Home Ops"
+   "trigger": "Switches to Expenses Assistant"
   },
   {
    "id": "j5dD9g",
@@ -1849,7 +1849,7 @@
    "render": "flows/f08-switching-agents/ga0YM-f8-2-agent-switcher.png",
    "flow": 8,
    "step": "F8.2",
-   "trigger": "Picks Health Assistant"
+   "trigger": "Picks HR Assistant"
   },
   {
    "id": "p8e9kq",
@@ -1893,7 +1893,7 @@
    "render": "flows/f08-switching-agents/gihjG-f8-5-quick-switch-cmd-j.png",
    "flow": 8,
    "step": "F8.5",
-   "trigger": "Picks Coding Agent → Flow 2"
+   "trigger": "Picks Research Analyst → Flow 2"
   },
   {
    "id": "OSWol",
@@ -1993,7 +1993,7 @@
    "render": "flows/f09-settings-management/H1yh2-f9-7-degraded-agent-in-catalog.png",
    "flow": 9,
    "step": "F9.7",
-   "trigger": "Opens Ledger anyway"
+   "trigger": "Opens Documents anyway"
   },
   {
    "id": "s1omGy",
@@ -2081,7 +2081,7 @@
    "render": "flows/f10-mobile/i46aRN-f10-5-sessions-drawer.png",
    "flow": 10,
    "step": "F10.5",
-   "trigger": "Opens Ledger session"
+   "trigger": "Switches to Documents, opens the contract session"
   },
   {
    "id": "GCuQ2",
@@ -2095,7 +2095,7 @@
    "render": "flows/f10-mobile/GCuQ2-f10-6-approve-on-mobile.png",
    "flow": 10,
    "step": "F10.6",
-   "trigger": "Taps “Approve transfer”"
+   "trigger": "Taps “Approve”"
   },
   {
    "id": "EP1MN",
@@ -2247,7 +2247,7 @@
    "render": "flows/f11-mobile-core/wE4kz-f11-10-agent-switcher-sheet.png",
    "flow": 11,
    "step": "F11.10",
-   "trigger": "Picks Home Ops"
+   "trigger": "Picks Expenses Assistant"
   },
   {
    "id": "t4QWfb",
@@ -2263,7 +2263,7 @@
    "render": "flows/f11-mobile-core/t4QWfb-f11-11-agent-offline.png",
    "flow": 11,
    "step": "F11.11",
-   "trigger": "Switches to Ledger; approves a transfer"
+   "trigger": "Switches to Documents; approves a filing"
   },
   {
    "id": "c16G99",
