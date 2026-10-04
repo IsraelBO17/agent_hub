@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft for owner review (product-design session, step 3) |
+| Status | **Approved 2026-10-04** and applied in three batches (step 4): `33a9484` (1–5), `6ab80a3` (6, 7, 10–12), batch 3 (8, 9) |
 | Date | 2026-10-04 |
 | Inputs | [`PROBLEM_BRIEF.md`](PROBLEM_BRIEF.md) (approved), ARCHITECTURE D31, the gallery [`design/renders/index.html`](../design/renders/index.html), build screenshots in [`screenshots/`](screenshots/) (issue-8 and `m1-mock/`, main `251a14a`) |
 
@@ -108,7 +108,7 @@
   - About 20 flow screens are detached copies of reference screens and will drift.
 - **Accessibility:** contrast was fixed in M0; focus is drawn (`Crc4x`). The new states (unread, draft, details) need a text equivalent, not colour alone.
 
-## 5. Design changes, ranked (proposed; owner approves before any change)
+## 5. Design changes, ranked (approved 2026-10-04; all applied)
 
 | # | Change | Tag | Screens and components | Why |
 |---|---|---|---|---|

@@ -9,6 +9,8 @@
 
 > **Aligned (2026-09-29):** the design, data model and flows were checked against each other in the alignment review (build step 4b); F01, F08, F10, F12, F13, F14 and F20 below were updated from it.
 >
+> **Users and scope updated (2026-10-04, product-design session):** real use since M1 changed who v1 is for. Qucoon colleagues use v1 with private history and per-agent access (ARCHITECTURE D31); the ranked problems are in [`PROBLEM_BRIEF.md`](PROBLEM_BRIEF.md) and the design changes in [`DESIGN_REVIEW.md`](DESIGN_REVIEW.md). §1 users, F31–F33 and the §5 inventory below reflect it; where older text here says owner-only, D31 wins.
+>
 > **Stack superseded (2026-09-29):** technical decisions now live in [`ARCHITECTURE.md`](ARCHITECTURE.md). Mentions below of DynamoDB, Cognito, Next.js and Lambda Function URLs are out of date; see its table at the top.
 
 This is the plan to build from. It makes decisions; where a decision rests on something I don't know, it is marked **[A#]** (assumption) and collected in §7. Open questions that block the build are ranked at the end (§11).
@@ -35,7 +37,7 @@ This is the plan to build from. It makes decisions; where a decision rests on so
 |---|---|---|---|
 | Primary | **You, the builder and daily user.** AI engineer and team lead who ships Strands agents on AgentCore. | Use your agents daily, test new ones, and come back to past work. | Everything in v1 is built for you. |
 | Secondary | **Portfolio audience:** hiring managers, clients, meetup and demo audiences. | See what the agents can do, often on a phone, without an account. | They see agents through **your live demos** and **read-only shared session links** (P1). They cannot chat. [A2] |
-| Later | **Teammates** | Use shared agents with their own history. | Out of v1. This needs multi-user auth and data separation (P2). |
+| Primary (from 2026-10-04) | **Qucoon colleagues** (10–20; engineers and non-technical staff) | Use Qucoon's agents for real work with private history; builders among them put their own agents in front of their users. | **In v1 (D31):** invites by CLI, per-agent access, staff copy, a builder's details view. |
 
 **Pushback on the requirements.** "Single user" and "portfolio" pull against each other: a portfolio exists to be seen by others. If strangers can chat with your agents, you take on cost, abuse and data-safety work (quotas, guest identity, demo-safe tools) that roughly doubles the auth and backend scope. I recommend v1 stays owner-only for chat, and others see the work through read-only share links and recorded demos. Live guest chat moves to P2, behind quotas, and only for agents marked demo-safe.
 
@@ -120,7 +122,7 @@ This is the plan to build from. It makes decisions; where a decision rests on so
 | F01 | **Agent registry and catalog** | `GET /v1/agents` drives the catalog; there is no agent list in front-end code. Registering a new agent (CLI or SQL seed inserting a row in the `agents` table, D6) makes it appear on reload with its icon, colours, description and status. Catalog search appears only when there are more than 8 agents. Loading, empty and error states exist. |
 | F02 | **Descriptor-driven UI** | Each agent descriptor declares `icon`, `color`, `starters[]`, `disclaimer`, `capabilities` (`attachments: {types, maxMB}`, `artifacts`, `approvals`, `questions`), `tools[]` (`name`, `description`, `requiresApproval`), `stage` (`beta`/`stable`) and `runtime` (`agentcore`/`http`). The UI hides what an agent doesn't support: no "+" button without attachments. The disclaimer under the composer is the agent's own text. |
 | F03 | **New session, lazy creation** | `/agents/:id` shows starters and the composer. No session exists until the first send. The server creates it and returns an id, and the URL becomes `/agents/:id/:sessionId` without a reload. If the first send fails, no session is created, the draft is kept, and Retry works. |
-| F04 | **Streaming chat** | Tokens render progressively with no layout jumps. The view auto-scrolls only when already at the bottom; otherwise "Jump to latest" appears. Stop (button or Esc) ends generation, keeps the partial reply and marks it "Stopped". Markdown covers headings, lists, tables, inline and fenced code with a copy button, and links. Each message has Copy and a timestamp. |
+| F04 | **Streaming chat** | Tokens render progressively with no layout jumps. The view auto-scrolls only when already at the bottom; otherwise "Jump to latest" appears. Stop (button or Esc) ends generation, keeps the partial reply and marks it "Stopped". Markdown covers headings, lists, tables, inline and fenced code with a copy button, and links. Each message has Copy and a timestamp. Before the first event the reply names the agent and counts seconds; streamed text is revealed at a steady pace, never more than 1 s behind (the steady-reveal rule on the Agent Working board `sx5f0` §5). |
 | F05 | **Agent activity** | `thinking` events render as a collapsed "Thought for Ns" row; if the agent emits none, the row doesn't appear. Tool calls render as chips (name, short summary, duration, state) that expand to input and output. `plan`/`progress` events render the Plan Card with steps. All of these persist and look the same after reload. |
 | F06 | **Session history** | The sidebar lists the current agent's sessions, grouped Today / Yesterday / Previous 7 days / Earlier, newest first. A new session appears at the top the moment it's created (this fixes the design bug). Sessions are titled from the first message when created (ARCHITECTURE D21). Rename inline. Delete removes the session immediately with a 10-second Undo toast and no dialog. Reopening a session restores its full transcript, including tool calls, artifacts and approvals. |
 | F07 | **Agent switching** | The Agent Switcher in the sidebar lists all agents with status. Choosing one opens a fresh session for it. The header always shows agent, status and session title. Offline agents can be selected but are read-only. |
@@ -133,10 +135,14 @@ This is the plan to build from. It makes decisions; where a decision rests on so
 | F14 | **AgentApi and the contract** | *(Superseded in part by ARCHITECTURE D29: one HTTP/SSE client, with MSW answering it in mock mode; the Scenario Agent's scripts are MSW scenarios.)* One `AgentApi` interface with two implementations: a mock (localStorage, scripted scenarios) and an HTTP/SSE client, switched by an env var. The OpenAPI 3.1 spec (build step 5) documents endpoints, JSON shapes and every SSE event and block; the client is typed from it. A Playwright suite runs every Scenario Agent script against the mock in CI. |
 | F15 | **Mobile web, core flows** | At 390 px width, these work: catalog, new session, chat with streaming, sessions drawer, artifact sheet, approval. The composer stays above the keyboard. Tap targets are at least 44 px. No horizontal scroll. |
 
+| F31 | **Builder's view of a reply** (D31) | A Details action on each reply, visible only to the agent's builders, opens Reply Details (`n63hvg`; screens `h3wzrt`, mobile `suD2V`): model, agent version, request ID, timings (first event, first words, total), tokens in and out with estimated cost, every tool call in full, and the raw event list with Copy as JSON. Hidden on shared sessions. |
+| F32 | **Colleagues and agent access** (D31) | Users are invited by CLI and activate on first Google sign-in. Each agent is visible to everyone or to named users; a new agent is visible only to its builders and carries the Draft tag (`j8Myl`) on its card, in the switcher and in the chat header. Staff never see runtime names, endpoints, registration hints or error codes (catalogs `DXXMq` staff, `Z8yHd` builder). A first visit shows an empty, private session list (`b7rUpi`). |
+
 ### P1
 
 | ID | Feature | Acceptance criteria |
 |---|---|---|
+| F33 | **Messages from outside the run** (D31) | A person or system can add a message to a session after the run (the HR team replying from the HR app). It renders as an Outside Message (`pzqKM`), clearly not from the agent, under a "New" divider; the session shows an unread marker and a toast names the sender (Flow 12, `W9xQH`–`nyfwu`). The agent says up front what the other side will see. Designed in M3; built in v1 only if the HR agent ships by 18 Dec. |
 | F16 | ⌘K palette | Searches session titles and message text across all agents plus agents by name. Arrow keys and Enter work. The top result opens in 1 keystroke. Empty and no-result states exist. |
 | F17 | Pin and archive | Pinned sessions show in their own section at the top. Archived sessions are hidden from the sidebar and ⌘K by default and shown in an Archived view with Restore. |
 | F18 | Read-only share link | "Share" creates an unguessable link to a frozen snapshot of the session and its artifacts. Viewers don't need to log in and can't send messages. The link can be revoked, after which it returns 404. It renders well on mobile. |
@@ -243,6 +249,13 @@ Status key:
 | Settings | ✅ `RHrDH`: Account (Google, Sign out), Light only, shortcuts in the ⌘/ overlay | ✅ `RT72e` (Account; no shortcuts on mobile) | P1 |
 | Artifacts library / Archived | ✅ | ✅ `GSi1C` / `grrlx` | P1 |
 | Forms | ✅ | ✅ `m4Kt4` | P1 |
+| Reply details for builders (F31) | ✅ `h3wzrt`; component `n63hvg` | ✅ `suD2V` | P0 (M2) |
+| Staff and builder catalogs, Draft tag, first visit (F32) | ✅ staff `DXXMq`, builder `Z8yHd`, first visit `b7rUpi`; `PBQLh` is the staff view | ✅ `ulBUE` (real roster) | P0 (M2) |
+| Waiting and steady reveal (F04) | ✅ Typing Indicator names the agent and counts seconds; rule on `sx5f0` §5 | uses the same | P0 (M2) |
+| Hover, pressed, disabled, selected; touch targets | ✅ States · Interaction `aJOsC`, States · Touch `O2tPw` | ✅ `O2tPw` | P0 (M2) |
+| Markdown in a reply | ✅ `IVLvU` §11 | uses the same | P0 (M2) |
+| Approvals with the Documents agent (replaces Ledger) | ✅ F4.1–F4.4, `r5Gru`, `zaZHd` §4, Edge States | ✅ F10.6, F11.12–14, `B6G93s` | P0 (M3) |
+| A reply from outside the run (F33) | ✅ Flow 12: F12.1–F12.3 | ✅ F12.4 `nyfwu` | P1, built if the HR agent ships (M3) |
 | Add / Edit agent, Face ID, voice, doc edit, compare, onboarding, shortcuts overlay | ✅ (parked) | n/a | P2 |
 
 **Mobile screens for v1: done.** The 13 missing items (new session, streaming with tool chips, plan card, error and reconnect, keyboard-open composer with attachments, agent switcher sheet, approval approved / denied / expired, question card, agent offline, 404, catalog loading, sessions loading, row menu) are designed as Flow 11, 19 screens in all (F11.1–F11.19). Variants got their own step so every screen has a trigger note. Delete on mobile supports both long-press and swipe.
@@ -307,7 +320,7 @@ No third-party analytics. The client sends a small set of events to `POST /telem
 | # | Assumption |
 |---|---|
 | A1 | Today you test agents with the CLI, the AgentCore console, curl and ad-hoc UIs. |
-| A2 | v1 is owner-only for chat. Others see the work through read-only share links (P1) and your demos. |
+| A2 | ~~v1 is owner-only for chat.~~ **Answered 2026-10-04 (D31):** Qucoon colleagues use v1, invited by CLI, each with private history; agents are visible to everyone or to named people. Share links stay P1. |
 | A3 | About 20 focused hours a week, you plus AI coding agents. v1 targets **Fri 18 Dec 2026**. |
 | A4 | Monthly budget of about $50 AWS excluding model tokens, with a model-spend alarm at a limit you set. |
 | A5 | AWS region `us-east-1`. Stack: CloudFront + S3 or Amplify for the Next.js front end; API on ECS Fargate or a Lambda Function URL; DynamoDB; S3; Cognito. |
@@ -383,7 +396,7 @@ This is a good base. The changes below are ordered by importance.
 |---|---|---|---|---|
 | **Scenario Agent** (internal, hidden from catalog outside dev) | P0, M1 | Mock script player, plus a tiny Strands agent on AgentCore that replays the same scripts | `emit_scenario(name)` | Every SSE event and state renders correctly: offline, degraded, slow, dropped stream, expired approval. It powers e2e tests and fault injection. Replaces Home Ops for the offline state. |
 | **Research Analyst** | P0, M2 | Strands, AgentCore Runtime | `web_search` (search API through AgentCore Gateway), `fetch_url`, `write_document` (artifact) | Streaming, tool timeline, plan and progress on a long task, citations, a document artifact with versions revised through chat. |
-| **Ledger** (the Bank Agent, on a synthetic ledger) | P0, M3 | Strands, AgentCore; DynamoDB ledger | `get_balances`, `list_transactions`, `categorize`, `draft_transfer`, `execute_transfer` (**requires approval**) | Human in the loop end to end: pause and resume, expiry, deny with a reason, the audit log. Agent questions ("Which account?"), tables, charts (P1). |
+| ~~**Ledger** (the Bank Agent, on a synthetic ledger)~~ **Replaced as the approvals agent (D31, 2026-10-04):** the Documents agent asking before it files shows approvals with a real agent; Ledger stays in the design only as the background-task example (F4.5–F4.7). |  |  |  |  |
 | **Coding Agent** | P1, M5 | Strands, AgentCore Code Interpreter | `run_python`, `write_file`, `create_html_app` | Code and HTML artifacts, the sandboxed preview, file outputs (CSV / XLSX). Runs in a sandbox only; no git write access to real repos in v1. |
 | **Health Assistant** | P1, M5 | Strands, a multimodal model | `extract_lab_values` (from PDF or image), `reference_ranges`, `interaction_check` (open dataset) | Attachments and image input, domain disclaimers from the descriptor, cautious-answer patterns. Synthetic records only. |
 | **Travel Planner** | P1, M5 | **LangGraph**, through the HTTP adapter | Mock flight and hotel search, `itinerary` artifact, preference form | Framework independence (J1): a second framework with 0 front-end changes. Also structured forms (F21). |
@@ -411,7 +424,7 @@ The design shows Research Analyst as "LangGraph · Lambda". I recommend Strands 
 
 | Rank | Question | Blocks | My default if you don't answer |
 |---|---|---|---|
-| 1 | **Who uses v1 besides you, and how?** Owner-only with read-only share links, or strangers chatting live with your agents? | Auth model, backend cost controls, data model (visibility), security review, P0 vs P1 of sharing | Owner-only chat. Share links in P1. Guest chat in P2. |
+| 1 | ~~**Who uses v1 besides you, and how?**~~ **Answered 2026-10-04 (D31): Qucoon colleagues, invited.** Owner-only with read-only share links, or strangers chatting live with your agents? | Auth model, backend cost controls, data model (visibility), security review, P0 vs P1 of sharing | Owner-only chat. Share links in P1. Guest chat in P2. |
 | 2 | **Time and date:** how many hours a week, and is Dec 18 a real date or a wish? | Roadmap, what gets cut from M4 | About 20 h/week, Dec 18. |
 | 3 | **Bank and health: synthetic data only, confirmed?** Any plan to connect real accounts, records or payment rails? | Agent design, compliance scope, whether step-up auth becomes P0 | Synthetic only, permanently for this project. |
 | 4 | **Backend stack and hosting:** Python / FastAPI on ECS Fargate (or a Lambda Function URL), DynamoDB, S3, Cognito, `us-east-1`? | M0 spikes, the contract's type sharing | Yes, as stated (A5, A6). |

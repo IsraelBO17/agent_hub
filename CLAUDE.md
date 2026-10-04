@@ -35,6 +35,7 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 - **Blank newly inserted frames.** Inserted frames sometimes lay out with a stale +50 y offset and render blank. Fix: Copy the affected top-level frame, then Delete the original. **Never do this to a reusable component**: copying a component creates an instance, not a component.
 - **Blank screenshots.** Screenshots taken right after creation, or of nodes inside instances, can come back blank. Retake later, or screenshot the parent.
 - **Lost overrides.** Moving component children that instances override can drop those overrides.
+- **Lost nested instances.** Inserting or moving a child inside a reusable component can delete that component's instances nested in *other* instances' slot overrides (2026-10-04: every Session Item inside a Sidebar slot vanished after a child was added to Session Item). Don't change a slotted component's children; if you must, diff the renders and restore slots from the last saved `.pen` with `Replace(instanceId/slotFrameId, frame)`.
 - **Slots.** Fill a slot with `Replace(instanceId + "/" + slotId, frameData)`, then Insert or Move content into the returned frame.
 - **Script engine:**
   - Functions don't persist between `execute` calls.

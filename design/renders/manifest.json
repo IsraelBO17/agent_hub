@@ -53,7 +53,7 @@
   {
    "n": 4,
    "title": "Human in the loop",
-   "description": "Ledger pauses for approval before moving money, then runs a long background task and notifies the user when it's done.",
+   "description": "Documents asks before it files a contract to SharePoint (approve, deny, expire). Then, in Ledger, a long background task finishes while the user is away and a toast brings them back.",
    "group": "flows/f04-human-in-the-loop"
   },
   {
@@ -97,6 +97,12 @@
    "title": "Mobile core",
    "description": "The v1 phone states: loading, starting and composing, streaming with tools, plans and questions, connection problems, switching agents, approval outcomes, and managing sessions with long-press and swipe.",
    "group": "flows/f11-mobile-core"
+  },
+  {
+   "n": 12,
+   "title": "A reply from outside",
+   "description": "HR Assistant passes a question to the HR team. Later, a person replies from the HR app: the staff member gets a toast and a marked session, and the reply sits in the conversation, clearly not from the agent.",
+   "group": "flows/f12-a-reply-from-outside"
   }
  ],
  "screens": [
@@ -724,7 +730,7 @@
    "group": "states",
    "scope": "P0",
    "status": "M3",
-   "note": "",
+   "note": "Approvals shown with the Documents agent (D31).",
    "built": [],
    "render": "states/r5Gru-approval-waiting-in-another-session.png",
    "flow": null,
@@ -904,7 +910,7 @@
    "group": "mobile",
    "scope": "P0",
    "status": "M3",
-   "note": "",
+   "note": "Approvals shown with the Documents agent (D31).",
    "built": [],
    "render": "mobile/B6G93s-mobile-approval-waiting-elsewhere.png",
    "flow": null,
@@ -1382,12 +1388,12 @@
    "group": "flows/f04-human-in-the-loop",
    "scope": "P0",
    "status": "M3",
-   "note": "",
+   "note": "Recast with the Documents agent filing to SharePoint (D31; Ledger is no longer the approvals agent).",
    "built": [],
    "render": "flows/f04-human-in-the-loop/C6Znz-f4-1-approval-requested.png",
    "flow": 4,
    "step": "F4.1",
-   "trigger": "Clicks “Approve transfer”; in v1 this goes straight to step 3"
+   "trigger": "Clicks “Approve and file”; in v1 this goes straight to step 3"
   },
   {
    "id": "RPA2L",
@@ -1405,17 +1411,17 @@
   },
   {
    "id": "Xju40",
-   "name": "F4.3 Transfer sent",
+   "name": "F4.3 Filed",
    "size": "1440×1024",
    "group": "flows/f04-human-in-the-loop",
    "scope": "P0",
    "status": "M3",
    "note": "",
    "built": [],
-   "render": "flows/f04-human-in-the-loop/Xju40-f4-3-transfer-sent.png",
+   "render": "flows/f04-human-in-the-loop/Xju40-f4-3-filed.png",
    "flow": 4,
    "step": "F4.3",
-   "trigger": "Asks for a monthly reconciliation"
+   "trigger": "Later, in Ledger, asks for a monthly reconciliation"
   },
   {
    "id": "oTQRM",
@@ -1424,7 +1430,7 @@
    "group": "flows/f04-human-in-the-loop",
    "scope": "P0",
    "status": "M3",
-   "note": "",
+   "note": "Approvals shown with the Documents agent (D31).",
    "built": [],
    "render": "flows/f04-human-in-the-loop/oTQRM-f4-4-branch-denied.png",
    "flow": 4,
@@ -2084,7 +2090,7 @@
    "group": "flows/f10-mobile",
    "scope": "P0",
    "status": "M3",
-   "note": "",
+   "note": "Approvals shown with the Documents agent (D31).",
    "built": [],
    "render": "flows/f10-mobile/GCuQ2-f10-6-approve-on-mobile.png",
    "flow": 10,
@@ -2266,7 +2272,7 @@
    "group": "flows/f11-mobile-core",
    "scope": "P0",
    "status": "M3",
-   "note": "",
+   "note": "Approvals shown with the Documents agent (D31).",
    "built": [],
    "render": "flows/f11-mobile-core/c16G99-f11-12-approval-approved.png",
    "flow": 11,
@@ -2280,7 +2286,7 @@
    "group": "flows/f11-mobile-core",
    "scope": "P0",
    "status": "M3",
-   "note": "",
+   "note": "Approvals shown with the Documents agent (D31).",
    "built": [],
    "render": "flows/f11-mobile-core/s9qGv-f11-13-approval-denied.png",
    "flow": 11,
@@ -2294,7 +2300,7 @@
    "group": "flows/f11-mobile-core",
    "scope": "P0",
    "status": "M3",
-   "note": "",
+   "note": "Approvals shown with the Documents agent (D31).",
    "built": [],
    "render": "flows/f11-mobile-core/AKLDi-f11-14-approval-expired.png",
    "flow": 11,
@@ -2470,6 +2476,62 @@
    "step": null,
    "trigger": null,
    "render": "core/O2tPw-states-touch.png"
+  },
+  {
+   "id": "W9xQH",
+   "name": "F12.1 Question passed to HR",
+   "size": "1440×1024",
+   "group": "flows/f12-a-reply-from-outside",
+   "scope": "P1",
+   "status": "M3",
+   "note": "Designed in M3 (D31); built in v1 only if the HR agent ships by 18 Dec.",
+   "built": [],
+   "render": "flows/f12-a-reply-from-outside/W9xQH-f12-1-question-passed-to-hr.png",
+   "flow": 12,
+   "step": "F12.1",
+   "trigger": "HR replies in the HR app; the user is on the catalog"
+  },
+  {
+   "id": "wgxjb",
+   "name": "F12.2 Reply arrives elsewhere",
+   "size": "1440×1024",
+   "group": "flows/f12-a-reply-from-outside",
+   "scope": "P1",
+   "status": "M3",
+   "note": "",
+   "built": [],
+   "render": "flows/f12-a-reply-from-outside/wgxjb-f12-2-reply-arrives-elsewhere.png",
+   "flow": 12,
+   "step": "F12.2",
+   "trigger": "Clicks “View reply” (or the New reply row)"
+  },
+  {
+   "id": "G7j0jP",
+   "name": "F12.3 Reading the reply",
+   "size": "1440×1024",
+   "group": "flows/f12-a-reply-from-outside",
+   "scope": "P1",
+   "status": "M3",
+   "note": "",
+   "built": [],
+   "render": "flows/f12-a-reply-from-outside/G7j0jP-f12-3-reading-the-reply.png",
+   "flow": 12,
+   "step": "F12.3",
+   "trigger": "Later, opens the same session on a phone"
+  },
+  {
+   "id": "nyfwu",
+   "name": "F12.4 Reply on mobile",
+   "size": "390×844",
+   "group": "flows/f12-a-reply-from-outside",
+   "scope": "P1",
+   "status": "M3",
+   "note": "",
+   "built": [],
+   "render": "flows/f12-a-reply-from-outside/nyfwu-f12-4-reply-on-mobile.png",
+   "flow": 12,
+   "step": "F12.4",
+   "trigger": "Replies to HR Assistant, which can pass it on again"
   }
  ]
 }
