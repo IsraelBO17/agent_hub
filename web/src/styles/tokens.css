@@ -18,6 +18,7 @@
   --font-ui: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-google: Roboto, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", ui-sans-serif, system-ui, sans-serif;
   --color-bg: #FBFAF7;
   --color-surface: #FFFFFF;
   --color-sidebar: #F3F1EC;
@@ -107,6 +108,10 @@
   --color-google-border: #747775;
   --color-google-text: #1F1F1F;
   --color-focus-ring: #1F5C4A;
+  --color-accent-hover: #194D3E;
+  --color-accent-pressed: #143F33;
+  --color-danger-hover: #9C2F24;
+  --color-danger-pressed: #86281F;
   --radius-*: initial;
   --radius-4: 0.25rem;
   --radius-5: 0.3125rem;

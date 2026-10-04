@@ -2,7 +2,7 @@
 
 One web app that is a single chat interface for many AI agents (AWS Strands Agents on Amazon Bedrock AgentCore Runtime, LangGraph later). Agents are data from `GET /agents`; adding one must never need UI changes.
 
-**Current stage: building M1.** `api/` is a FastAPI service built from the owner's API standard (`docs/API_PROFILE.md`); issue #5 added its shell. `web/` is a Vite SPA built from the owner's web standard (`docs/WEB_PROFILE.md`); issue #4 adds its shell. Features are built issue by issue; do not scaffold ahead of an issue unless asked.
+**Current stage: building M2 (Chat core).** M1, the walking skeleton, is done. `api/` is a FastAPI service built from the owner's API standard (`docs/API_PROFILE.md`); `web/` is a Vite SPA built from the owner's web standard (`docs/WEB_PROFILE.md`). M2's issues and build order are in `docs/DELIVERY_PLAN.md` §9. Features are built issue by issue; do not scaffold ahead of an issue unless asked.
 
 **Layout (D24):** `api/` (FastAPI, uv; `api/openapi.yaml` is the contract; work there follows `api/CLAUDE.md`), `web/` (Vite SPA, npm; work there follows `web/CLAUDE.md`), `infra/` (Terraform), `agents/` (one descriptor YAML per agent), `design/`, `docs/`. Create a folder only in the step that fills it. `make` lists the common commands.
 
