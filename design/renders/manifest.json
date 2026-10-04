@@ -107,7 +107,7 @@
    "group": "core",
    "scope": "P0",
    "status": "built",
-   "note": "",
+   "note": "The staff view with the real roster: Research Analyst, HR Assistant, Documents, and an offline agent.",
    "built": [
     "m1-mock/desktop-catalog.png"
    ],
@@ -368,7 +368,7 @@
    "group": "artifacts",
    "scope": "P1",
    "status": "later",
-   "note": "Code and tables in replies are M2 (F04). Images, charts, citations and files are P1 (F22).",
+   "note": "Code and tables in replies are M2 (F04), and §11 shows Markdown together. Images, charts, citations and files are P1 (F22).",
    "built": [],
    "render": "artifacts/IVLvU-rich-reply-content.png",
    "flow": null,
@@ -2010,7 +2010,7 @@
    "group": "flows/f10-mobile",
    "scope": "P0",
    "status": "built",
-   "note": "",
+   "note": "The real roster; no search with fewer than 8 agents.",
    "built": [
     "m1-mock/mobile-catalog.png"
    ],
@@ -2442,6 +2442,34 @@
    "step": null,
    "trigger": null,
    "render": "colleagues/suD2V-mobile-reply-details.png"
+  },
+  {
+   "id": "aJOsC",
+   "name": "States · Interaction",
+   "size": "2280×auto",
+   "group": "core",
+   "scope": "P0",
+   "status": "M2",
+   "note": "Hover, pressed, disabled and selected for every control (design change 6).",
+   "built": [],
+   "flow": null,
+   "step": null,
+   "trigger": null,
+   "render": "core/aJOsC-states-interaction.png"
+  },
+  {
+   "id": "O2tPw",
+   "name": "States · Touch",
+   "size": "2280×auto",
+   "group": "core",
+   "scope": "P0",
+   "status": "M2",
+   "note": "44 × 44 hit areas on touch without changing the drawn size (change 7).",
+   "built": [],
+   "flow": null,
+   "step": null,
+   "trigger": null,
+   "render": "core/O2tPw-states-touch.png"
   }
  ]
 }
