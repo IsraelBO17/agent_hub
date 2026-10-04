@@ -36,6 +36,8 @@ A script reads `variables` from `fleet_dev.pen` and writes `web/src/styles/token
 | `--sidebar`, `--sidebar-accent`, `--sidebar-border` | `sidebar`, `hover`, `border` | |
 | `--chart-*` | *unused* | `<ChartBlock>` reads `chart-1`–`6` directly (CHART_SPEC) |
 
+**Added 2026-10-04 (product-design session):** `accent-hover` / `accent-pressed` and `danger-hover` / `danger-pressed` (Button / Primary and / Danger states, board `aJOsC`), and the string token `font-serif` (Source Serif 4, document artifacts). Regenerate `tokens.css` from the file.
+
 - **Type scale:** reset Tailwind's sizes (`--text-*: initial`) and define only `text-12`, `13`, `14`, `15`, `20`, `28` and `40`, so no other size can be used. `cn` must be told these names (`createCn` from `cn/config`), or it drops `text-13` next to a text colour (WEB_PROFILE, Type scale). Line heights stay with each component (1.35–1.6 in the file). Fonts: `font-ui` Inter and `font-mono` JetBrains Mono; Roboto only inside the Google button.
 - **Radii:** reset the scale the same way and define the steps the file uses: `rounded-4`, `5`, `6`, `7`, `8`, `9`, `10`, `12`, `14`, `16` and `rounded-full`. Most controls use 9, cards and callouts 10, menus 12, popovers and toasts 14, dialogs 16.
 - **Shadows** (from the components):
@@ -77,6 +79,8 @@ Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taki
 | Toast (`IjtkQ`) | `toast` (Base UI; not `sonner`) | 380 wide, radius 14, padding 14, gap 12; 32 px round icon on `accent-soft`; title 14/600, body 13; `sm` buttons; close 15. Task complete, deleted with undo (F7.7), approval waiting (`r5Gru`). |
 | Feedback Popover (`meKbs`) | `popover` + `textarea` | 380 wide, radius 14, padding 16, gap 14. Comment box 84 tall, radius 10, `bg` fill. |
 | Citation Chip + Source Preview (`q3C9LM`, `Ypu1g`) | `hover-card` (Base UI Preview Card) | Chip: height 18, radius 5, `surface-muted`, 12/600 mono. Card: 340 wide, radius 12, padding 14. Must also open from the keyboard and on tap; if Preview Card can't, use `popover`. |
+| Stage Tag / Draft (`j8Myl`) | `badge`, variant `draft` | `warning-subtle` fill, `warning-line` stroke, eye-off icon 12 and 12/500 `warning-strong` label "Draft · builders only". Hidden by default inside Agent Card, Agent Menu Item and Chat Header; shown only to an agent's builders (D31). |
+| Reply Details (`n63hvg`) | `sheet`, right side (desktop); `drawer` (mobile) | 380 wide; Run / Timing / Tokens and cost / Tool calls / Raw events sections of Info Rows (`NEFiE`); timing bar in `chart-*` tokens; raw events on `code` in mono 12; footer says who can see it. Opened from Message Actions → Details (`scan-search`), builders only, never on shared sessions. |
 | Panel Tab (`HXUoW`) | `tabs` | Trigger 9×12, gap 6, bordered, icon 13, 12 mono `text-secondary`. |
 | Resize Handle (`accqR`) | `resizable` (react-resizable-panels) | 1 px `border` line; grip 9×44 pill, `surface` + `border`. Chat and artifact split about 50/50. |
 | Sidebar, Sidebar Nav Item, Session Item, Session Group Label, Sidebar Footer (`hj5RV`, `MoK3u`, `SEJaD`, `rQVuA`, `CpCSr`) | `sidebar` (`--sidebar-width: 284px`) | Nav item 8×10, radius 9, 14/500, icon 16, mono shortcut 12. Session item 8×10, radius 8, 14 `text-secondary`; its `⋯` is a `SidebarMenuAction` that opens a `dropdown-menu`. On mobile the sidebar's own sheet is the sessions drawer (F10.5). If it fights the layout, keep a custom sidebar built from the same parts. |
@@ -109,6 +113,8 @@ Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taki
 | Recent Session Row, Capability Row, Source Row, Detail Row, Info Row (`V8961f`, `V6Dax`, `q7ISXo`, `wGPRe`, `NEFiE`) | `item`, or plain markup (`<dl>` for Detail and Info rows) |
 | Suggestion Pill (`wULfL`), Jump to Latest (`R2yN9`) | `button`, variants `pill` and `float` |
 | Message Footer / Stopped, / Still replying, / Still working (`XebGB`, `SjJKc`, `K5UJmM`) | Custom + `button` |
+| Outside Message (`pzqKM`) | Custom: a round initials avatar (not an agent tile), name and role, an `info` "A person, not the agent" tag, the text in an `info-line` card, and a "Replied in … · time" meta line. Follows a "New · time" divider in `accent`. Announced through the same polite live region as replies. |
+| Typing Indicator (`eFeRx`) | Now has a label: "Waiting for {agent} · {n} s", counting up until the first event (`Message Footer / Still replying` hides it). Streamed text follows the steady-reveal rule on `sx5f0` §5. |
 
 **Built in #8 and #9** (web/docs/decisions.md): Composer (Send, Stop generating, Shift + Enter hint, disclaimer; the mobile layout puts Send beside the input; attach and voice wait), Starter Prompt, User Message, Agent Message, Thinking Row and Tool Call Chip / Detail (disclosure buttons, not `collapsible`), Typing Indicator, Inline Error and / Warning (no Retry yet), Message Footer / Stopped and / Still working, Jump to Latest, and the "Session expired" dialog (`N8ysh`, on `dialog`). Message Actions, Version Pager and the Code Block's highlighting and Copy are later issues.
 | Session row on mobile (F11.16, F11.17) | `context-menu` for long-press (Base UI opens it on long-press); swipe-to-delete is a custom gesture. |
@@ -128,8 +134,9 @@ Overlay backdrops use the `scrim`, `scrim-light` and `scrim-strong` tokens, taki
 ## 5. Gaps to settle in the design, not in code
 
 1. ~~**No focus state is drawn anywhere.**~~ **Settled 2026-10-03:** a `focus-ring` colour variable (same value as `accent`, used as `--ring`) and a `Focus Ring` component (`Tx1AB`): 2 px ring, 2 px gap, radius = the control's + 4, pills stay round. The "States · Focus" board shows every focusable control focused; rows in menus, the palette and lists use their highlight fill instead of a ring.
-2. **Hover, pressed and disabled are drawn only on "Chat Interaction Details"** (`Q6kwA2`). For other controls, decide the state in Pencil first; don't invent it in code.
+2. ~~**Hover, pressed and disabled are drawn only on "Chat Interaction Details"**~~ **Settled 2026-10-04:** the "States · Interaction" board (`aJOsC`) draws default, hover, pressed, disabled and selected for every control, with tokens. Build them as CSS states (`:hover`, `:active`, `:disabled`, `aria-pressed` / `aria-selected`), not extra components.
 3. ~~**Button / Danger has radius 8; Primary and Secondary have 9.**~~ **Settled 2026-10-03:** Danger is 9, like Primary and Secondary.
 4. ~~**Confirm Dialog differs from Dialog.**~~ **Settled 2026-10-03:** it keeps its compact layout (400 wide, padding 20, gap 14, no header or footer bands) but takes the Dialog's radius 16 and its two shadows (`shadow-dialog`).
 5. ~~**Near-duplicate values.**~~ **Settled 2026-10-03:** Agent Switcher uses Segmented Item's shadow (`0 1px 2px #0000000F`), so there is one `shadow-control`. Command Palette keeps its own `shadow-palette`.
-6. **Mobile tap targets** must be 44 px (F15), but icon buttons are 24–32 px. Enlarge the hit area on touch, not the drawn size.
+6. ~~**Mobile tap targets**~~ **Settled 2026-10-04:** the "States · Touch" board (`O2tPw`). On touch (`pointer: coarse`, or under 768 wide) every hit area is at least 44 × 44, centred on the unchanged drawn control; hit areas never overlap, so message actions spread to a 44 pitch.
+7. **Session Item unread marker:** shown with the existing trailing marker (`p4yaL` as `dot` in `accent`) plus a 600 title, not a new child: adding children to Session Item drops instances nested in sidebar slots (CLAUDE.md, Pencil quirks).

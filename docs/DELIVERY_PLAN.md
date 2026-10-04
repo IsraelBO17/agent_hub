@@ -44,9 +44,10 @@ The skeleton retires the first, second and fourth in about two weeks. The spike 
 |---|---|---|---|
 | 1 | Research Analyst v0 → full | M1 → M3 | Streaming, thinking, tools, plan, document artifacts with versions, PDF attachments |
 | 2 | Scenario Agent (mock player in the web app) | M2 | Every event and failure state on demand; the Playwright suite in CI. The AgentCore replayer version comes later, if needed |
-| 3 | Ledger (synthetic bank) | M3 | Approvals end to end (after the P8 spike), questions, tables |
+| 3 | ~~Ledger (synthetic bank)~~ **Documents agent** (D31, 2026-10-04): drafts and files business documents, asking first | M3 | Approvals end to end with a real agent (after the P8 spike), questions, tables |
+| 4 | HR Assistant (if it ships by 18 Dec) | M3–M4 | Messages from outside the run (F33, Flow 12) |
 
-Health Assistant, Coding Agent and Travel Planner (LangGraph) stay after v1 (PRODUCT_PLAN §10A).
+Health Assistant, Coding Agent and Travel Planner (LangGraph) stay after v1 (PRODUCT_PLAN §10A). Agents are built in their own `fleet-agent-<slug>` repos (D24); colleagues build more (D31).
 
 **If an agent is already deployed on AgentCore** (Q9), it can stand in for Research Analyst v0 in M1: recording its output matters more than what it does.
 
@@ -77,6 +78,7 @@ Build steps 1–7 (Terraform written, not applied): decisions, diagrams, schema,
 - Every reply end state: failed, stopped, interrupted, Retry, reconnect polling, "Still working", agent offline, auth expired with draft kept (F08).
 - Plan block, Markdown, code blocks, "Jump to latest" (F04, F05).
 - Activity polling (D22): the sidebar working dot and the "Task complete" toast. 👍/👎 feedback (D4).
+- **Added 2026-10-04 (D31):** colleagues with invites and agent access, a builder's reply details, staff copy, the waiting state and steady reveal, interaction and touch states (`DESIGN_REVIEW.md` changes 1–7).
 - Mock client, Scenario Agent scripts, Playwright suite and deploys in GitHub Actions; logs and alarms (step 9).
 
 **Exit:** Flows 2, 6 (v1 parts) and 8 pass on the real back end and on the mock; the scenario suite is green in CI; a push to `main` deploys.
@@ -86,7 +88,8 @@ Build steps 1–7 (Terraform written, not applied): decisions, diagrams, schema,
 - **Week 1 gate: the P8 spike.** A Strands agent ends its turn on an approval request and resumes when re-invoked with the decision. If it fails: fall back to holding the run open (D19), decided that week.
 - Artifacts (F09): Research Analyst writes documents, with versions; panel on desktop, sheet on mobile.
 - Attachments (F12): upload, limits, and the agent reads a PDF.
-- Approvals and questions (F10, F11): the Ledger agent, the approval card in every state, the sidebar badge and toast, the audit record.
+- Approvals and questions (F10, F11): ~~the Ledger agent~~ the Documents agent asking before it files (D31), the approval card in every state, the sidebar badge and toast, the audit record.
+- Messages from outside the run (F33, Flow 12): designed; built only if the HR agent ships by 18 Dec.
 
 **Exit:** Flows 3, 4 and 5 (v1 parts, no voice) pass on the real back end; the audit query shows 0 executions without an approval.
 
@@ -103,12 +106,14 @@ P1 features by usage (⌘K, share links, agent detail, artifacts library, forms,
 **Beyond chat** (ARCHITECTURE D30; PRODUCT_PLAN F28–F30): task agents, triggers and an Inbox, scheduled after v1 by need. Before then, during M1–M4, two precautions hold: `capabilities.interaction` (`chat` by default) is reserved in the descriptor, and no code assumes a person started a session. A non-chat agent becoming urgent moves this theme forward.
 
 ### If it runs late: cut in this order
-The schedule has no slack (≈ 230 h in ≈ 11.5 weeks). If a milestone slips by more than 3 working days, cut from the top of this list before moving the date:
+The schedule has no slack (≈ 230 h in ≈ 11.5 weeks; D31 added ≈ 15 h to M2). If a milestone slips by more than 3 working days, cut from the top of this list before moving the date:
 
-1. "Task complete" toast (back to P1)
-2. Questions (F11) (back to P1; approvals stay)
-3. Mobile polish beyond the core flows
-4. Artifact types beyond document and code (html and table to P1)
+1. "Task complete" toast (back to P1) (#37)
+2. 👍 / 👎 feedback (#38) (to M3)
+3. Mobile parts of the interaction and touch states (#42) (to M4)
+4. Questions (F11) (back to P1; approvals stay)
+5. Mobile polish beyond the core flows
+6. Artifact types beyond document and code (html and table to P1)
 
 ---
 
@@ -186,3 +191,24 @@ Product metrics (sessions per week, first-render time, "nothing hangs", approval
 | [#10](https://github.com/IsraelBO17/agent_hub/issues/10) | Verify: 3-minute stream through the ALB and deploy draining |
 
 Rough order: #2 and #3 first (they unblock everything), #4 and #5 in parallel, then #6 → #7 → #8 → #9, and #10 last.
+
+## 9. M2 issues
+
+Written 2026-10-04 in the product-design session, from the approved design (`DESIGN_REVIEW.md`). Build in this order: #39 → #33 → #34 → #9 → #35 → #40 → #36 → #41 → #42 → #38 → #37 → #43, with #28 when convenient.
+
+| # | Slice |
+|---|---|
+| [#33](https://github.com/IsraelBO17/agent_hub/issues/33) | Sessions: the sidebar, reopening and the first visit |
+| [#34](https://github.com/IsraelBO17/agent_hub/issues/34) | Sessions: rename, delete with undo, session info |
+| [#9](https://github.com/IsraelBO17/agent_hub/issues/9) | Chat: every reply end state, with Retry (widened from Stop) |
+| [#35](https://github.com/IsraelBO17/agent_hub/issues/35) | Chat: waiting and a steady reveal |
+| [#36](https://github.com/IsraelBO17/agent_hub/issues/36) | Chat: Markdown, code blocks and the plan card |
+| [#37](https://github.com/IsraelBO17/agent_hub/issues/37) | Activity: working dot and "Task complete" toast |
+| [#38](https://github.com/IsraelBO17/agent_hub/issues/38) | Feedback: 👍 / 👎 with reasons |
+| [#39](https://github.com/IsraelBO17/agent_hub/issues/39) | Colleagues: invites and agent access (D31) |
+| [#40](https://github.com/IsraelBO17/agent_hub/issues/40) | Builders: reply details (D31) |
+| [#41](https://github.com/IsraelBO17/agent_hub/issues/41) | Staff copy and catalog fixes |
+| [#42](https://github.com/IsraelBO17/agent_hub/issues/42) | Interaction and touch states for built controls |
+| [#43](https://github.com/IsraelBO17/agent_hub/issues/43) | Delivery: deploy on push, scenario suite, alarms |
+| [#28](https://github.com/IsraelBO17/agent_hub/issues/28) | Reserve the agent interaction mode (D30) |
+

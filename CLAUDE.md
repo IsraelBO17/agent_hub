@@ -2,7 +2,7 @@
 
 One web app that is a single chat interface for many AI agents (AWS Strands Agents on Amazon Bedrock AgentCore Runtime, LangGraph later). Agents are data from `GET /agents`; adding one must never need UI changes.
 
-**Current stage: building M1.** `api/` is a FastAPI service built from the owner's API standard (`docs/API_PROFILE.md`); issue #5 added its shell. `web/` is a Vite SPA built from the owner's web standard (`docs/WEB_PROFILE.md`); issue #4 adds its shell. Features are built issue by issue; do not scaffold ahead of an issue unless asked.
+**Current stage: building M2 (Chat core).** M1, the walking skeleton, is done. `api/` is a FastAPI service built from the owner's API standard (`docs/API_PROFILE.md`); `web/` is a Vite SPA built from the owner's web standard (`docs/WEB_PROFILE.md`). M2's issues and build order are in `docs/DELIVERY_PLAN.md` §9. Features are built issue by issue; do not scaffold ahead of an issue unless asked.
 
 **Layout (D24):** `api/` (FastAPI, uv; `api/openapi.yaml` is the contract; work there follows `api/CLAUDE.md`), `web/` (Vite SPA, npm; work there follows `web/CLAUDE.md`), `infra/` (Terraform), `agents/` (one descriptor YAML per agent), `design/`, `docs/`. Create a folder only in the step that fills it. `make` lists the common commands.
 
@@ -35,6 +35,7 @@ One web app that is a single chat interface for many AI agents (AWS Strands Agen
 - **Blank newly inserted frames.** Inserted frames sometimes lay out with a stale +50 y offset and render blank. Fix: Copy the affected top-level frame, then Delete the original. **Never do this to a reusable component**: copying a component creates an instance, not a component.
 - **Blank screenshots.** Screenshots taken right after creation, or of nodes inside instances, can come back blank. Retake later, or screenshot the parent.
 - **Lost overrides.** Moving component children that instances override can drop those overrides.
+- **Lost nested instances.** Inserting or moving a child inside a reusable component can delete that component's instances nested in *other* instances' slot overrides (2026-10-04: every Session Item inside a Sidebar slot vanished after a child was added to Session Item). Don't change a slotted component's children; if you must, diff the renders and restore slots from the last saved `.pen` with `Replace(instanceId/slotFrameId, frame)`.
 - **Slots.** Fill a slot with `Replace(instanceId + "/" + slotId, frameData)`, then Insert or Move content into the returned frame.
 - **Script engine:**
   - Functions don't persist between `execute` calls.

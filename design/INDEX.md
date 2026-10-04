@@ -2,10 +2,10 @@
 
 Generated from `fleet_dev.pen` by `design/tools/pen_index.py`. Do not edit by hand.
 
-- Top-level frames: 295
-- Reusable components: 103 (2937 references, nested ones included)
-- Reference screens and boards: 68
-- Flow screens: 93
+- Top-level frames: 311
+- Reusable components: 106 (3114 references, nested ones included)
+- Reference screens and boards: 75
+- Flow screens: 97
 
 Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID>"`).
 
@@ -105,6 +105,11 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | `google-text` | color | `#1F1F1F` |
 | `font-google` | string | `Roboto` |
 | `focus-ring` | color | `#1F5C4A` |
+| `font-serif` | string | `Source Serif 4` |
+| `accent-hover` | color | `#194D3E` |
+| `accent-pressed` | color | `#143F33` |
+| `danger-hover` | color | `#9C2F24` |
+| `danger-pressed` | color | `#86281F` |
 
 ## Components
 
@@ -112,21 +117,22 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Button / Primary | `H0OSN` | auto×auto |  | 37 |
-| Button / Secondary | `XBZK2` | auto×auto |  | 102 |
-| Button / Danger | `HsXdL` | auto×auto |  | 7 |
-| Icon Button | `btfe4` | 32×32 |  | 98 |
+| Button / Primary | `H0OSN` | auto×auto |  | 41 |
+| Button / Secondary | `XBZK2` | auto×auto |  | 111 |
+| Button / Danger | `HsXdL` | auto×auto |  | 11 |
+| Icon Button | `btfe4` | 32×32 |  | 114 |
 | Kbd | `rjWo1` | auto×20 |  | 124 |
 | Tooltip | `fkIAs` | auto×auto |  | 3 |
 | Checkbox | `llhcq` | 16×16 |  | 19 |
 | Status Badge | `JQ0rx` | auto×auto |  | 18 |
-| Agent Avatar | `vCJQN` | 26×26 |  | 94 |
-| Inline Code | `Uzd9M` | auto×auto |  | 2 |
+| Agent Avatar | `vCJQN` | 26×26 |  | 97 |
+| Inline Code | `Uzd9M` | auto×auto |  | 3 |
 | Citation Chip | `q3C9LM` | auto×18 |  | 4 |
 | Resize Handle | `accqR` | 1×400 |  | 10 |
 | Stage Tag | `nC6tf` | auto×auto |  | 5 |
 | Google Button | `hveC0` | auto×40 |  | 6 |
 | Google Button / Loading | `Y8uI7x` | auto×40 |  | 1 |
+| Stage Tag / Draft | `j8Myl` | auto×auto |  | 3 |
 | Focus Ring | `Tx1AB` | auto×auto | `Control` (l33x5J): Button / Primary / Button / Secondary / Button / Danger / Icon Button / Search Field / Select Button / Checkbox / Filter Chip / Reason Chip / Suggestion Pill / Segmented Item / Choice Option / Panel Tab / Sidebar Nav Item / Session Item / Agent Card | 18 |
 
 ### 2 Inputs & Selection
@@ -136,9 +142,9 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Search Field | `Wjnvx` | 240×auto |  | 18 |
 | Select Button | `ZWD7y` | auto×auto |  | 17 |
 | Segmented Item | `K1CWuA` | auto×auto |  | 15 |
-| Filter Chip | `W0HHV` | auto×auto |  | 20 |
-| Reason Chip | `c3s8Su` | auto×auto |  | 34 |
-| Suggestion Pill | `wULfL` | auto×auto |  | 16 |
+| Filter Chip | `W0HHV` | auto×auto |  | 25 |
+| Reason Chip | `c3s8Su` | auto×auto |  | 40 |
+| Suggestion Pill | `wULfL` | auto×auto |  | 27 |
 | Form Field | `s2kV7R` | 300×auto |  | 34 |
 | Toggle Row | `sQir5` | 300×auto |  | 22 |
 | Choice Option | `CxmKK` | 420×auto |  | 30 |
@@ -148,14 +154,14 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Menu Item | `koWWb` | 180×auto |  | 75 |
+| Menu Item | `koWWb` | 180×auto |  | 79 |
 | Menu Panel | `QRlRa` | 220×auto | `Items` (p97XhG): Menu Item | 18 |
 | Agent Menu Item | `UauTJ` | 288×auto |  | 22 |
 | Palette Row | `QrHIB` | 600×auto |  | 40 |
 | Command Palette | `ZHC9i` | 640×auto | `Results` (NF5Vl): Palette Row | 5 |
 | Dialog | `dQMxZ` | 480×auto | `Body` (sYTH9) | 22 |
 | Confirm Dialog (Delete all only) | `i3B1e` | 400×auto |  | 0 |
-| Toast | `IjtkQ` | 380×auto |  | 16 |
+| Toast | `IjtkQ` | 380×auto |  | 17 |
 | Feedback Popover | `meKbs` | 380×auto |  | 1 |
 | Source Preview | `Ypu1g` | 340×auto |  | 1 |
 
@@ -163,45 +169,45 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| App Header | `fqLch` | 1440×64 |  | 19 |
-| Chat Header | `H0YWK` | 1156×60 |  | 66 |
-| Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 68 |
+| App Header | `fqLch` | 1440×64 |  | 22 |
+| Chat Header | `H0YWK` | 1156×60 |  | 70 |
+| Sidebar | `hj5RV` | 284×1024 | `Session List` (uHSbn): Session Group Label / Session Item | 72 |
 | Sidebar Brand | `T8TdZq` | 256×auto |  | 1 |
 | Agent Switcher | `RZF5q` | 256×auto |  | 1 |
 | Sidebar Nav Item | `MoK3u` | 256×auto |  | 30 |
 | Sidebar Footer | `CpCSr` | 284×auto |  | 1 |
-| Session Item | `SEJaD` | 248×auto |  | 331 |
-| Session Group Label | `rQVuA` | auto×auto |  | 161 |
-| Mobile Status Bar | `CLJUJ` | 390×44 |  | 44 |
+| Session Item | `SEJaD` | 248×auto |  | 342 |
+| Session Group Label | `rQVuA` | auto×auto |  | 165 |
+| Mobile Status Bar | `CLJUJ` | 390×44 |  | 46 |
 | Home Indicator | `mSdhx` | 390×28 |  | 16 |
-| Section Heading | `o1lqG` | auto×auto |  | 34 |
+| Section Heading | `o1lqG` | auto×auto |  | 35 |
 | Tile Label | `Vu7nt` | auto×auto |  | 113 |
 
 ### 5 Composer & Messages
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Composer | `K6k66O` | 760×auto | `Attachments` (I5xpa): Attachment Chip / Image Attachment | 82 |
-| User Message | `EfHME` | 760×auto |  | 124 |
-| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 133 |
-| Message Actions | `SnIqS` | auto×auto |  | 15 |
+| Composer | `K6k66O` | 760×auto | `Attachments` (I5xpa): Attachment Chip / Image Attachment | 86 |
+| User Message | `EfHME` | 760×auto |  | 130 |
+| Agent Message | `BsXl7` | 760×auto | `Content` (BohzX) | 138 |
+| Message Actions | `SnIqS` | auto×auto |  | 16 |
 | Message Editor | `x0laEo` | 520×auto |  | 1 |
 | Version Pager | `FVkS9` | auto×auto |  | 2 |
 | Attachment Chip | `xdoWs` | auto×auto |  | 14 |
 | Image Attachment | `z1ehKR` | 54×54 |  | 4 |
 | File Card | `Mr5AY` | 260×auto |  | 11 |
-| Jump to Latest | `R2yN9` | auto×auto |  | 3 |
+| Jump to Latest | `R2yN9` | auto×auto |  | 4 |
 | Typing Indicator | `eFeRx` | auto×auto |  | 4 |
 | Thinking Row | `Fg95V` | 640×auto |  | 6 |
-| Starter Prompt | `fkUCB` | 320×auto |  | 32 |
+| Starter Prompt | `fkUCB` | 320×auto |  | 41 |
 
 ### 6 Agent Activity & Feedback
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
 | Inline Error / Warning | `U4HXP` | 560×auto |  | 3 |
-| Tool Call Chip | `Hbhy0` | auto×auto |  | 107 |
-| Tool Call Detail | `pkhri` | 640×auto |  | 17 |
+| Tool Call Chip | `Hbhy0` | auto×auto |  | 111 |
+| Tool Call Detail | `pkhri` | 640×auto |  | 18 |
 | Timeline Step | `JGoho` | 640×auto |  | 15 |
 | Plan Step | `aKwZB` | 480×auto |  | 38 |
 | Plan Card | `I05g84` | 520×auto | `Steps` (LlLdq): Plan Step | 7 |
@@ -211,7 +217,7 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Status Banner | `dcn54` | 720×34 |  | 7 |
 | Inline Error | `Sl1FL` | 560×auto |  | 6 |
 | Notice Banner | `D9HsR` | 560×auto |  | 13 |
-| Callout / Info | `TqvAv` | 560×auto |  | 2 |
+| Callout / Info | `TqvAv` | 560×auto |  | 4 |
 | Empty State | `HUrKd` | 560×auto |  | 18 |
 | Callout / Warning | `sGs40` | 560×auto |  | 5 |
 | Callout / Danger | `S0AYO` | 560×auto |  | 0 |
@@ -222,11 +228,11 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
-| Code Block | `wW1XY` | 640×auto |  | 23 |
+| Code Block | `wW1XY` | 640×auto |  | 24 |
 | Content Card | `l5WJH` | 640×auto | `Actions` (LibZM): Button / Secondary / Icon Button, `Body` (ZnzO6) | 5 |
 | Source Row | `q7ISXo` | 320×auto |  | 4 |
 | Download File | `s5qDxc` | 420×auto |  | 7 |
-| Artifact Card | `SMBup` | 440×auto |  | 37 |
+| Artifact Card | `SMBup` | 440×auto |  | 38 |
 | Artifact Toolbar | `AwpSJ` | 720×52 | `Extra` (nkW3V) | 16 |
 | Panel Tab | `HXUoW` | auto×auto |  | 7 |
 | Version Row | `Z4Hd3` | 260×auto |  | 19 |
@@ -237,22 +243,24 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 
 | Component | ID | Size | Slots | Refs |
 |---|---|---|---|---|
+| Reply Details | `n63hvg` | 380×auto |  | 2 |
 | Approval Card | `m1FtM` | 520×auto |  | 14 |
 | Permission Prompt | `YwhPJ` | 560×auto |  | 3 |
 | Detail Row | `wGPRe` | 400×auto |  | 53 |
-| Agent Card | `VZuIf` | 392×auto |  | 36 |
+| Agent Card | `VZuIf` | 392×auto |  | 54 |
 | Capability Row | `V6Dax` | 560×auto |  | 27 |
 | Approval Card / Cancelled | `G4yJz` | 520×auto |  | 1 |
 | Approval Card / Deny reason | `J6Ep4h` | 520×auto |  | 1 |
 | Approval Card / Decision failed | `F2LNrs` | 520×auto |  | 1 |
-| Recent Session Row | `V8961f` | 800×auto |  | 27 |
-| Info Row | `NEFiE` | 320×auto |  | 12 |
+| Recent Session Row | `V8961f` | 800×auto |  | 36 |
+| Info Row | `NEFiE` | 320×auto |  | 21 |
 | Tip Card | `HFzDp` | 300×auto | `Extra` (IepYs): Kbd | 6 |
 
 ### Not on a library panel
 
 - Composer Disclaimer (`QTWM6`)
 - Composer / Mobile (`OUcXN`)
+- Outside Message (`pzqKM`)
 
 ## Reference screens and boards
 
@@ -260,6 +268,8 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 |---|---|---|
 | Board note | `Ns7FY` | 560×110 |
 | States · Focus | `Crc4x` | 2280×auto |
+| States · Interaction | `aJOsC` | 2280×auto |
+| States · Touch | `O2tPw` | 2280×auto |
 | Catalog — / | `PBQLh` | 1440×1024 |
 | Chat — /agents/coding-agent/:sessionId | `wtDYF` | 1440×1024 |
 | New Session — /agents/health-assistant | `uBRCZ` | 1440×1024 |
@@ -326,6 +336,11 @@ Node IDs are stable Pencil IDs; use them to find a node in the file (`"id": "<ID
 | Mobile — Sign in · Not allowed | `dLCVX` | 390×844 |
 | Mobile — Shared session · Link revoked | `rYc1d` | 390×844 |
 | Edge States (P0) | `l77UCh` | 1440×auto |
+| Reply details — builders | `h3wzrt` | 1440×1024 |
+| Mobile — Reply details | `suD2V` | 390×844 |
+| First visit — new session | `b7rUpi` | 1440×1024 |
+| Catalog — staff, first visit | `DXXMq` | 1440×1024 |
+| Catalog — builder | `Z8yHd` | 1440×1024 |
 
 ## User flows
 
@@ -350,7 +365,7 @@ From the catalog to a finished reply: pick an agent, start a session, watch it t
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
-| F2.1 Catalog | `UwUMM` | 1440×1024 | Clicks the Coding Agent card |
+| F2.1 Catalog | `UwUMM` | 1440×1024 | Clicks the Research Analyst card |
 | F2.2 Agent detail | `PHIgn` | 1440×1024 | Clicks “Start session” |
 | F2.3 New session | `mU5UB` | 1440×1024 | Clicks a starter prompt |
 | F2.4 Composing | `xpt2S` | 1440×1024 | Edits the prompt, presses Enter |
@@ -376,13 +391,13 @@ Research Analyst turns a request into a document artifact, then the user opens, 
 
 ### Flow 4 — Human in the loop
 
-Ledger pauses for approval before moving money, then runs a long background task and notifies the user when it's done.
+Documents asks before it files a contract to SharePoint (approve, deny, expire). Then a long contract review finishes while the user is away and a toast brings them back.
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
-| F4.1 Approval requested | `C6Znz` | 1440×1024 | Clicks “Approve transfer”; in v1 this goes straight to step 3 |
+| F4.1 Approval requested | `C6Znz` | 1440×1024 | Clicks “Approve and file”; in v1 this goes straight to step 3 |
 | F4.2 Confirm with Face ID (P2, parked) | `RPA2L` | 1440×1024 | Authenticates (P2 only) |
-| F4.3 Transfer sent | `Xju40` | 1440×1024 | Asks for a monthly reconciliation |
+| F4.3 Filed | `Xju40` | 1440×1024 | Later, asks Documents to review last quarter's contracts |
 | F4.4 Branch · Denied | `oTQRM` | 1440×1024 | If the user clicks Deny instead |
 | F4.5 Long task running | `l7fEn` | 1440×1024 | Leaves the page |
 | F4.6 Task complete, anywhere | `pwVxh` | 1440×1024 | Clicks “View result” |
@@ -390,7 +405,7 @@ Ledger pauses for approval before moving money, then runs a long background task
 
 ### Flow 5 — Attachments & voice
 
-The user shares a photo and a lab report with Health Assistant, gets an answer about them, then dictates a follow-up.
+The user shares a photo of a doctor's note and a payslip with HR Assistant, gets an answer about sick pay, then dictates a follow-up.
 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
@@ -398,7 +413,7 @@ The user shares a photo and a lab report with Health Assistant, gets an answer a
 | F5.2 Uploading | `k7zUs` | 1440×1024 | Uploads finish; types a question |
 | F5.3 Ready to send | `U1xhD` | 1440×1024 | Presses Enter |
 | F5.4 Agent reads the files | `LJlPN` | 1440×1024 | Answer arrives |
-| F5.5 Answer with care note | `xwgQu` | 1440×1024 | Taps the mic to follow up |
+| F5.5 Answer with policy note | `xwgQu` | 1440×1024 | Taps the mic to follow up |
 | F5.6 Dictating | `rzkSq` | 1440×1024 | Taps ✓ to finish |
 | F5.7 Transcribed, ready to send | `sGUaU` | 1440×1024 | Presses Enter |
 
@@ -414,7 +429,7 @@ What the user sees when things go wrong: a failed reply, a dropped connection, r
 | F6.4 Back online | `PsIbC` | 1440×1024 | Sends several requests quickly |
 | F6.5 Rate limited (P2) | `HmCpV` | 1440×1024 | Later: session grows very long |
 | F6.6 Session too long (P2) | `M7v0g` | 1440×1024 | Clicks “Start new session” |
-| F6.7 Fresh session with summary (P2) | `uZP3Q` | 1440×1024 | Switches to Home Ops |
+| F6.7 Fresh session with summary (P2) | `uZP3Q` | 1440×1024 | Switches to Expenses Assistant |
 | F6.8 Agent offline while typing | `j5dD9g` | 1440×1024 | Draft kept; waits or switches |
 
 ### Flow 7 — Finding & organising
@@ -440,10 +455,10 @@ Move between agents from anywhere. Switching always opens a fresh session; past 
 | Screen | ID | Size | Leads on when… |
 |---|---|---|---|
 | F8.1 Mid-conversation | `oI49h` | 1440×1024 | Clicks the agent switcher |
-| F8.2 Agent switcher | `ga0YM` | 1440×1024 | Picks Health Assistant |
+| F8.2 Agent switcher | `ga0YM` | 1440×1024 | Picks HR Assistant |
 | F8.3 Fresh session | `p8e9kq` | 1440×1024 | Opens a past session from the sidebar |
 | F8.4 Past session reopened | `jrgPt` | 1440×1024 | Presses ⌘J to switch quickly |
-| F8.5 Quick switch (⌘J) | `gihjG` | 1440×1024 | Picks Coding Agent → Flow 2 |
+| F8.5 Quick switch (⌘J) | `gihjG` | 1440×1024 | Picks Research Analyst → Flow 2 |
 
 ### Flow 9 — Settings & management
 
@@ -457,7 +472,7 @@ Change preferences, wipe data safely, learn shortcuts, and manage an agent's det
 | F9.4 Keyboard shortcuts | `Iicud` | 1440×1024 | Opens an agent's page |
 | F9.5 Agent detail | `yz8Mr` | 1440×1024 | Clicks “Edit agent” (P2) |
 | F9.6 Edit agent (P2, parked) | `gpyEo` | 1440×1024 | Saves changes |
-| F9.7 Degraded agent in catalog | `H1yh2` | 1440×1024 | Opens Ledger anyway |
+| F9.7 Degraded agent in catalog | `H1yh2` | 1440×1024 | Opens Documents anyway |
 | F9.8 Degraded agent in chat | `s1omGy` | 1440×1024 | Status recovers automatically |
 
 ### Flow 10 — Mobile
@@ -470,8 +485,8 @@ The same product on a phone: browse agents, chat, open artifacts as full-screen 
 | F10.2 Chat with artifact | `j57Yaa` | 390×844 | Taps the artifact card |
 | F10.3 Artifact sheet | `o3XCU` | 390×844 | Taps ⋯ |
 | F10.4 Overflow menu | `oNbW3` | 390×844 | Downloads; taps back, opens menu |
-| F10.5 Sessions drawer | `i46aRN` | 390×844 | Opens Ledger session |
-| F10.6 Approve on mobile | `GCuQ2` | 390×844 | Taps “Approve transfer” |
+| F10.5 Sessions drawer | `i46aRN` | 390×844 | Switches to Documents, opens the contract session |
+| F10.6 Approve on mobile | `GCuQ2` | 390×844 | Taps “Approve” |
 
 ### Flow 11 — Mobile core
 
@@ -488,8 +503,8 @@ The v1 phone states: loading, starting and composing, streaming with tools, plan
 | F11.7 Question card | `wiL50` | 390×844 | Picks “Engineering team” |
 | F11.8 Reconnecting | `e6XAO` | 390×844 | The agent returns an error |
 | F11.9 Reply failed | `vBCdH` | 390×844 | Taps the agent name |
-| F11.10 Agent switcher sheet | `wE4kz` | 390×844 | Picks Home Ops |
-| F11.11 Agent offline | `t4QWfb` | 390×844 | Switches to Ledger; approves a transfer |
+| F11.10 Agent switcher sheet | `wE4kz` | 390×844 | Picks Expenses Assistant |
+| F11.11 Agent offline | `t4QWfb` | 390×844 | Switches to Documents; approves a filing |
 | F11.12 Approval approved | `c16G99` | 390×844 | Branch: denies instead |
 | F11.13 Approval denied | `s9qGv` | 390×844 | Branch: lets it expire |
 | F11.14 Approval expired | `AKLDi` | 390×844 | Opens the drawer |
@@ -498,3 +513,14 @@ The v1 phone states: loading, starting and composing, streaming with tools, plan
 | F11.17 Swipe to delete | `mepQO` | 390×844 | Taps Delete |
 | F11.18 Deleted, with undo | `XRu2z` | 390×844 | Later, opens an old link to that session |
 | F11.19 Session not found | `HfWCC` | 390×844 | Taps “Back to agents” |
+
+### Flow 12 — A reply from outside
+
+HR Assistant passes a question to the HR team. Later, a person replies from the HR app: the staff member gets a toast and a marked session, and the reply sits in the conversation, clearly not from the agent.
+
+| Screen | ID | Size | Leads on when… |
+|---|---|---|---|
+| F12.1 Question passed to HR | `W9xQH` | 1440×1024 | HR replies in the HR app; the user is on the catalog |
+| F12.2 Reply arrives elsewhere | `wgxjb` | 1440×1024 | Clicks “View reply” (or the New reply row) |
+| F12.3 Reading the reply | `G7j0jP` | 1440×1024 | Later, opens the same session on a phone |
+| F12.4 Reply on mobile | `nyfwu` | 390×844 | Replies to HR Assistant, which can pass it on again |
