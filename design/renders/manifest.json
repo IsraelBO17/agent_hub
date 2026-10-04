@@ -53,13 +53,13 @@
   {
    "n": 4,
    "title": "Human in the loop",
-   "description": "Documents asks before it files a contract to SharePoint (approve, deny, expire). Then, in Ledger, a long background task finishes while the user is away and a toast brings them back.",
+   "description": "Documents asks before it files a contract to SharePoint (approve, deny, expire). Then a long contract review finishes while the user is away and a toast brings them back.",
    "group": "flows/f04-human-in-the-loop"
   },
   {
    "n": 5,
    "title": "Attachments & voice",
-   "description": "The user shares a photo and a lab report with Health Assistant, gets an answer about them, then dictates a follow-up.",
+   "description": "The user shares a photo of a doctor's note and a payslip with HR Assistant, gets an answer about sick pay, then dictates a follow-up.",
    "group": "flows/f05-attachments-voice"
   },
   {
